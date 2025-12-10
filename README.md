@@ -89,4 +89,4 @@ Key endpoints:
 
 CORS is enabled for `http://localhost:4200` by default. Update `app.cors.allowed-origins` in `backend/src/main/resources/application.properties` to allow additional front-end hosts during development.
 
-Multipart uploads are limited to 10 MB per file (30 MB per request) by default. Adjust `spring.servlet.multipart.max-file-size` and `spring.servlet.multipart.max-request-size` in `application.properties` if your documents are larger.
+Multipart uploads are limited to 20 MB per file (60 MB per request) by default. Adjust `spring.servlet.multipart.max-file-size` and `spring.servlet.multipart.max-request-size` in `application.properties` if your documents are larger.
