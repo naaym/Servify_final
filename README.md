@@ -67,7 +67,21 @@ cd backend
 mvn spring-boot:run
 ```
 
-The application starts on port `8084` with an in-memory H2 database enabled for quick development. Key endpoints:
+The application starts on port `8084` and uses a MySQL database named `servify`. Before running the backend, create the database and a user (defaults below) or export environment variables to override the connection:
+
+```sql
+CREATE DATABASE servify;
+CREATE USER 'servify'@'localhost' IDENTIFIED BY 'servify';
+GRANT ALL PRIVILEGES ON servify.* TO 'servify'@'localhost';
+```
+
+Connection defaults (override with `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, and `MYSQL_PASSWORD`):
+
+- URL: `jdbc:mysql://localhost:3306/servify?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC`
+- Username: `servify`
+- Password: `servify`
+
+Key endpoints:
 
 - `POST /api/auth/login` – authenticate clients and providers. Returns `access_token`, `id`, `role`, `status`, and `message` for routing the Angular app.
 - `POST /api/clients/register` – JSON payload to register a client.
