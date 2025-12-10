@@ -1,0 +1,131 @@
+<!-- provider -->
+<div class="min-h-screen bg-[#0D0D11] text-white flex">
+
+  <!-- SIDEBAR PROVIDER -->
+  <div class="w-64 h-full bg-[#141418] fixed left-0 top-0 shadow-2xl flex flex-col">
+
+    <div class="p-6 border-b border-gray-800">
+      <h1 class="text-2xl font-bold text-purple-500">Provider</h1>
+    </div>
+
+    <nav class="flex-1 p-4 space-y-2">
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-600/20 cursor-pointer">
+        <span></span> Dashboard
+      </a>
+
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/20 cursor-pointer">
+        <span></span> Incoming Requests
+      </a>
+
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/20 cursor-pointer">
+        <span></span> My Appointments
+      </a>
+
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/20 cursor-pointer">
+        <span></span> Earnings
+      </a>
+
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/20 cursor-pointer">
+        <span></span> Settings
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-gray-800">
+      <button class="w-full bg-purple-600 py-2 rounded-xl hover:bg-purple-700 transition">
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN PROVIDER DASHBOARD -->
+  <div class="flex-1 ml-64 p-8 space-y-10">
+
+    <!-- HEADER -->
+    <div>
+      <h1 class="text-3xl font-bold">Provider Dashboard</h1>
+      <p class="text-gray-400">Manage your requests & earnings</p>
+    </div>
+
+    <!-- CARDS -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4">
+        <div class="w-14 h-14 bg-purple-600 rounded-xl flex justify-center items-center text-xl"></div>
+        <div>
+          <p class="text-gray-400 text-sm">Today's Requests</p>
+          <h2 class="text-2xl font-bold">5</h2>
+        </div>
+      </div>
+
+      <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4">
+        <div class="w-14 h-14 bg-yellow-600 rounded-xl flex justify-center items-center text-xl"></div>
+        <div>
+          <p class="text-gray-400 text-sm">Pending</p>
+          <h2 class="text-2xl font-bold">4</h2>
+        </div>
+      </div>
+
+      <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4">
+        <div class="w-14 h-14 bg-green-600 rounded-xl flex justify-center items-center text-xl"></div>
+        <div>
+          <p class="text-gray-400 text-sm">Earnings (Month)</p>
+          <h2 class="text-2xl font-bold">480 DT</h2>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LATEST REQUESTS -->
+    <div class="bg-[#16161C] p-6 rounded-2xl shadow">
+
+      <h2 class="text-lg font-semibold mb-6">Latest Requests</h2>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="text-gray-400 border-b border-gray-700">
+            <tr>
+              <th class="text-left py-3">Client</th>
+              <th class="text-left py-3">Service</th>
+              <th class="text-left py-3">Date</th>
+              <th class="text-left py-3">Status</th>
+              <th class="text-left py-3">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-gray-800">
+
+            <tr class="hover:bg-[#1D1D26]">
+              <td class="py-4">Oussama</td>
+              <td>Electricity Fix</td>
+              <td>21 Jan 2025</td>
+              <td>
+                <span class="px-3 py-1 bg-yellow-600/30 rounded-lg text-yellow-400">Pending</span>
+              </td>
+              <td class="flex gap-3">
+                <button class="text-green-400 hover:underline">Accept</button>
+                <button class="text-red-400 hover:underline">Reject</button>
+              </td>
+            </tr>
+
+            <tr class="hover:bg-[#1D1D26]">
+              <td class="py-4">Nader</td>
+              <td>Roof Repair</td>
+              <td>19 Jan 2025</td>
+              <td>
+                <span class="px-3 py-1 bg-green-600/30 rounded-lg text-green-400">Completed</span>
+              </td>
+              <td class="flex gap-3">
+                <button class="text-purple-400 hover:underline">Details</button>
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

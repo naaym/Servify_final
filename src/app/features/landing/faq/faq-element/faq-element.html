@@ -1,0 +1,27 @@
+<div class="w-full max-w-xl mx-auto border-b border-gray-200 py-2">
+
+  <!-- Question -->
+  <button
+    class="w-full flex justify-between items-center py-3 text-left text-gray-800 font-medium cursor-pointer transition"
+    (click)="isOpen = !isOpen"
+  >
+    <span>{{ question }}</span>
+
+    <svg
+      [class.rotate-180]="isOpen"
+      class="w-4 h-4 text-gray-500 transform transition-transform duration-200"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+
+  <!-- Answer -->
+  @if(isOpen){
+    <div class="pb-3 pl-1 pr-2 text-gray-600 text-sm leading-relaxed">
+      {{ answer }}
+    </div>
+  }
+</div>

@@ -1,0 +1,32 @@
+<div class="min-h-screen bg-[#0D0D11] text-white flex">
+
+  <!-- ASIDE -->
+  <app-aside></app-aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 ml-64 p-8 space-y-10">
+
+
+    <!-- HEADER -->
+    <div class="text-center">
+      <h1 class="text-3xl font-bold ">Welcome back </h1>
+      <p class="text-gray-400">Here is your activity overview</p>
+    </div>
+
+    <!-- CARDS -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+     <stat-card color="purple" [totalRequests]=2 status="Total Requests"></stat-card>
+     <stat-card color="yellow" [totalRequests]=1 status="Pending"></stat-card>
+     <stat-card color="green" [totalRequests]=1 status="Accepted"></stat-card>
+     <stat-card color="red" [totalRequests]=0 status="Rejected"></stat-card>
+     <stat-card color="gray" [totalRequests]=0 status="Cancelled"></stat-card>
+     <stat-card color="blue" [totalRequests]=0 status="Done"></stat-card>
+    </div>
+
+    <!-- BOOKINGS LIST -->
+    <bookings-list></bookings-list>
+
+  </main>
+
+</div>

@@ -1,0 +1,13 @@
+{
+  "clientsregister": [
+    {
+      "id": "60f7",
+      "name": "dsfsdf",
+      "address": "88888",
+      "phone": "sdfsdfs",
+      "email": "888@gmail.com",
+      "password": "123456",
+      "passconfirm": "123456"
+    }
+  ]
+}

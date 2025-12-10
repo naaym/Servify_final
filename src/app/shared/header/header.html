@@ -1,0 +1,74 @@
+<header
+  class="flex justify-evenly items-center px-8 py-4 bg-white shadow sticky top-0 z-30"
+>
+
+  <div class="flex items-center gap-3">
+    <img
+      src="servifylogosvg.svg"
+      alt="SERVIFY logo"
+      class="h-11 cursor-pointer"
+      (click)="goToHome()"
+    />
+  </div>
+
+  <nav class="hidden md:flex items-center gap-8 text-gray-700 font-semibold">
+    <a href="#features" class="hover:text-purple-700">Accueil</a>
+    <a href="#about" class="hover:text-purple-700">Devenir un Prestataire</a>
+    <a href="#services" class="hover:text-purple-700">Nos Services</a>
+    <a href="#contact" class="hover:text-purple-700">Contacts</a>
+  </nav>
+<div class="hidden md:flex items-center gap-8 text-gray-700 font-semibold"  >
+  <a
+  routerLink="/login"
+  class="bg-purple-700 text-white px-5 py-2 rounded-lg hover:bg-purple-800 transition whitespace-nowrap"
+  >
+  Se connecter
+</a>
+
+<button
+routerLink="/signup"
+class="bg-purple-700 text-white px-5 py-2 rounded-lg hover:bg-purple-800 transition"
+>
+S'inscrire
+</button>
+</div>
+
+
+  <button (click)="toggleMenu()" class="md:hidden lg:hidden text-purple-700 text-3xl">
+    @if (!isMenuOpen) {
+    <span>&#9776;</span>
+
+    } @else {
+    <span >&#10005;</span>
+    <!-- X -->
+    }
+  </button>
+</header>
+
+<!-- telephone header -->
+@if (isMenuOpen) {
+<div
+  class="md:hidden bg-white shadow-lg px-8 py-5 space-y-4 text-gray-700 font-semibold w-screen fixed z-2"
+>
+  <a href="#features" class="block hover:text-purple-700">Accueil</a>
+  <a href="#about" class="block hover:text-purple-700"
+    >Devenir un Prestataire</a
+  >
+  <a href="#services" class="block hover:text-purple-700">Nos Services</a>
+  <a href="#contact" class="block hover:text-purple-700">Contacts</a>
+
+  <a
+    routerLink="/login"
+    class="block bg-purple-700 text-white px-5 py-3 rounded-lg text-center hover:bg-purple-800 transition"
+  >
+    Se connecter
+  </a>
+
+  <a
+    routerLink="/signup"
+    class="block bg-purple-700 text-white px-5 py-3 rounded-lg text-center hover:bg-purple-800 transition"
+  >
+    S'inscrire
+  </a>
+</div>
+}

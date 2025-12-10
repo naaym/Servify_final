@@ -1,0 +1,115 @@
+<!-- <aside class="w-64  min-h-screen bg-[#0D0F3F] text-white flex flex-col p-6 float-left">
+
+
+  <div class="text-2xl font-bold mb-10 cursor-pointer" routerLink="/" >
+    IJENI
+  </div>
+
+
+  <nav class="flex flex-col space-y-4">
+
+  <a routerLink="/clients/dashboard"
+     class="text-gray-300 hover:text-white hover:pl-2 hover:border-l-4 hover:border-purple-400 transition-all">
+     Dashboard
+  </a>
+
+  <a routerLink="/clients/requests/new"
+     class="text-gray-300 hover:text-white hover:pl-2 hover:border-l-4 hover:border-purple-400 transition-all">
+     Demander un service
+  </a>
+
+  <a routerLink="/clients/requests"
+     class="text-gray-300 hover:text-white hover:pl-2 hover:border-l-4 hover:border-purple-400 transition-all">
+     Mes demandes
+  </a>
+
+  <a routerLink="/client/chat"
+     class="text-gray-300 hover:text-white hover:pl-2 hover:border-l-4 hover:border-purple-400 transition-all">
+     Messagerie
+  </a>
+
+  <a routerLink="/client/favorites"
+     class="text-gray-300 hover:text-white hover:pl-2 hover:border-l-4 hover:border-purple-400 transition-all">
+     Favoris
+  </a>
+
+  <a routerLink="/client/payments"
+     class="text-gray-300 hover:text-white hover:pl-2 hover:border-l-4 hover:border-purple-400 transition-all">
+     Paiements
+  </a>
+
+  <a routerLink="/client/notifications"
+     class="text-gray-300 hover:text-white hover:pl-2 hover:border-l-4 hover:border-purple-400 transition-all">
+     Notifications
+  </a>
+
+  <a routerLink="/client/security"
+     class="text-gray-300 hover:text-white hover:pl-2 hover:border-l-4 hover:border-purple-400 transition-all">
+     Sécurité
+  </a>
+
+  <a routerLink="/clients/profil"
+     class="text-gray-300 hover:text-white hover:pl-2 hover:border-l-4 hover:border-purple-400 transition-all">
+     Profil
+  </a>
+
+  <a routerLink="/login"
+     class="text-gray-300 hover:text-white hover:pl-2 hover:border-l-4 hover:border-purple-400 transition-all">
+     Paramètres
+  </a>
+
+
+  <a routerLink="/"
+     class="mt-10 text-red-400 hover:text-red-300 transition-all">
+     Déconnexion
+  </a>
+
+</nav>
+
+ </aside> -->
+<!-- ----------------- -->
+ <div class="w-64 h-screen bg-[#141418] fixed left-0 top-0 shadow-2xl flex flex-col">
+
+  <!-- HEADER -->
+  <div class="p-6 border-b border-gray-800">
+  <img src="servifylogosvg.svg" class=" object-contain" alt="Servify Logo">
+</div>
+
+
+  <!-- NAVIGATION -->
+  <nav class="flex-1 p-4 space-y-2">
+
+    <a routerLink="/client/dashboard"
+       routerLinkActive="bg-purple-600/20"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/20 cursor-pointer">
+      <span>🏠</span> Dashboard
+    </a>
+
+    <a routerLink="/client/bookings"
+       routerLinkActive="bg-purple-600/20"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/20 cursor-pointer">
+      <span>📅</span> My Requests
+    </a>
+
+    <a routerLink="/client/new"
+       routerLinkActive="bg-purple-600/20"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/20 cursor-pointer">
+      <span>➕</span> New Request
+    </a>
+
+    <a routerLink="/client/settings"
+       routerLinkActive="bg-purple-600/20"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/20 cursor-pointer">
+      <span>⚙️</span> Settings
+    </a>
+
+  </nav>
+
+  <!-- LOGOUT -->
+  <div class="p-4 border-t border-gray-800">
+    <button class="w-full bg-purple-600 py-2 rounded-xl hover:bg-purple-700 transition">
+      Logout
+    </button>
+  </div>
+
+</div>

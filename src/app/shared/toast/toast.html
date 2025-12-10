@@ -1,0 +1,16 @@
+
+@if (messageService.message$ | async; as msg) {
+  <div
+    class="fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-3
+           rounded-lg shadow-lg text-white text-center min-w-[250px] z-5"
+    [ngClass]="{
+      'bg-green-600': msg.type === 'success',
+      'bg-red-600': msg.type === 'error',
+      'bg-blue-600': msg.type === 'info',
+      'bg-yellow-500': msg.type === 'warning'
+    }"
+  >
+    {{ msg.text }}
+  </div>
+}
+

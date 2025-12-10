@@ -1,0 +1,222 @@
+<app-logo></app-logo>
+
+<section
+  class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0b0125] via-[#1a0440] to-[#330067] px-4 py-10"
+>
+  <div
+    class="relative w-full max-w-md bg-white/10 backdrop-blur-xl shadow-2xl rounded-3xl p-8 text-white border border-white/10"
+  >
+    <!-- Title -->
+    <h1 class="text-3xl font-bold text-center mb-8 drop-shadow-lg">Sign up</h1>
+
+    <!-- Google -->
+    @if(step===1){
+    <div class="flex flex-col gap-3 mb-6">
+      <button
+        class="flex items-center justify-center gap-3 bg-white/20 border border-white/30 rounded-xl py-2 hover:bg-white/30 transition"
+      >
+        <img
+          src="https://www.svgrepo.com/show/475656/google-color.svg"
+          alt="Google"
+          class="h-5"
+        />
+        Continue with Google
+      </button>
+    </div>
+
+    <!-- OR -->
+    <div class="flex items-center justify-center mb-6">
+      <hr class="w-1/3 border-white/30" />
+      <span class="mx-2 text-white/60 text-sm">or</span>
+      <hr class="w-1/3 border-white/30" />
+    </div>
+    }
+    <!-- Form -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
+      @if(step===1){
+
+      <!-- INPUT TEMPLATE -->
+      <!-- je te fais un input stylé futuriste et tu l’utilises pour tous -->
+
+      <input
+        type="text"
+        placeholder="Full name"
+        class="w-full bg-white/20 text-white placeholder-white/50 border border-white/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+        formControlName="name"
+      />
+      @if (isValid("name")) {
+      <p class="text-red-300 text-sm font-semibold">Name required</p>
+      }
+
+      <input
+        type="text"
+        placeholder="Governorate"
+        class="w-full bg-white/20 text-white placeholder-white/50 border border-white/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+        formControlName="governorate"
+      />
+      @if (isValid("governorate")) {
+      <p class="text-red-300 text-sm font-semibold">Governorate required</p>
+      }
+
+      <input
+        type="text"
+        placeholder="Delegation"
+        class="w-full bg-white/20 text-white placeholder-white/50 border border-white/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+        formControlName="delegation"
+      />
+      @if (isValid("delegation")) {
+      <p class="text-red-300 text-sm font-semibold">Delegation required</p>
+      }
+
+      <input
+        type="tel"
+        placeholder="Phone"
+        class="w-full bg-white/20 text-white placeholder-white/50 border border-white/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+        formControlName="phone"
+      />
+      @if (isValid("phone")) {
+      <p class="text-red-300 text-sm font-semibold">Phone required</p>
+      }
+
+      <input
+        type="number"
+        placeholder="Age"
+        class="w-full bg-white/20 text-white placeholder-white/50 border border-white/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+        formControlName="age"
+      />
+      @if (isValid("age")) {
+      <p class="text-red-300 text-sm font-semibold">Age required</p>
+      }
+
+      <div class="flex justify-end">
+        <button
+          type="button"
+          (click)="nextStep()"
+          class="bg-purple-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:bg-purple-700 transition"
+        >
+          NEXT<lucide-angular [img]="arrowr" class="w-full"></lucide-angular>
+        </button>
+      </div>
+
+      <p class="text-center text-white/70 mt-4">
+        Already have an account?
+        <a href="/login" class="text-purple-300 font-bold hover:underline"
+          >Log In</a
+        >
+      </p>
+      } @else if (step===2) {
+
+      <input
+        type="email"
+        placeholder="Work email address"
+        class="w-full bg-white/20 text-white placeholder-white/50 border border-white/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+        formControlName="email"
+      />
+      @if (isValid("email")) {
+      <p class="text-red-300 text-sm font-semibold">Valid email required</p>
+      }
+
+      <!-- Passwords -->
+      <div class="flex flex-col gap-3">
+        <input
+          type="password"
+          placeholder="Password (8 or more characters)"
+          class="w-full bg-white/20 text-white placeholder-white/50 border border-white/30 rounded-xl px-4 py-3 pr-10 focus:ring-2 focus:ring-purple-400 outline-none"
+          formControlName="password"
+        />
+        @if (isValid("password")) {
+        <p class="text-red-300 text-sm font-semibold">Min 6 characters</p>
+        }
+
+        <input
+          type="password"
+          placeholder="Confirm password"
+          class="w-full bg-white/20 text-white placeholder-white/50 border border-white/30 rounded-xl px-4 py-3 pr-10 focus:ring-2 focus:ring-purple-400 outline-none"
+          formControlName="passconfirm"
+        />
+        @if (isValid("passconfirm")) {
+        <p class="text-red-300 text-sm font-semibold">Passwords don’t match</p>
+        }
+      </div>
+      <div class="flex justify-between">
+
+        <button
+          type="button"
+          (click)="backStep()"
+          class="bg-purple-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:bg-purple-700 transition"
+        >
+          PREVIOUS<lucide-angular [img]="arrowl" class="w-full"></lucide-angular>
+        </button>
+         <button
+          type="button"
+          (click)="nextStep()"
+          class="bg-purple-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:bg-purple-700 transition"
+
+        >
+
+          NEXT
+    <lucide-angular [img]="arrowr" class="w-full"></lucide-angular>
+
+        </button>
+      </div>
+
+      } @else {
+
+      <!-- Documents -->
+      <div class="document flex flex-col gap-3 mt-4">
+        <label class="text-white/80">CIN</label>
+        <input
+          type="file"
+          (change)="onFileSelected($event, 'cin')"
+          class="w-full bg-white/10 text-white border border-white/30 rounded-xl px-4 py-2"
+        />
+        @if (isValid('cin')) {
+        <p class="text-red-300 text-sm">CIN required</p>
+        }
+
+        <label class="text-white/80">CV</label>
+        <input
+          type="file"
+          (change)="onFileSelected($event, 'cv')"
+          class="w-full bg-white/10 text-white border border-white/30 rounded-xl px-4 py-2"
+        />
+        @if (isValid('cv')) {
+        <p class="text-red-300 text-sm">CV required</p>
+        }
+
+        <label class="text-white/80">Diplôme</label>
+        <input
+          type="file"
+          (change)="onFileSelected($event, 'diplome')"
+          class="w-full bg-white/10 text-white border border-white/30 rounded-xl px-4 py-2"
+        />
+        @if (isValid('diplome')) {
+        <p class="text-red-300 text-sm">Diplôme required</p>
+        }
+      </div>
+
+      <div class="flex justify-start">
+        <button
+          type="button"
+          (click)="backStep()"
+          class="bg-purple-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:bg-purple-700 transition"
+        >
+          PREVIOUS<lucide-angular [img]="arrowl" class="w-full"></lucide-angular>
+        </button>
+      </div>
+
+      <!-- Button -->
+      <button
+        type="submit"
+        class="w-full bg-purple-600 text-xl text-white font-bold py-3 rounded-xl shadow-lg hover:bg-purple-700 transition"
+      >
+        Create my account
+      </button>
+      }
+
+      <!-- Login -->
+    </form>
+
+    <!-- Bottom rounded part -->
+  </div>
+</section>

@@ -1,0 +1,229 @@
+<app-header></app-header>
+<div class="min-h-screen bg-gray-50">
+  <!-- MAIN CONTAINER -->
+  <div class="max-w-7xl mx-auto px-6 py-10">
+    <!-- HEADER -->
+    <header class="mb-10">
+      <h1 class="text-xl font-bold text-gray-700 tracking-tight">
+        Plombiers à
+        <span class="text-xl font-extrabold text-black">
+          {{ city }}
+        </span>
+      </h1>
+
+      <p class="text-gray-600 mt-2 text-lg">
+        <strong>2 prestataires</strong> disponibles pour votre service :
+        <span class="text-xl font-extrabold text-black">
+          {{ service }}
+        </span>
+      </p>
+    </header>
+
+    <!-- GRID : ASIDE + PROVIDERS -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+      <!-- ⭐ ASIDE / FILTRES -->
+      <aside class="md:col-span-1 space-y-8">
+        <div
+          class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 space-y-8"
+        >
+          <!-- TITLE -->
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900">Filtres</h2>
+            <p class="text-gray-500 text-sm mt-1">Affinez votre recherche</p>
+          </div>
+
+          <hr class="border-gray-200" />
+
+          <!-- RATING -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">
+              Note minimum
+            </h3>
+
+            <div class="space-y-2">
+              <label
+                class="flex items-center justify-between px-3 py-2 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100"
+              >
+                ⭐⭐⭐⭐⭐
+                <input
+                  type="checkbox"
+                  class="accent-indigo-600"
+                  value="5"
+                  (click)="onRatingChange('5')"
+                />
+              </label>
+
+              <label
+                class="flex items-center justify-between px-3 py-2 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100"
+              >
+                ⭐⭐⭐⭐☆
+                <input
+                  type="checkbox"
+                  class="accent-indigo-600"
+                  value="4"
+                  (click)="onRatingChange('4')"
+                />
+              </label>
+
+              <label
+                class="flex items-center justify-between px-3 py-2 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100"
+              >
+                ⭐⭐⭐☆☆
+                <input
+                  type="checkbox"
+                  class="accent-indigo-600"
+                  value="3"
+                  (click)="onRatingChange('3')"
+                />
+              </label>
+            </div>
+          </div>
+
+          <hr class="border-gray-200" />
+
+          <!-- PRICE RANGE -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">
+              Prix (TND / heure)
+            </h3>
+
+            <div class="flex items-center gap-3">
+              <input
+                type="number"
+                placeholder="Min"
+                class="w-24 px-3 py-2 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500"
+                (change)="onMinPriceChange($event)"
+              />
+              <span class="text-gray-500">—</span>
+              <input
+                type="number"
+                placeholder="Max"
+                class="w-24 px-3 py-2 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500"
+                (change)="onMaxPriceChange($event)"
+              />
+            </div>
+
+            <input
+              type="range"
+              class="w-full mt-4 accent-indigo-600"
+              min="0"
+              max="300"
+            />
+          </div>
+
+          <hr class="border-gray-200" />
+
+          <!-- SKILLS -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">
+              Compétences
+            </h3>
+
+            <div class="flex flex-wrap gap-2">
+              <button
+                class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs cursor-pointer hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                [disabled]="disabledSkills['fuite']"
+                (click)="toggleSkill('fuite')"
+              >
+                Fuite
+              </button>
+
+              <button
+                class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs cursor-pointer hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                [disabled]="disabledSkills['installation']"
+                (click)="toggleSkill('installation')"
+              >
+                Installation
+              </button>
+
+              <button
+                class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs cursor-pointer hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                [disabled]="disabledSkills['Chauffage']"
+                (click)="toggleSkill('Chauffage')"
+              >
+                Chauffage
+              </button>
+
+              <button
+                class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs cursor-pointer hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                [disabled]="disabledSkills['Urgence']"
+                (click)="toggleSkill('Urgence')"
+              >
+                Urgence
+              </button>
+            </div>
+          </div>
+
+          <hr class="border-gray-200" />
+
+          <!-- RESET FILTERS -->
+          <button
+            class="w-full py-2 bg-gray-100 rounded-lg hover:bg-gray-200 text-gray-700 font-medium"
+            (click)="resetFilters()"
+          >
+            Réinitialiser les filtres
+          </button>
+        </div>
+      </aside>
+
+      <!-- PROVIDERS LIST -->
+      <main class="md:col-span-3">
+        <!-- SORT BAR -->
+        <div class="flex justify-between items-center mb-6">
+          <p class="text-gray-700 font-medium">Trier par :</p>
+          <select
+            class="px-4 py-2 bg-white border rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500"
+            (change)="onSortChange($event)"
+          >
+            <option value="rating;desc">Meilleure note</option>
+            <option value="price;asc">Moins cher</option>
+            <option value="price;desc">Plus cher</option>
+            <option value="reviewCount;desc">Nombre d’avis</option>
+          </select>
+        </div>
+
+        <!-- FIXED PROVIDER LOOP -->
+        <div class="space-y-6">
+          @for (p of providers; track p.providerId) {
+          <div
+            class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex gap-6 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all"
+          >
+            <app-provider-card
+              [provider]="p"
+              (toProviderDetails)="showProviderDetails($event)"
+              (toReserver)="newBooking($event)"
+            ></app-provider-card>
+          </div>
+          }
+            <div class="flex items-center justify-center gap-6 my-6 mx-auto">
+        <!-- Previous Button -->
+        <button
+          (click)="prevPage()"
+          [disabled]="page === 0"
+          class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          <span class="text-xl">&#8249;</span>
+          <!-- ← -->
+        </button>
+
+        <!-- Page Indicator -->
+        <span class="text-lg font-medium text-gray-700">
+          {{ page + 1 }} of {{ totalPages }}
+        </span>
+
+        <!-- Next Button -->
+        <button
+          (click)="nextPage()"
+          [disabled]="page + 1 === totalPages"
+          class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          <span class="text-xl">&#8250;</span>
+          <!-- → -->
+        </button>
+      </div>
+        </div>
+      </main>
+
+    </div>
+  </div>
+</div>

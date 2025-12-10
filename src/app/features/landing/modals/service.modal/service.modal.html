@@ -1,0 +1,29 @@
+
+@if(open){
+<div
+
+    class="fixed inset-0 bg-black bg-opacity-20 flex justify-center items-center z-50">
+
+    <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl text-gray-900">
+
+    <h2 class="text-xl font-bold mb-4">Choisissez un service</h2>
+
+    <ul class="space-y-3">
+      @for( service of services ; track service ){
+        <li>
+          <button
+          (click)="selectService.emit(service)"
+          class="w-full text-left p-3 rounded-xl border hover:bg-purple-100">
+          {{ service }}
+        </button>
+      </li>
+    }
+    </ul>
+
+    <button (click)="close.emit()" class="mt-5 text-sm text-gray-500 underline">
+      Fermer
+    </button>
+
+  </div>
+</div>
+}

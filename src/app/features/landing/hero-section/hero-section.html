@@ -1,0 +1,53 @@
+<section class="bg-purple-400 text-white text-center py-16 px-5 rounded-2xl max-w-4xl mx-auto mt-10">
+
+  <!-- Titre -->
+  <h1 class="text-3xl md:text-5xl font-serif font-medium leading-tight mb-10">
+    Trouver les bons <span class="text-blue-600 italic">Prestataire</span><br>
+    pour tous vos projets
+  </h1>
+
+  <!-- Champ de recherche -->
+ <div class="flex justify-center items-center mb-10 w-full max-w-xl mx-auto " (click)="toggleServiceModal(true)">
+  <button
+
+    class="w-full text-left px-4 py-3 bg-white text-gray-900 rounded-l-xl outline-none">
+    Que cherchez-vous ? Par exemple : Applications mobiles
+  </button>
+
+  <button
+    class="bg-purple-600 p-3 rounded-r-xl text-white hover:bg-blue-600">
+    <lucide-angular [img]="icon"></lucide-angular>
+  </button>
+</div>
+
+  <!-- Liste des avantages -->
+  <div class="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-8 text-sm md:text-base font-semibold text-black">
+
+    <div class="flex items-center gap-2 text-white">
+      <span>200.000 francophones sur la plateforme</span>
+    </div>
+
+    <div class="flex items-center gap-2 text-white">
+      <span>Une assistance 24h/24 et 7j/7</span>
+    </div>
+
+    <div class="flex items-center gap-2 text-white">
+      <span>Paiement sécurisé</span>
+    </div>
+
+  </div>
+
+</section>
+<app-service
+ [open]="isServiceModalOpen"
+ (close)="toggleServiceModal(false)"
+ (selectService)="onServiceChosen($event)">
+</app-service>
+
+<app-city [open]="isCityModalOpen"
+ (close)="toggleCityModal(false)"
+ (citySelected)="onCityChosen($event)"  [serviceName]="nameService"
+ (retour)="backToServiceModal()" ></app-city>
+
+
+
