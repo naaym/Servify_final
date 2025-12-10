@@ -72,3 +72,5 @@ The application starts on port `8084` with an in-memory H2 database enabled for 
 - `POST /api/auth/login` – authenticate clients and providers. Returns `access_token`, `id`, `role`, `status`, and `message` for routing the Angular app.
 - `POST /api/clients/register` – JSON payload to register a client.
 - `POST /api/providers/register` – `multipart/form-data` payload to register a provider with CIN, CV, and diploma file uploads. Providers start in `PENDING` status.
+
+CORS is enabled for `http://localhost:4200` by default. Update `app.cors.allowed-origins` in `backend/src/main/resources/application.properties` to allow additional front-end hosts during development.
