@@ -57,3 +57,36 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Backend (Spring Boot)
+
+The `/backend` directory contains a Spring Boot monolith structured by feature (e.g., `client`, `provider`). To run it locally:
+
+```bash
+cd backend
+mvn spring-boot:run
+```
+
+The application starts on port `8084` and uses a MySQL database named `servify`. Before running the backend, create the database and a user (defaults below) or export environment variables to override the connection:
+
+```sql
+CREATE DATABASE servify;
+CREATE USER 'root'@'localhost' IDENTIFIED BY 'root';
+GRANT ALL PRIVILEGES ON servify.* TO 'root'@'localhost';
+```
+
+Connection defaults (override with `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, and `MYSQL_PASSWORD`):
+
+- URL: `jdbc:mysql://localhost:3306/servify?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC`
+- Username: `root`
+- Password: `root`
+
+Key endpoints:
+
+- `POST /api/auth/login` – authenticate clients and providers. Returns `access_token`, `id`, `role`, `status`, and `message` for routing the Angular app.
+- `POST /api/clients/register` – JSON payload to register a client.
+- `POST /api/providers/register` – `multipart/form-data` payload to register a provider with CIN, CV, and diploma file uploads. Providers start in `PENDING` status.
+
+CORS is enabled for `http://localhost:4200` by default. Update `app.cors.allowed-origins` in `backend/src/main/resources/application.properties` to allow additional front-end hosts during development.
+
+Multipart uploads are limited to 20 MB per file (60 MB per request) by default. Adjust `spring.servlet.multipart.max-file-size` and `spring.servlet.multipart.max-request-size` in `application.properties` if your documents are larger.

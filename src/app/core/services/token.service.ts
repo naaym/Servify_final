@@ -5,20 +5,30 @@ import { jwtDecode } from 'jwt-decode';
 @Injectable({ providedIn: 'root' })
 export class TokenService {
   private tokenKey = STORAGE.ACCESS_TOKEN;
+  private userIdKey = STORAGE.USER_ID;
 
 
   saveAccessToken(token: string) {
     localStorage.setItem(this.tokenKey, token);
   }
 
+  saveUserId(id: number) {
+    localStorage.setItem(this.userIdKey, id.toString());
+  }
+
 
   clearTokens() {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userIdKey);
   }
 
 
   getAccessToken(): string | null {
     return localStorage.getItem(this.tokenKey);
+  }
+
+  getUserId(): string | null {
+    return localStorage.getItem(this.userIdKey);
   }
 
 

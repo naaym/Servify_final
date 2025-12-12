@@ -10,7 +10,7 @@ import { Http } from '../../../core/api/http';
 export class ClientSignUpService {
   private readonly http=inject(Http);
   register(data:ClientSignUpRequest){
-  return this.http.post<ClientSignUpResponse>(`${API_ENDPOINTS.CLIENT.BASE}${API_ENDPOINTS.CLIENT.REGISTER}`,data)
+  return this.http.post<ClientSignUpResponse>(API_ENDPOINTS.CLIENT.REGISTER,data)
 
 
 }}

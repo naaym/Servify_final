@@ -1,22 +1,19 @@
 export const API_ENDPOINTS = {
-  BASE: 'http://localhost:8084/api/',
+  BASE: 'http://localhost:8084/api',
   AUTH: {
-    LOGIN: 'clients/login',
+    LOGIN: 'auth/login',
   },
 
   CLIENT: {
-    BASE: 'clients/',
-    BY_ID: (id: number) => `clients/requests/${id}`,
-    REGISTER: 'register',
+    REGISTER: 'clients/register',
 
   },
 
   PROVIDER: {
-    BASE: 'providers',
-    REGISTER: 'register',
-    SEARCH:'search',
-    BY_ID:(id:number)=>`/${id}`,
-    CHECK:'check'
+    REGISTER: 'providers/register',
+    SEARCH: 'providers/search',
+    BY_ID: (id: number) => `providers/${id}`,
+    CHECK: 'providers/check'
   },
   BOOKING:{
     BASE:'bookings',

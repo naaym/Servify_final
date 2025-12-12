@@ -6,38 +6,35 @@ import { API_ENDPOINTS } from './endpoints';
   providedIn: 'root'
 })
 export class Http {
-  BASE=API_ENDPOINTS.BASE;
-  http=inject(HttpClient);
+  BASE = API_ENDPOINTS.BASE;
+  http = inject(HttpClient);
 
-
-  post<T>(endpoint : string ,body:any){
-    return this.http.post<T>(`${this.BASE}${endpoint}`,body);
-  }
-  get<T>(endpoint:string,options?:any){
-    return this.http.get<T>(`${this.BASE}${endpoint}`,{params:options})
+  private buildUrl(endpoint: string): string {
+    const normalized = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
+    return `${this.BASE}/${normalized}`;
   }
 
-
-  getAll<T>(endpoint:string){
-    return this.http.get<T[]>(`${this.BASE}/${endpoint}`);
-
+  post<T>(endpoint: string, body: any) {
+    return this.http.post<T>(this.buildUrl(endpoint), body);
   }
 
-
-  getOne<T>(endpoint:string,id:number){
-    return this.http.get<T>(`${this.BASE}${endpoint}/${id}`)
+  get<T>(endpoint: string, options?: any) {
+    return this.http.get<T>(this.buildUrl(endpoint), { params: options });
   }
 
-
-  put<T>(endpoint: string, id:  number, body: any) {
-    return this.http.put<T>(`${this.BASE}/${endpoint}/${id}`, body);
+  getAll<T>(endpoint: string) {
+    return this.http.get<T[]>(this.buildUrl(endpoint));
   }
 
-
-  delete<T>(endpoint:string,id:number){
-    return this.http.delete<T>(`${this.BASE}/${endpoint}/${id}`)
+  getOne<T>(endpoint: string, id: number) {
+    return this.http.get<T>(this.buildUrl(`${endpoint}/${id}`));
   }
 
+  put<T>(endpoint: string, id: number, body: any) {
+    return this.http.put<T>(this.buildUrl(`${endpoint}/${id}`), body);
+  }
 
-
+  delete<T>(endpoint: string, id: number) {
+    return this.http.delete<T>(this.buildUrl(`${endpoint}/${id}`));
+  }
 }

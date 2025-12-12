@@ -5,7 +5,7 @@ import { API_ENDPOINTS } from "../../../core/api/endpoints";
 import { catchError, throwError } from "rxjs";
 
 @Injectable({providedIn:"root"})
-export class providerSignUpService{
+export class ProviderSignUpService{
 
 private readonly http=inject(Http);
 
@@ -21,10 +21,10 @@ signUp(data:ProviderSignUpRequest){
     formData.append('delegation', data.delegation);
     formData.append('phone', data.phone);
 
-    formData.append('cin', data.cin);
-    formData.append('cv', data.cv);
-    formData.append('diplome', data.diplome);
- return this.http.post<ProviderSignUpResponse>(`${API_ENDPOINTS.PROVIDER.BASE}${API_ENDPOINTS.PROVIDER.REGISTER}`,formData).
+    formData.append('cin', data.cin, data.cin.name);
+    formData.append('cv', data.cv, data.cv.name);
+    formData.append('diplome', data.diplome, data.diplome.name);
+ return this.http.post<ProviderSignUpResponse>(API_ENDPOINTS.PROVIDER.REGISTER,formData).
   pipe(catchError((err)=>{const normalized={message:err.message};
   return throwError(()=>normalized)}))
 }
