@@ -3,6 +3,7 @@ package com.servify.provider.mapper;
 import com.servify.provider.dto.ProviderRegistrationRequest;
 import com.servify.provider.model.ProviderEntity;
 import com.servify.provider.model.ProviderStatus;
+import com.servify.user.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,8 @@ public  class ProviderMapperImpl implements ProviderMapper {
         providerEntity.setCin(request.getCin());
         providerEntity.setCv(request.getCv());
         providerEntity.setDiplome(request.getDiplome());
+      providerEntity.setRole(Role.PROVIDER);
+
         return providerEntity;
     }
 

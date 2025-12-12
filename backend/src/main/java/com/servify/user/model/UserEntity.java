@@ -39,8 +39,7 @@ public  abstract class UserEntity implements UserDetails {
 
   @Column(nullable = false)
   private String governorate;
-  @Column(nullable = false)
-  private Integer age;
+
   @Column(nullable = false, updatable = false)
   private Instant createdAt;
 

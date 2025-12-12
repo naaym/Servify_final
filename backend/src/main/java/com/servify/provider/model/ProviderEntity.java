@@ -5,11 +5,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +26,7 @@ public class ProviderEntity extends UserEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ProviderStatus status;
+    private int age;
 
 
     private String cin;
