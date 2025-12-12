@@ -8,5 +8,5 @@ export interface ClientSignUpRequest {
 }
 export interface ClientSignUpResponse {
 
- message:string;
+ clientId:number;
 }

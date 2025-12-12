@@ -10,29 +10,31 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
 
       const normalized = {
-        message: mapStatusToMessage(error.status),
+        message: mapStatusToMessage(error.status , error.error),
         status:error.status,
         url:error.url,
-        technicalMessage:error.message,
-
       };
       messageservice.show("error",normalized.message)
 
       return throwError(() => normalized);
+
     })
   );
 };
 
-function mapStatusToMessage(status: number): string {
+function mapStatusToMessage(status: number, message : string): string {
+
   switch (status) {
     case 0:
-      return "Connexion impossible. Vérifiez votre réseau.";
+      return `${message}`;
     case 404:
-      return "Service temporairement indisponible.";
+      return `${message}`;
     case 500:
-      return "Un problème interne est survenu.";
+      return `${message}`;
+    case 400:
+      return `${message}`;
     default:
-      return "Une erreur est survenue. Veuillez réessayer.";
+      return `${message}`;
   }
 }
 

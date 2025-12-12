@@ -9,22 +9,21 @@ import { Router } from '@angular/router';
 })
 export class AccountReview implements OnInit {
   router = inject(Router);
-  id!:number;
-  status!:string;
-  message!:string;
+  id!: number;
+  status!: string;
+
   ngOnInit(): void {
+    const data = history.state;// 7lowa de plus persistante si je fais refresh 
 
-    const nav = this.router.getCurrentNavigation();
-   const data = nav?.extras.state;
-
-  if (data) {
-     this.id = data['id'];
-    this.status = data['status'];
-  }
-  }
-  toHome(){
-    this.router.navigate(['/'])
+    if (data && data.id) {
+      this.id = data.id;
+      this.status = data.status;
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 
-
+  toHome() {
+    this.router.navigate(['/']);
+  }
 }

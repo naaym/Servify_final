@@ -2,6 +2,7 @@ package com.servify.client.controller;
 
 import com.servify.client.dto.ClientSignUpRequest;
 import com.servify.client.dto.ClientSignUpResponse;
+import com.servify.client.service.ClientService;
 import com.servify.client.service.ClientServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/clients")
 public class ClientController {
 
-    private final ClientServiceImpl clientServiceImpl;
+    private final ClientService clientService;
 
     @PostMapping("/register")
     public ResponseEntity<ClientSignUpResponse> register(@Valid @RequestBody ClientSignUpRequest request) {
-        ClientSignUpResponse response = clientServiceImpl.register(request);
+        ClientSignUpResponse response = clientService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
