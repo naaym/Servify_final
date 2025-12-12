@@ -111,7 +111,7 @@ export class Provider {
     this.providersignupservice
       .signUp(this.data)
       .subscribe({
-        next: (res) =>{ this.showMessage.show('info', res.message)
+        next: (res) =>{ this.showMessage.show('info', "Provider registration submitted for review")
 
           this.router.navigate(['/providers/account-review'], { state: { id: res.providerId, status: res.status } })
           ;

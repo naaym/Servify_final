@@ -23,8 +23,7 @@ export const logInterceptor: HttpInterceptorFn = (req, next) => {
           "color: #F44336",
           `url: ${error.url}\n
           status: ${error.status}\n
-          technicalMessage: ${error.technicalMessage} \n
-          message:${error.message} `
+          technicalMessage: ${error.message} \n `
         );
       }
     })

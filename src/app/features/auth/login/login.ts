@@ -42,7 +42,7 @@ export class Login {
               this.showmessage.show('error', val.message);
             }
             if (val.status === 'PENDING') {
-              this.router.navigate(['/providers/pending']);
+              this.router.navigate(['/providers/account-review']);
               this.showmessage.show('info', val.message);
             }
             break;

@@ -41,11 +41,13 @@ export class Client {
     }
     console.log("form submitted")
      const payload = this.form.getRawValue()
-     this.clientsignupservice.register(payload).subscribe({next:(value)=>{this.showmessage.show("success",value.message)
+     this.clientsignupservice.register(payload).subscribe({next:(value)=>{this.showmessage.show("success","Register Success")
 
       this.router.navigate(["/login"]);
      },
-      error:err=>this.showmessage.show('error',err.message)})
+      error:err=>{this.showmessage.show('error',err.message);
+        this.router.navigate(["/login"]);
+      }})
 
   }
 
