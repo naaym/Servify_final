@@ -16,9 +16,13 @@ import com.servify.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 import java.util.Optional;
+import com.servify.user.enums.Role;
 
 @Service
 @Transactional
@@ -81,13 +85,25 @@ public class AdminServiceImpl implements AdminService {
     @Transactional(readOnly = true)
     public AdminDashboardStats getDashboardStats() {
         AdminDashboardStats stats = new AdminDashboardStats();
-        stats.setUsers(userRepository.count());
-        stats.setProviders(providerRepository.count());
-        stats.setClients(clientRepository.count());
+        long providerCount = providerRepository.count();
+        long clientCount = clientRepository.count();
+        long adminCount = adminRepository.count();
+
+        stats.setProviders(providerCount);
+        stats.setClients(clientCount);
         stats.setServices(0L);
         stats.setPendingProviders(providerRepository.countByStatus(ProviderStatus.PENDING));
         stats.setAcceptedProviders(providerRepository.countByStatus(ProviderStatus.ACCEPTED));
         stats.setRejectedProviders(providerRepository.countByStatus(ProviderStatus.REJECTED));
+
+        Role currentRole = resolveCurrentUserRole();
+        if (currentRole == Role.SUPER_ADMIN) {
+            stats.setUsers(providerCount + clientCount + adminCount);
+        } else if (currentRole == Role.ADMIN) {
+            stats.setUsers(providerCount + clientCount);
+        } else {
+            stats.setUsers(userRepository.count());
+        }
         return stats;
     }
 
@@ -115,5 +131,24 @@ public class AdminServiceImpl implements AdminService {
         if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("Email already used: " + email);
         }
+    }
+
+    private Role resolveCurrentUserRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        for (GrantedAuthority authority : authentication.getAuthorities()) {
+            String name = authority.getAuthority();
+            if (name != null && name.startsWith("ROLE_")) {
+                try {
+                    return Role.valueOf(name.substring("ROLE_".length()));
+                } catch (IllegalArgumentException ignored) {
+                    // continue
+                }
+            }
+        }
+        return null;
     }
 }
