@@ -1,17 +1,21 @@
 import { Component, inject, input } from '@angular/core';
 import { Logo } from '../../../../../shared/logo/logo';
 import { ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
-import { passMatch,} from '../../../../../shared/validators/pass-match.validator';
-import { isMissingFile} from '../../../../../shared/validators/filevalidation.validator';
+import { passMatch } from '../../../../../shared/validators/pass-match.validator';
+import { isMissingFile } from '../../../../../shared/validators/filevalidation.validator';
 import { ProviderSignUpService } from '../../../services/provider-signup.service';
 import { ProviderSignUpRequest } from '../../../models/provider-signup.model';
 import { ShowMessageService } from '../../../../../shared/services/showmessage.service';
 import { Router } from '@angular/router';
-import { ArrowBigLeft, ArrowBigRight, LucideAngularModule } from 'lucide-angular';
+import {
+  ArrowBigLeft,
+  ArrowBigRight,
+  LucideAngularModule,
+} from 'lucide-angular';
 
 @Component({
   selector: 'app-prestataire',
-  imports: [Logo, ReactiveFormsModule,LucideAngularModule],
+  imports: [Logo, ReactiveFormsModule, LucideAngularModule],
   templateUrl: './provider.html',
   styleUrl: './prestataire.scss',
 })
@@ -20,15 +24,15 @@ export class Provider {
   private readonly providersignupservice = inject(ProviderSignUpService);
   private readonly showMessage = inject(ShowMessageService);
   private readonly router = inject(Router);
-  arrowr=ArrowBigRight
-  arrowl=ArrowBigLeft
-  step:number=1
-   nextStep(){
-    this.step++
-   }
-   backStep(){
-    this.step--
-   }
+  arrowr = ArrowBigRight;
+  arrowl = ArrowBigLeft;
+  step: number = 1;
+  nextStep() {
+    this.step++;
+  }
+  backStep() {
+    this.step--;
+  }
   form = this.fb.nonNullable.group(
     {
       name: ['', Validators.required],
@@ -43,8 +47,8 @@ export class Provider {
       governorate: ['', Validators.required],
       delegation: ['', Validators.required],
       age: ['', [Validators.required, Validators.pattern('^\\d+$')]],
-    },{ validators: [passMatch] }
-
+    },
+    { validators: [passMatch] }
   );
 
   isValid(control: string): boolean {
@@ -58,30 +62,30 @@ export class Provider {
   maxSize = 5 * 1024 * 1024; // 5MB
 
   onFileSelected(event: Event, controlName: string) {
-  const input = event.target as HTMLInputElement;
-  const files = input.files;
+    const input = event.target as HTMLInputElement;
+    const files = input.files;
 
-  if (!files || files.length === 0) return;
+    if (!files || files.length === 0) return;
 
-  const file = files[0];
+    const file = files[0];
 
-  // Vérifie l'extension PDF
-  if (!this.allowedTypes.includes(file.type)) {
-    alert("Only PDF files are allowed");
-    this.form.patchValue({ [controlName]: null });
-    return;
+    // Vérifie l'extension PDF
+    if (!this.allowedTypes.includes(file.type)) {
+      alert('Only PDF files are allowed');
+      this.form.patchValue({ [controlName]: null });
+      return;
+    }
+
+    // Vérifie la taille (5MB)
+    if (file.size > this.maxSize) {
+      alert('File must be less than 5MB');
+      this.form.patchValue({ [controlName]: null }); // ← SAFE RESET
+      return;
+    }
+
+    // mise à jour du form control
+    this.form.patchValue({ [controlName]: file });
   }
-
-  // Vérifie la taille (5MB)
-  if (file.size > this.maxSize) {
-    alert("File must be less than 5MB");
-    this.form.patchValue({ [controlName]: null }); // ← SAFE RESET
-    return;
-  }
-
-  // mise à jour du form control
-  this.form.patchValue({ [controlName]: file });
-}
   //---------------------------------------------------------------------------
 
   private buildRequest(): ProviderSignUpRequest {
@@ -103,22 +107,20 @@ export class Provider {
   onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      alert("Some fields are wrongs ");
+      alert('Some fields are wrongs ');
       return;
     }
     console.log('form submitted ');
     this.data = this.buildRequest();
-    this.providersignupservice
-      .signUp(this.data)
-      .subscribe({
-        next: (res) =>{ this.showMessage.show('info', "Provider registration submitted for review")
-
-          this.router.navigate(['/providers/account-review'], { state: { id: res.providerId, status: res.status } })
-          ;
-        },
-        error: err => {
-          this.showMessage.show('error', err.message  );
-    } });
-
+    this.providersignupservice.signUp(this.data).subscribe({
+      next: (res) => {
+        this.router.navigate(['/providers/account-review'], {
+          state: { id: res.providerId, status: res.status },
+        });
+      },
+      error: (err) => {
+        this.showMessage.show('error', err.message);
+      },
+    });
   }
 }

@@ -15,7 +15,7 @@ public class ProviderResponse {
     private String phone;
     private String governorate;
     private String delegation;
-    private Integer age;
+    private int age;
     private ProviderStatus status;
     private Instant createdAt;
 

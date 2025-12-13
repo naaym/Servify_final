@@ -27,7 +27,7 @@ public class ProviderServiceImpl implements ProviderService{
         ProviderEntity savedEntity = providerMapper.toEntity(request);
 
         ProviderEntity saved = providerRepository.save(savedEntity);
-        return new ProviderRegistrationResponse(saved.getId(), saved.getStatus());
+        return new ProviderRegistrationResponse(saved.getUserId(), saved.getStatus());
     }
 
     private void ensureEmailIsAvailable(String email) {

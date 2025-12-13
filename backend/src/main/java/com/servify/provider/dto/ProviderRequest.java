@@ -39,7 +39,7 @@ public class ProviderRequest {
 
     @NotNull
     @Min(18)
-    private Integer age;
+    private int age;
 
 
 }

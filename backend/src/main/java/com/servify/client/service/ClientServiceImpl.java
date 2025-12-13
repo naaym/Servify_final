@@ -23,7 +23,7 @@ public class ClientServiceImpl implements ClientService{
     ensureEmailIsAvailable(request.getEmail());
     ClientEntity clientEntity = clientMapper.toEntity(request);
     ClientEntity saved = clientRepository.save(clientEntity);
-    return new ClientSignUpResponse(saved.getId());
+    return new ClientSignUpResponse(saved.getUserId());
   }
 
 

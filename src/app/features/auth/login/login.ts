@@ -33,17 +33,24 @@ export class Login {
             break;
 
           case 'PROVIDER':
-            if (val.status === 'ACCEPTED') {
-              this.router.navigate(['/providers/dashboard']);
-              this.showmessage.show('success', val.message);
-            }
-            if (val.status === 'REJECTED') {
-              this.router.navigate(['/providers/rejected']);
-              this.showmessage.show('error', val.message);
-            }
-            if (val.status === 'PENDING') {
-              this.router.navigate(['/providers/account-review']);
-              this.showmessage.show('info', val.message);
+            switch (val.status) {
+              case 'ACCEPTED':
+                this.showmessage.show('success', val.message);
+                this.router.navigate(['/providers/dashboard']);
+
+                break;
+
+              case 'REJECTED':
+                this.showmessage.show('error', val.message);
+                this.router.navigate(['/providers/rejected']);
+                break;
+
+              case 'PENDING':
+               this.router.navigate(['/providers/account-review'], { state: { id: val.id, status: val.status } })
+
+
+
+                break;
             }
             break;
 
@@ -54,7 +61,8 @@ export class Login {
           default:
             this.router.navigate(['/']);
         }
-      },error:err=>this.showmessage.show('error',err.message)
+      },
+      error: (err) => this.showmessage.show('error', err.message),
     });
   }
 

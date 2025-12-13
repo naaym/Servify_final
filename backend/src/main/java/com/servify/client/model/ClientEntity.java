@@ -1,5 +1,6 @@
 package com.servify.client.model;
 
+import com.servify.user.model.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,34 +17,6 @@ import java.time.Instant;
 @Table(name = "clients")
 @Getter
 @Setter
-public class ClientEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false)
-    private String passwordHash;
-
-    @Column(nullable = false)
-    private String phone;
-
-    @Column(nullable = false)
-    private String governorate;
-
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt;
-
-    @PrePersist
-    void onCreate() {
-        this.createdAt = Instant.now();
-    }
-
+public class ClientEntity extends UserEntity {
 
 }

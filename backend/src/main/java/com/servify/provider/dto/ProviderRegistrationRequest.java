@@ -18,7 +18,7 @@ public class ProviderRegistrationRequest {
     private String phone;
     private String governorate;
     private String delegation;
-    private Integer age;
+    private int age;
     private String  cin;
     private String cv;
     private String diplome;
