@@ -32,6 +32,7 @@ export class DashboardAdmin implements OnInit {
   admins: AdminResponse[] = [];
   adminForm: AdminRequest = { name: '', email: '', phone: '', governorate: '', password: '' };
   editingAdminId?: number;
+  showAdminModal = false;
 
   ngOnInit() {
     this.isSuperAdmin = this.tokenService.hasRole('SUPER_ADMIN');
@@ -66,6 +67,7 @@ export class DashboardAdmin implements OnInit {
     this.activeSection = section;
     this.error = undefined;
     this.adminError = undefined;
+    this.showAdminModal = false;
 
     if (section === 'providers') {
       this.loadProviderRequests(this.selectedStatus);
@@ -126,11 +128,14 @@ export class DashboardAdmin implements OnInit {
   }
 
   startCreateAdmin() {
+    this.adminError = undefined;
     this.editingAdminId = undefined;
     this.adminForm = { name: '', email: '', phone: '', governorate: '', password: '' };
+    this.showAdminModal = true;
   }
 
   startEditAdmin(admin: AdminResponse) {
+    this.adminError = undefined;
     this.editingAdminId = admin.id;
     this.adminForm = {
       name: admin.name,
@@ -139,6 +144,11 @@ export class DashboardAdmin implements OnInit {
       governorate: admin.governorate,
       password: '',
     };
+    this.showAdminModal = true;
+  }
+
+  closeAdminModal() {
+    this.showAdminModal = false;
   }
 
   saveAdmin() {
@@ -165,6 +175,7 @@ export class DashboardAdmin implements OnInit {
     request$.subscribe({
       next: () => {
         this.startCreateAdmin();
+        this.closeAdminModal();
         this.loadAdmins();
         this.loadDashboardStats();
       },

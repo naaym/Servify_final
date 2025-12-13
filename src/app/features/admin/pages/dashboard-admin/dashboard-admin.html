@@ -80,111 +80,71 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
-      <div class="xl:col-span-2 bg-[#12121A] p-6 rounded-2xl shadow space-y-4 border border-gray-800">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <div>
-            <h2 class="text-lg font-semibold">Liste des administrateurs</h2>
-            <p class="text-gray-400 text-sm">Créer, mettre à jour ou supprimer des comptes admin.</p>
-          </div>
-          <button
-            class="px-4 py-2 rounded-lg border border-purple-600 text-purple-200 hover:bg-purple-700/30"
-            (click)="startCreateAdmin()"
-          >
-            Nouvel administrateur
-          </button>
+    <div class="bg-[#12121A] p-6 rounded-2xl shadow space-y-4 border border-gray-800 mt-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-semibold">Liste des administrateurs</h2>
+          <p class="text-gray-400 text-sm">Créer, mettre à jour ou supprimer des comptes admin.</p>
         </div>
-
-        @if (adminError) {
-          <div class="bg-red-900/30 text-red-200 px-4 py-3 rounded-lg border border-red-800">{{ adminError }}</div>
-        }
-
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-800 text-sm">
-            <thead>
-              <tr class="text-left text-gray-400">
-                <th class="py-3">Nom</th>
-                <th>Email</th>
-                <th>Téléphone</th>
-                <th>Gouvernorat</th>
-                <th class="text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-800">
-              @if (loadingAdmins) {
-                <tr><td colspan="5" class="py-4 text-center text-gray-400">Chargement...</td></tr>
-              }
-              @else if (!admins.length) {
-                <tr><td colspan="5" class="py-4 text-center text-gray-400">Aucun administrateur pour le moment.</td></tr>
-              }
-              @else {
-                @for (admin of admins; track admin.id) {
-                  <tr class="hover:bg-[#1D1D26]">
-                    <td class="py-3">
-                      <div class="font-semibold">{{ admin.name }}</div>
-                      <div class="text-xs text-gray-500">Créé le {{ admin.createdAt | date:'shortDate' }}</div>
-                    </td>
-                    <td>{{ admin.email }}</td>
-                    <td>{{ admin.phone }}</td>
-                    <td>{{ admin.governorate }}</td>
-                    <td class="text-right space-x-2">
-                      <button
-                        class="px-3 py-2 rounded-lg border border-blue-500 text-blue-200 hover:bg-blue-600/20"
-                        (click)="startEditAdmin(admin)"
-                      >
-                        Modifier
-                      </button>
-                      <button
-                        class="px-3 py-2 rounded-lg border border-red-600 text-red-300 hover:bg-red-600/20"
-                        (click)="deleteAdmin(admin.id)"
-                      >
-                        Supprimer
-                      </button>
-                    </td>
-                  </tr>
-                }
-              }
-            </tbody>
-          </table>
-        </div>
+        <button
+          class="px-4 py-2 rounded-lg border border-purple-600 text-purple-200 hover:bg-purple-700/30"
+          (click)="startCreateAdmin()"
+        >
+          Nouvel administrateur
+        </button>
       </div>
 
-      <div class="bg-[#12121A] p-6 rounded-2xl shadow space-y-4 border border-gray-800">
-        <h3 class="text-lg font-semibold">@if (editingAdminId) {Éditer un admin} @else {Créer un admin}</h3>
-        <p class="text-gray-400 text-sm">Le mot de passe est requis lors de la création et optionnel lors d'une mise à jour.</p>
-        <div class="space-y-3">
-          <label class="block text-sm text-gray-300">Nom
-            <input class="mt-1 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-2" [(ngModel)]="adminForm.name" />
-          </label>
-          <label class="block text-sm text-gray-300">Email
-            <input type="email" class="mt-1 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-2" [(ngModel)]="adminForm.email" />
-          </label>
-          <label class="block text-sm text-gray-300">Téléphone
-            <input class="mt-1 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-2" [(ngModel)]="adminForm.phone" />
-          </label>
-          <label class="block text-sm text-gray-300">Gouvernorat
-            <input class="mt-1 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-2" [(ngModel)]="adminForm.governorate" />
-          </label>
-          <label class="block text-sm text-gray-300">Mot de passe
-            <input type="password" class="mt-1 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-2" [(ngModel)]="adminForm.password" placeholder="8 caractères minimum" />
-          </label>
-        </div>
-        <div class="flex gap-3">
-          <button
-            class="px-4 py-2 rounded-lg border border-purple-600 text-purple-200 hover:bg-purple-700/30"
-            (click)="saveAdmin()"
-            [disabled]="loadingAdmins"
-          >
-            @if (editingAdminId) {Mettre à jour} @else {Créer}
-          </button>
-          <button
-            class="px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:border-purple-400"
-            type="button"
-            (click)="startCreateAdmin()"
-          >
-            Réinitialiser
-          </button>
-        </div>
+      @if (adminError) {
+        <div class="bg-red-900/30 text-red-200 px-4 py-3 rounded-lg border border-red-800">{{ adminError }}</div>
+      }
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-800 text-sm">
+          <thead>
+            <tr class="text-left text-gray-400">
+              <th class="py-3">Nom</th>
+              <th>Email</th>
+              <th>Téléphone</th>
+              <th>Gouvernorat</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-800">
+            @if (loadingAdmins) {
+              <tr><td colspan="5" class="py-4 text-center text-gray-400">Chargement...</td></tr>
+            }
+            @else if (!admins.length) {
+              <tr><td colspan="5" class="py-4 text-center text-gray-400">Aucun administrateur pour le moment.</td></tr>
+            }
+            @else {
+              @for (admin of admins; track admin.id) {
+                <tr class="hover:bg-[#1D1D26]">
+                  <td class="py-3">
+                    <div class="font-semibold">{{ admin.name }}</div>
+                    <div class="text-xs text-gray-500">Créé le {{ admin.createdAt | date:'shortDate' }}</div>
+                  </td>
+                  <td>{{ admin.email }}</td>
+                  <td>{{ admin.phone }}</td>
+                  <td>{{ admin.governorate }}</td>
+                  <td class="text-right space-x-2">
+                    <button
+                      class="px-3 py-2 rounded-lg border border-blue-500 text-blue-200 hover:bg-blue-600/20"
+                      (click)="startEditAdmin(admin)"
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      class="px-3 py-2 rounded-lg border border-red-600 text-red-300 hover:bg-red-600/20"
+                      (click)="deleteAdmin(admin.id)"
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
       </div>
     </div>
   }
@@ -327,6 +287,53 @@
       </div>
     }
   </div>
+
+  @if (showAdminModal) {
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-30">
+      <div class="bg-[#12121A] rounded-2xl max-w-3xl w-full p-6 shadow-2xl border border-purple-800/40 relative">
+        <button class="absolute top-4 right-4 text-gray-400 hover:text-white" (click)="closeAdminModal()">✕</button>
+
+        <div class="space-y-1">
+          <p class="text-xs uppercase tracking-[0.2em] text-purple-300">Administration</p>
+          <h3 class="text-2xl font-semibold">@if (editingAdminId) {Éditer un admin} @else {Créer un admin}</h3>
+          <p class="text-gray-400 text-sm">Le mot de passe est requis lors de la création et optionnel lors d'une mise à jour.</p>
+        </div>
+
+        @if (adminError) {
+          <div class="bg-red-900/30 text-red-200 px-4 py-3 rounded-lg border border-red-800 mt-4">{{ adminError }}</div>
+        }
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+          <label class="block text-sm text-gray-300">Nom
+            <input class="mt-2 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-3 focus:border-purple-500" [(ngModel)]="adminForm.name" />
+          </label>
+          <label class="block text-sm text-gray-300">Email
+            <input type="email" class="mt-2 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-3 focus:border-purple-500" [(ngModel)]="adminForm.email" />
+          </label>
+          <label class="block text-sm text-gray-300">Téléphone
+            <input class="mt-2 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-3 focus:border-purple-500" [(ngModel)]="adminForm.phone" />
+          </label>
+          <label class="block text-sm text-gray-300">Gouvernorat
+            <input class="mt-2 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-3 focus:border-purple-500" [(ngModel)]="adminForm.governorate" />
+          </label>
+          <label class="block text-sm text-gray-300 md:col-span-2">Mot de passe
+            <input type="password" class="mt-2 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-3 focus:border-purple-500" [(ngModel)]="adminForm.password" placeholder="8 caractères minimum" />
+          </label>
+        </div>
+
+        <div class="flex justify-end gap-3 mt-6">
+          <button class="px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:border-purple-400" type="button" (click)="closeAdminModal()">Annuler</button>
+          <button
+            class="px-4 py-2 rounded-lg border border-purple-600 text-purple-200 hover:bg-purple-700/30"
+            (click)="saveAdmin()"
+            [disabled]="loadingAdmins"
+          >
+            @if (editingAdminId) {Mettre à jour} @else {Créer}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 
   @if (selectedProvider; as provider) {
     <div
