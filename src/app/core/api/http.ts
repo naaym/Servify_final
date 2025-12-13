@@ -34,6 +34,10 @@ export class Http {
     return this.http.put<T>(this.buildUrl(`${endpoint}/${id}`), body);
   }
 
+  patch<T>(endpoint: string, body: any) {
+    return this.http.patch<T>(this.buildUrl(endpoint), body);
+  }
+
   delete<T>(endpoint: string, id: number) {
     return this.http.delete<T>(this.buildUrl(`${endpoint}/${id}`));
   }

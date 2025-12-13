@@ -1,121 +1,165 @@
-<!-- Admin -->
-<!-- FULL PAGE -->
 <div class="min-h-screen bg-[#0D0D11] text-white flex">
   <aside-dashboard-admin></aside-dashboard-admin>
 
-  <!-- DASHBOARD CONTENT -->
   <div class="flex-1 ml-64 p-8 space-y-10">
-    <!-- HEADER -->
-    <div>
-      <h1 class="text-3xl font-bold">Admin Dashboard</h1>
-      <p class="text-gray-400">Welcome back admin</p>
+    <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 class="text-3xl font-bold">Admin Dashboard</h1>
+        <p class="text-gray-400">Gérez les demandes des prestataires et les comptes admin</p>
+      </div>
+      <div class="flex gap-3">
+        <button
+          class="px-4 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
+          (click)="refreshData()"
+        >
+          Rafraîchir
+        </button>
+      </div>
     </div>
 
-    <!-- TOP CARDS -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <card-dashboard-admin
-        title="Providers"
-        quantity="3"
+        title="Demandes fournisseurs"
+        [quantity]="overviewCounts.total.toString()"
       ></card-dashboard-admin>
-      <card-dashboard-admin title="Clients" quantity="0"></card-dashboard-admin>
       <card-dashboard-admin
-        title="Bookings Today"
-        quantity="0"
+        title="En attente"
+        [quantity]="overviewCounts.pending.toString()"
+      ></card-dashboard-admin>
+      <card-dashboard-admin
+        title="Validés"
+        [quantity]="overviewCounts.accepted.toString()"
       ></card-dashboard-admin>
     </div>
 
-    <!-- CHART + STATUS -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- BOOKINGS CHART -->
-       <div class="lg:col-span-2 bg-[#16161C] rounded-2xl p-6 shadow">
+      <div class="lg:col-span-2 bg-[#16161C] rounded-2xl p-6 shadow">
+        <chart-dashboard-admin title="Bookings Overview"></chart-dashboard-admin>
+      </div>
 
-         <chart-dashboard-admin title="Bookings Overview"></chart-dashboard-admin>
+      <div class="bg-[#16161C] p-6 rounded-2xl shadow space-y-2">
+        <h2 class="text-lg font-semibold">État des demandes</h2>
+        <p class="text-sm text-gray-400">Résumé rapide des demandes fournisseurs</p>
+        <div class="space-y-3 text-sm pt-2">
+          <div class="flex justify-between">
+            <span class="text-gray-400">En attente</span>
+            <span class="font-semibold text-yellow-400">{{ overviewCounts.pending }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Acceptées</span>
+            <span class="font-semibold text-green-400">{{ overviewCounts.accepted }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Rejetées</span>
+            <span class="font-semibold text-red-400">{{ overviewCounts.rejected }}</span>
+          </div>
         </div>
-
-
-      <!-- STATUS BOX -->
-      <div class="bg-[#16161C] p-6 rounded-2xl shadow">
-        <h2 class="text-lg font-semibold mb-4">System Status</h2>
-
-        <ul class="space-y-3 text-sm">
-          <li class="flex justify-between">
-            <span class="text-gray-400">Bookings Today</span>
-            <span class="font-semibold">0</span>
-          </li>
-          <li class="flex justify-between">
-            <span class="text-gray-400">Pending Requests</span>
-            <span class="font-semibold text-yellow-400">0</span>
-          </li>
-          <li class="flex justify-between">
-            <span class="text-gray-400">Rejected</span>
-            <span class="font-semibold text-red-400">0</span>
-          </li>
-          <li class="flex justify-between">
-            <span class="text-gray-400">Active Categories</span>
-            <span class="font-semibold text-green-400">0</span>
-          </li>
-        </ul>
       </div>
     </div>
 
-    <!-- PROVIDERS TABLE -->
-    <div class="bg-[#16161C] p-6 rounded-2xl shadow">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-lg font-semibold">Latest Providers</h2>
+    <div class="bg-[#16161C] p-6 rounded-2xl shadow space-y-4">
+      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h2 class="text-lg font-semibold">Demandes de prestataires</h2>
+          <p class="text-gray-400 text-sm">
+            Consulter chaque dossier (CIN, CV, diplôme) et valider ou rejeter la demande.
+          </p>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <button
+            class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
+            [class.bg-purple-600]="selectedStatus === undefined"
+            (click)="loadProviderRequests()"
+          >
+            Tous
+          </button>
+          <button
+            class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
+            [class.bg-yellow-700/40]="selectedStatus === 'PENDING'"
+            (click)="loadProviderRequests('PENDING')"
+          >
+            En attente
+          </button>
+          <button
+            class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
+            [class.bg-green-700/40]="selectedStatus === 'ACCEPTED'"
+            (click)="loadProviderRequests('ACCEPTED')"
+          >
+            Acceptées
+          </button>
+          <button
+            class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
+            [class.bg-red-700/40]="selectedStatus === 'REJECTED'"
+            (click)="loadProviderRequests('REJECTED')"
+          >
+            Rejetées
+          </button>
+        </div>
       </div>
 
-      <div class="overflow-x-auto">
+      <div *ngIf="error" class="p-3 bg-red-900/50 text-red-200 rounded-lg">{{ error }}</div>
+      <div *ngIf="loading" class="text-gray-300">Chargement en cours...</div>
+      <div *ngIf="!loading && providerRequests.length === 0" class="text-gray-400 text-sm">
+        Aucune demande à afficher pour ce filtre.
+      </div>
+
+      <div class="overflow-x-auto" *ngIf="providerRequests.length > 0">
         <table class="w-full text-sm">
           <thead class="text-gray-400 border-b border-gray-700">
             <tr>
-              <th class="text-left py-3">Name</th>
-              <th class="text-left py-3">Phone</th>
-              <th class="text-left py-3">City</th>
-              <th class="text-left py-3">Status</th>
+              <th class="text-left py-3">Nom</th>
+              <th class="text-left py-3">Contact</th>
+              <th class="text-left py-3">Localisation</th>
+              <th class="text-left py-3">Documents</th>
+              <th class="text-left py-3">Statut</th>
               <th class="text-left py-3">Actions</th>
             </tr>
           </thead>
 
           <tbody class="divide-y divide-gray-800">
-            <tr class="hover:bg-[#1D1D26]">
-              <td class="py-4">Mohamed Ali</td>
-              <td>+216 55 555 555</td>
-              <td>Ariana</td>
+            <tr class="hover:bg-[#1D1D26]" *ngFor="let provider of providerRequests">
+              <td class="py-4">
+                <div class="font-semibold">{{ provider.name }}</div>
+                <div class="text-xs text-gray-400">Inscription {{ provider.createdAt | date:'shortDate' }}</div>
+              </td>
               <td>
-                <span class="px-3 py-1 bg-green-600/30 rounded text-green-400"
-                  >Approved</span
+                <div class="text-sm">{{ provider.email }}</div>
+                <div class="text-xs text-gray-400">{{ provider.phone }}</div>
+              </td>
+              <td>
+                <div class="text-sm">{{ provider.governorate }}</div>
+                <div class="text-xs text-gray-400">{{ provider.delegation }}</div>
+              </td>
+              <td class="space-y-1 text-xs">
+                <div class="text-gray-300">CIN: {{ provider.cin }}</div>
+                <div class="text-gray-300">CV: {{ provider.cv }}</div>
+                <div class="text-gray-300">Diplôme: {{ provider.diplome }}</div>
+              </td>
+              <td>
+                <span
+                  class="px-3 py-1 rounded text-xs"
+                  [ngClass]="{
+                    'bg-yellow-600/30 text-yellow-300': provider.status === 'PENDING',
+                    'bg-green-600/30 text-green-300': provider.status === 'ACCEPTED',
+                    'bg-red-600/30 text-red-300': provider.status === 'REJECTED'
+                  }"
                 >
+                  {{ provider.status }}
+                </span>
               </td>
-              <td>
-                <button class="text-purple-400 hover:underline">Edit</button>
-              </td>
-            </tr>
-
-            <tr class="hover:bg-[#1D1D26]">
-              <td class="py-4">Sami Youssef</td>
-              <td>+216 22 222 222</td>
-              <td>Tunis</td>
-              <td>
-                <span class="px-3 py-1 bg-yellow-600/30 rounded text-yellow-400"
-                  >Pending</span
+              <td class="flex gap-2 py-4">
+                <button
+                  class="px-3 py-2 rounded-lg border border-green-600 text-green-300 hover:bg-green-600/20"
+                  (click)="updateStatus(provider.id, 'ACCEPTED')"
                 >
-              </td>
-              <td>
-                <button class="text-purple-400 hover:underline">Edit</button>
-              </td>
-            </tr>
-
-            <tr class="hover:bg-[#1D1D26]">
-              <td class="py-4">Rami Ltaief</td>
-              <td>+216 99 999 999</td>
-              <td>Ben Arous</td>
-              <td>
-                <span class="px-3 py-1 bg-red-600/30 rounded text-red-400"
-                  >Rejected</span
+                  Accepter
+                </button>
+                <button
+                  class="px-3 py-2 rounded-lg border border-red-600 text-red-300 hover:bg-red-600/20"
+                  (click)="updateStatus(provider.id, 'REJECTED')"
                 >
-              </td>
-              <td>
-                <button class="text-purple-400 hover:underline">Edit</button>
+                  Rejeter
+                </button>
               </td>
             </tr>
           </tbody>

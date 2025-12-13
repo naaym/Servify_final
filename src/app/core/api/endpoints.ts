@@ -22,4 +22,10 @@ export const API_ENDPOINTS = {
     STATS:'stats'
 
   }
+  ,
+  ADMIN:{
+    BASE:'admins',
+    PROVIDER_REQUESTS:'admins/providers',
+    PROVIDER_STATUS:(id:number)=>`admins/providers/${id}/status`
+  }
 };
