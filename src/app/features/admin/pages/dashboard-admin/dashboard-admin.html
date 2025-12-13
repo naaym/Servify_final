@@ -1,11 +1,22 @@
 <div class="min-h-screen bg-[#0B0B10] text-white flex">
-  <aside-dashboard-admin [stats]="dashboardStats"></aside-dashboard-admin>
+  <aside-dashboard-admin
+    [stats]="dashboardStats"
+    [activeSection]="activeSection"
+    (sectionChange)="switchSection($event)"
+  ></aside-dashboard-admin>
 
   <div class="flex-1 ml-64 p-8 space-y-10">
     <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <div>
-        <h1 class="text-3xl font-bold">Espace Administrateur</h1>
-        <p class="text-gray-400">Pilotage des prestataires et suivi des dossiers en temps réel.</p>
+        <h1 class="text-3xl font-bold" *ngIf="activeSection === 'dashboard'">Espace Administrateur</h1>
+        <h1 class="text-3xl font-bold" *ngIf="activeSection === 'providers'">Prestataires</h1>
+        <p class="text-gray-400">
+          <ng-container [ngSwitch]="activeSection">
+            <span *ngSwitchCase="'dashboard'">Vue d'ensemble de l'application et des indicateurs clés.</span>
+            <span *ngSwitchCase="'providers'">Demandes, validations et statistiques dédiées aux prestataires.</span>
+            <span *ngSwitchDefault>Sélectionnez une section pour consulter les détails.</span>
+          </ng-container>
+        </p>
       </div>
       <div class="flex gap-3 flex-wrap">
         <button
@@ -17,199 +28,161 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
-      <div class="bg-gradient-to-br from-purple-700/20 via-purple-900/30 to-purple-700/10 rounded-2xl p-5 border border-purple-700/40 shadow-lg">
-        <p class="text-xs text-gray-400">Utilisateurs</p>
-        <div class="text-3xl font-bold mt-2">{{ dashboardStats?.users ?? 0 }}</div>
-      </div>
-      <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
-        <p class="text-xs text-gray-400">Prestataires</p>
-        <div class="text-3xl font-bold mt-2">{{ dashboardStats?.providers ?? 0 }}</div>
-      </div>
-      <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
-        <p class="text-xs text-gray-400">Clients</p>
-        <div class="text-3xl font-bold mt-2">{{ dashboardStats?.clients ?? 0 }}</div>
-      </div>
-      <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
-        <p class="text-xs text-gray-400">Services</p>
-        <div class="text-3xl font-bold mt-2">{{ dashboardStats?.services ?? 0 }}</div>
-      </div>
-      <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
-        <p class="text-xs text-gray-400">Prestataires en attente</p>
-        <div class="text-3xl font-bold mt-2 text-amber-300">{{ dashboardStats?.pendingProviders ?? 0 }}</div>
-      </div>
-    </div>
-
-    <div class="bg-[#12121A] rounded-2xl p-6 shadow space-y-6 border border-gray-800">
-      <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h2 class="text-lg font-semibold">Prestataires publiés</h2>
-          <p class="text-gray-400 text-sm">Tous les prestataires validés et visibles côté client.</p>
+    <ng-container *ngIf="activeSection === 'dashboard'">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div class="bg-gradient-to-br from-purple-700/20 via-purple-900/30 to-purple-700/10 rounded-2xl p-5 border border-purple-700/40 shadow-lg">
+          <p class="text-xs text-gray-400">Utilisateurs</p>
+          <div class="text-3xl font-bold mt-2">{{ dashboardStats?.users ?? 0 }}</div>
+        </div>
+        <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
+          <p class="text-xs text-gray-400">Prestataires</p>
+          <div class="text-3xl font-bold mt-2">{{ dashboardStats?.providers ?? 0 }}</div>
+        </div>
+        <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
+          <p class="text-xs text-gray-400">Clients</p>
+          <div class="text-3xl font-bold mt-2">{{ dashboardStats?.clients ?? 0 }}</div>
+        </div>
+        <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
+          <p class="text-xs text-gray-400">Services</p>
+          <div class="text-3xl font-bold mt-2">{{ dashboardStats?.services ?? 0 }}</div>
         </div>
       </div>
-      <div *ngIf="loadingPublished" class="text-gray-300">Chargement des prestataires publiés...</div>
-      <div *ngIf="!loadingPublished && publishedProviders.length === 0" class="text-gray-500 text-sm">
-        Aucun prestataire publié pour le moment.
-      </div>
-      <div class="overflow-x-auto" *ngIf="publishedProviders.length > 0">
-        <table class="w-full text-sm">
-          <thead class="text-gray-400 border-b border-gray-800">
-            <tr>
-              <th class="text-left py-3">Nom</th>
-              <th class="text-left py-3">Contact</th>
-              <th class="text-left py-3">Localisation</th>
-              <th class="text-left py-3">Documents</th>
-              <th class="text-left py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-800">
-            <tr class="hover:bg-[#1A1A24]" *ngFor="let provider of publishedProviders">
-              <td class="py-4">
-                <div class="font-semibold">{{ provider.name }}</div>
-                <div class="text-xs text-gray-400">Publié le {{ provider.createdAt | date:'shortDate' }}</div>
-              </td>
-              <td>
-                <div class="text-sm">{{ provider.email }}</div>
-                <div class="text-xs text-gray-400">{{ provider.phone }}</div>
-              </td>
-              <td>
-                <div class="text-sm">{{ provider.governorate }}</div>
-                <div class="text-xs text-gray-400">{{ provider.delegation }}</div>
-              </td>
-              <td class="space-y-1 text-xs text-gray-300">
-                <div>CIN: {{ provider.cin || '—' }}</div>
-                <div>CV: {{ provider.cv || '—' }}</div>
-                <div>Diplôme: {{ provider.diplome || '—' }}</div>
-              </td>
-              <td class="py-4">
-                <button
-                  class="px-3 py-2 rounded-lg border border-purple-500 text-purple-200 hover:bg-purple-600/20"
-                  (click)="viewApplication(provider)"
-                >
-                  Voir
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    </ng-container>
 
-    <div class="bg-[#12121A] p-6 rounded-2xl shadow space-y-4 border border-gray-800">
-      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h2 class="text-lg font-semibold">Demandes de prestataires</h2>
-          <p class="text-gray-400 text-sm">
-            Consulter chaque dossier (CIN, CV, diplôme) et valider ou rejeter la demande.
-          </p>
+    <ng-container *ngIf="activeSection === 'providers'">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div class="bg-gradient-to-br from-purple-700/20 via-purple-900/30 to-purple-700/10 rounded-2xl p-5 border border-purple-700/40 shadow-lg">
+          <p class="text-xs text-gray-400">Prestataires totaux</p>
+          <div class="text-3xl font-bold mt-2">{{ dashboardStats?.providers ?? 0 }}</div>
         </div>
-        <div class="flex gap-2 flex-wrap">
-          <button
-            class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
-            [class.bg-purple-600]="selectedStatus === undefined"
-            (click)="loadProviderRequests()"
-          >
-            Tous
-          </button>
-          <button
-            class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
-            [class.bg-yellow-700/40]="selectedStatus === 'PENDING'"
-            (click)="loadProviderRequests('PENDING')"
-          >
-            En attente
-          </button>
-          <button
-            class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
-            [class.bg-green-700/40]="selectedStatus === 'ACCEPTED'"
-            (click)="loadProviderRequests('ACCEPTED')"
-          >
-            Acceptées
-          </button>
-          <button
-            class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
-            [class.bg-red-700/40]="selectedStatus === 'REJECTED'"
-            (click)="loadProviderRequests('REJECTED')"
-          >
-            Rejetées
-          </button>
+        <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
+          <p class="text-xs text-gray-400">En attente</p>
+          <div class="text-3xl font-bold mt-2 text-amber-300">{{ dashboardStats?.pendingProviders ?? 0 }}</div>
+        </div>
+        <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
+          <p class="text-xs text-gray-400">Acceptés</p>
+          <div class="text-3xl font-bold mt-2 text-green-300">{{ dashboardStats?.acceptedProviders ?? 0 }}</div>
+        </div>
+        <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
+          <p class="text-xs text-gray-400">Rejetés</p>
+          <div class="text-3xl font-bold mt-2 text-red-300">{{ dashboardStats?.rejectedProviders ?? 0 }}</div>
         </div>
       </div>
 
-      <div *ngIf="error" class="p-3 bg-red-900/50 text-red-200 rounded-lg">{{ error }}</div>
-      <div *ngIf="loadingRequests" class="text-gray-300">Chargement en cours...</div>
-      <div *ngIf="!loadingRequests && providerRequests.length === 0" class="text-gray-400 text-sm">
-        Aucune demande à afficher pour ce filtre.
-      </div>
+      <div class="bg-[#12121A] p-6 rounded-2xl shadow space-y-4 border border-gray-800">
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 class="text-lg font-semibold">Demandes de prestataires</h2>
+            <p class="text-gray-400 text-sm">
+              Consulter chaque dossier (CIN, CV, diplôme) et valider ou rejeter la demande.
+            </p>
+          </div>
+          <div class="flex gap-2 flex-wrap">
+            <button
+              class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
+              [class.bg-purple-600]="selectedStatus === undefined"
+              (click)="loadProviderRequests()"
+            >
+              Tous
+            </button>
+            <button
+              class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
+              [class.bg-yellow-700/40]="selectedStatus === 'PENDING'"
+              (click)="loadProviderRequests('PENDING')"
+            >
+              En attente
+            </button>
+            <button
+              class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
+              [class.bg-green-700/30]="selectedStatus === 'ACCEPTED'"
+              (click)="loadProviderRequests('ACCEPTED')"
+            >
+              Acceptés
+            </button>
+            <button
+              class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
+              [class.bg-red-700/30]="selectedStatus === 'REJECTED'"
+              (click)="loadProviderRequests('REJECTED')"
+            >
+              Rejetés
+            </button>
+          </div>
+        </div>
+        <div *ngIf="loadingRequests" class="text-gray-300">Chargement des demandes en cours...</div>
+        <div *ngIf="!loadingRequests && providerRequests.length === 0" class="text-gray-500 text-sm">
+          Aucune demande pour ce filtre.
+        </div>
 
-      <div class="overflow-x-auto" *ngIf="providerRequests.length > 0">
-        <table class="w-full text-sm">
-          <thead class="text-gray-400 border-b border-gray-700">
-            <tr>
-              <th class="text-left py-3">Nom</th>
-              <th class="text-left py-3">Contact</th>
-              <th class="text-left py-3">Localisation</th>
-              <th class="text-left py-3">Documents</th>
-              <th class="text-left py-3">Statut</th>
-              <th class="text-left py-3">Actions</th>
-            </tr>
-          </thead>
+        <div class="overflow-x-auto" *ngIf="providerRequests.length > 0">
+          <table class="w-full text-sm">
+            <thead class="text-gray-400 border-b border-gray-800">
+              <tr>
+                <th class="text-left py-3">Nom</th>
+                <th class="text-left py-3">Contact</th>
+                <th class="text-left py-3">Localisation</th>
+                <th class="text-left py-3">Documents</th>
+                <th class="text-left py-3">Statut</th>
+                <th class="text-left py-3">Actions</th>
+              </tr>
+            </thead>
 
-          <tbody class="divide-y divide-gray-800">
-            <tr class="hover:bg-[#1D1D26]" *ngFor="let provider of providerRequests">
-              <td class="py-4">
-                <div class="font-semibold">{{ provider.name }}</div>
-                <div class="text-xs text-gray-400">Inscription {{ provider.createdAt | date:'shortDate' }}</div>
-              </td>
-              <td>
-                <div class="text-sm">{{ provider.email }}</div>
-                <div class="text-xs text-gray-400">{{ provider.phone }}</div>
-              </td>
-              <td>
-                <div class="text-sm">{{ provider.governorate }}</div>
-                <div class="text-xs text-gray-400">{{ provider.delegation }}</div>
-              </td>
-              <td class="space-y-1 text-xs">
-                <div class="text-gray-300">CIN: {{ provider.cin }}</div>
-                <div class="text-gray-300">CV: {{ provider.cv }}</div>
-                <div class="text-gray-300">Diplôme: {{ provider.diplome }}</div>
-              </td>
-              <td>
-                <span
-                  class="px-3 py-1 rounded text-xs"
-                  [ngClass]="{
-                    'bg-yellow-600/30 text-yellow-300': provider.status === 'PENDING',
-                    'bg-green-600/30 text-green-300': provider.status === 'ACCEPTED',
-                    'bg-red-600/30 text-red-300': provider.status === 'REJECTED'
-                  }"
-                >
-                  {{ provider.status }}
-                </span>
-              </td>
-              <td class="flex gap-2 py-4 flex-wrap">
-                <button
-                  class="px-3 py-2 rounded-lg border border-purple-500 text-purple-200 hover:bg-purple-600/20"
-                  (click)="viewApplication(provider)"
-                >
-                  Voir
-                </button>
-                <button
-                  class="px-3 py-2 rounded-lg border border-green-600 text-green-300 hover:bg-green-600/20"
-                  (click)="updateStatus(provider.id, 'ACCEPTED')"
-                >
-                  Accepter
-                </button>
-                <button
-                  class="px-3 py-2 rounded-lg border border-red-600 text-red-300 hover:bg-red-600/20"
-                  (click)="updateStatus(provider.id, 'REJECTED')"
-                >
-                  Rejeter
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+            <tbody class="divide-y divide-gray-800">
+              <tr class="hover:bg-[#1D1D26]" *ngFor="let provider of providerRequests">
+                <td class="py-4">
+                  <div class="font-semibold">{{ provider.name }}</div>
+                  <div class="text-xs text-gray-400">Inscription {{ provider.createdAt | date:'shortDate' }}</div>
+                </td>
+                <td>
+                  <div class="text-sm">{{ provider.email }}</div>
+                  <div class="text-xs text-gray-400">{{ provider.phone }}</div>
+                </td>
+                <td>
+                  <div class="text-sm">{{ provider.governorate }}</div>
+                  <div class="text-xs text-gray-400">{{ provider.delegation }}</div>
+                </td>
+                <td class="space-y-1 text-xs">
+                  <div class="text-gray-300">CIN: {{ provider.cin }}</div>
+                  <div class="text-gray-300">CV: {{ provider.cv }}</div>
+                  <div class="text-gray-300">Diplôme: {{ provider.diplome }}</div>
+                </td>
+                <td>
+                  <span
+                    class="px-3 py-1 rounded text-xs"
+                    [ngClass]="{
+                      'bg-yellow-600/30 text-yellow-300': provider.status === 'PENDING',
+                      'bg-green-600/30 text-green-300': provider.status === 'ACCEPTED',
+                      'bg-red-600/30 text-red-300': provider.status === 'REJECTED'
+                    }"
+                  >
+                    {{ provider.status }}
+                  </span>
+                </td>
+                <td class="flex gap-2 py-4 flex-wrap">
+                  <button
+                    class="px-3 py-2 rounded-lg border border-purple-500 text-purple-200 hover:bg-purple-600/20"
+                    (click)="viewApplication(provider)"
+                  >
+                    Voir
+                  </button>
+                  <button
+                    class="px-3 py-2 rounded-lg border border-green-600 text-green-300 hover:bg-green-600/20"
+                    (click)="updateStatus(provider.id, 'ACCEPTED')"
+                  >
+                    Accepter
+                  </button>
+                  <button
+                    class="px-3 py-2 rounded-lg border border-red-600 text-red-300 hover:bg-red-600/20"
+                    (click)="updateStatus(provider.id, 'REJECTED')"
+                  >
+                    Rejeter
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </ng-container>
   </div>
 
   <div

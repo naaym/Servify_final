@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AdminDashboardStats } from '../../models/admin-dashboard-stats.model';
 
 @Component({
@@ -10,4 +10,12 @@ import { AdminDashboardStats } from '../../models/admin-dashboard-stats.model';
 })
 export class AsideDashboardAdmin {
   @Input() stats?: AdminDashboardStats;
+  @Input() activeSection: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' = 'dashboard';
+  @Output() sectionChange = new EventEmitter<'dashboard' | 'providers' | 'clients' | 'bookings' | 'services'>();
+
+  navigate(section: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services') {
+    if (section !== this.activeSection) {
+      this.sectionChange.emit(section);
+    }
+  }
 }

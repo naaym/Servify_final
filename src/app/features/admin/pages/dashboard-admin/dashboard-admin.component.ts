@@ -16,22 +16,22 @@ export class DashboardAdmin implements OnInit {
 
   dashboardStats?: AdminDashboardStats;
   providerRequests: ProviderApplication[] = [];
-  publishedProviders: ProviderApplication[] = [];
-  selectedStatus: ProviderStatus | undefined = 'PENDING';
+  selectedStatus: ProviderStatus | undefined = undefined;
   loadingRequests = false;
-  loadingPublished = false;
   loadingStats = false;
   error?: string;
   selectedProvider?: ProviderApplication;
+  activeSection: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' = 'dashboard';
 
   ngOnInit() {
-    this.refreshData();
+    this.loadDashboardStats();
   }
 
   refreshData() {
     this.loadDashboardStats();
-    this.loadProviderRequests(this.selectedStatus);
-    this.loadPublishedProviders();
+    if (this.activeSection === 'providers') {
+      this.loadProviderRequests(this.selectedStatus);
+    }
   }
 
   loadDashboardStats() {
@@ -48,6 +48,15 @@ export class DashboardAdmin implements OnInit {
     });
   }
 
+  switchSection(section: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services') {
+    this.activeSection = section;
+    this.error = undefined;
+
+    if (section === 'providers') {
+      this.loadProviderRequests(this.selectedStatus);
+    }
+  }
+
   loadProviderRequests(status?: ProviderStatus) {
     this.loadingRequests = true;
     this.selectedStatus = status;
@@ -59,19 +68,6 @@ export class DashboardAdmin implements OnInit {
       error: (err) => {
         this.error = err.message ?? 'Une erreur est survenue';
         this.loadingRequests = false;
-      },
-    });
-  }
-
-  loadPublishedProviders() {
-    this.loadingPublished = true;
-    this.adminService.getProviderRequests('ACCEPTED').subscribe({
-      next: (providers) => {
-        this.publishedProviders = providers;
-        this.loadingPublished = false;
-      },
-      error: () => {
-        this.loadingPublished = false;
       },
     });
   }

@@ -39,21 +39,51 @@
   </div>
 
   <nav class="flex-1 p-4 space-y-2 text-gray-300">
-    <a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-600/20 border border-purple-700/40">
+    <button
+      class="flex w-full items-center gap-3 px-4 py-3 rounded-xl border transition"
+      [class.bg-purple-600/20]="activeSection === 'dashboard'"
+      [class.border-purple-700/40]="activeSection === 'dashboard'"
+      [class.border-gray-800]="activeSection !== 'dashboard'"
+      (click)="navigate('dashboard')"
+    >
       <span class="w-2 h-2 rounded-full bg-purple-400"></span> Dashboard
-    </a>
-    <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/10 border border-gray-800">
+    </button>
+    <button
+      class="flex w-full items-center gap-3 px-4 py-3 rounded-xl border transition"
+      [class.bg-purple-600/20]="activeSection === 'providers'"
+      [class.border-purple-700/40]="activeSection === 'providers'"
+      [class.border-gray-800]="activeSection !== 'providers'"
+      (click)="navigate('providers')"
+    >
       <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Providers
-    </a>
-    <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/10 border border-gray-800">
+    </button>
+    <button
+      class="flex w-full items-center gap-3 px-4 py-3 rounded-xl border transition"
+      [class.bg-purple-600/20]="activeSection === 'clients'"
+      [class.border-purple-700/40]="activeSection === 'clients'"
+      [class.border-gray-800]="activeSection !== 'clients'"
+      (click)="navigate('clients')"
+    >
       <span class="w-2 h-2 rounded-full bg-blue-400"></span> Clients
-    </a>
-    <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/10 border border-gray-800">
+    </button>
+    <button
+      class="flex w-full items-center gap-3 px-4 py-3 rounded-xl border transition"
+      [class.bg-purple-600/20]="activeSection === 'bookings'"
+      [class.border-purple-700/40]="activeSection === 'bookings'"
+      [class.border-gray-800]="activeSection !== 'bookings'"
+      (click)="navigate('bookings')"
+    >
       <span class="w-2 h-2 rounded-full bg-orange-400"></span> Bookings
-    </a>
-    <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/10 border border-gray-800">
+    </button>
+    <button
+      class="flex w-full items-center gap-3 px-4 py-3 rounded-xl border transition"
+      [class.bg-purple-600/20]="activeSection === 'services'"
+      [class.border-purple-700/40]="activeSection === 'services'"
+      [class.border-gray-800]="activeSection !== 'services'"
+      (click)="navigate('services')"
+    >
       <span class="w-2 h-2 rounded-full bg-pink-400"></span> Services
-    </a>
+    </button>
   </nav>
 
   <div class="p-4 border-t border-gray-800">

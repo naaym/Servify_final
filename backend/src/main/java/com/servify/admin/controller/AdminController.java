@@ -42,17 +42,17 @@ public class AdminController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AdminResponse> findAdminById(@PathVariable Long id) {
+    public ResponseEntity<AdminResponse> findAdminById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(adminService.findById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AdminResponse> updateAdmin(@PathVariable Long id, @Valid @RequestBody AdminRequest request) {
+    public ResponseEntity<AdminResponse> updateAdmin(@PathVariable("id") Long id, @Valid @RequestBody AdminRequest request) {
         return ResponseEntity.ok(adminService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAdmin(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAdmin(@PathVariable("id") Long id) {
         adminService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -71,7 +71,7 @@ public class AdminController {
 
     @PatchMapping("/providers/{providerId}/status")
     public ResponseEntity<ProviderApplicationResponse> updateProviderStatus(
-        @PathVariable Long providerId,
+        @PathVariable("providerId") Long providerId,
         @Valid @RequestBody UpdateProviderStatusRequest request
     ) {
         return ResponseEntity.ok(adminService.updateProviderStatus(providerId, request.getStatus()));
