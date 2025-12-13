@@ -4,6 +4,7 @@ import { AsideDashboardAdmin } from "../../components/aside-dashboard-admin/asid
 import { AdminService } from '../../services/admin.service';
 import { ProviderApplication, ProviderStatus } from '../../models/provider-application.model';
 import { AdminDashboardStats } from '../../models/admin-dashboard-stats.model';
+import { TokenService } from '../../../../core/services/token.service';
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -13,6 +14,7 @@ import { AdminDashboardStats } from '../../models/admin-dashboard-stats.model';
 })
 export class DashboardAdmin implements OnInit {
   private readonly adminService = inject(AdminService);
+  private readonly tokenService = inject(TokenService);
 
   dashboardStats?: AdminDashboardStats;
   providerRequests: ProviderApplication[] = [];
@@ -22,8 +24,10 @@ export class DashboardAdmin implements OnInit {
   error?: string;
   selectedProvider?: ProviderApplication;
   activeSection: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' = 'dashboard';
+  isSuperAdmin = false;
 
   ngOnInit() {
+    this.isSuperAdmin = this.tokenService.hasRole('SUPER_ADMIN');
     this.loadDashboardStats();
   }
 

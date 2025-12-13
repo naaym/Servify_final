@@ -91,6 +91,7 @@ public class AdminServiceImpl implements AdminService {
 
         stats.setProviders(providerCount);
         stats.setClients(clientCount);
+        stats.setAdmins(adminCount);
         stats.setServices(0L);
         stats.setPendingProviders(providerRepository.countByStatus(ProviderStatus.PENDING));
         stats.setAcceptedProviders(providerRepository.countByStatus(ProviderStatus.ACCEPTED));

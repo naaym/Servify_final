@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class AdminDashboardStats {
     private long users;
+    private long admins;
     private long providers;
     private long clients;
     private long services;
