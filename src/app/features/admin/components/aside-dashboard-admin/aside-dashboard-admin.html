@@ -4,40 +4,6 @@
     <p class="text-xs text-gray-500 mt-1">Pilotage en temps réel</p>
   </div>
 
-  <div class="p-4 space-y-3 text-sm text-gray-200">
-    <div class="text-xs uppercase tracking-widest text-gray-500">Aperçu</div>
-    <div class="bg-gradient-to-br from-purple-900/60 to-purple-600/20 rounded-xl p-3 border border-purple-700/40">
-      <div class="flex items-center justify-between">
-        <span class="text-xs text-gray-400">Prestataires</span>
-        <span class="text-xs bg-purple-700/40 px-2 py-1 rounded-full text-purple-100">Total</span>
-      </div>
-      <div class="text-3xl font-bold mt-2">{{ stats?.providers ?? 0 }}</div>
-      <div class="flex justify-between text-xs text-gray-400 mt-2">
-        <span>En attente</span>
-        <span class="text-amber-300 font-semibold">{{ stats?.pendingProviders ?? 0 }}</span>
-      </div>
-      <div class="flex justify-between text-xs text-gray-400 mt-1">
-        <span>Validés</span>
-        <span class="text-emerald-300 font-semibold">{{ stats?.acceptedProviders ?? 0 }}</span>
-      </div>
-    </div>
-
-    <div class="bg-[#16161f] rounded-xl p-3 border border-gray-800">
-      <div class="flex justify-between text-xs text-gray-400">
-        <span>Clients</span>
-        <span class="text-gray-100 font-semibold">{{ stats?.clients ?? 0 }}</span>
-      </div>
-      <div class="flex justify-between text-xs text-gray-400 mt-2">
-        <span>Utilisateurs</span>
-        <span class="text-gray-100 font-semibold">{{ stats?.users ?? 0 }}</span>
-      </div>
-      <div class="flex justify-between text-xs text-gray-400 mt-2">
-        <span>Services</span>
-        <span class="text-gray-100 font-semibold">{{ stats?.services ?? 0 }}</span>
-      </div>
-    </div>
-  </div>
-
   <nav class="flex-1 p-4 space-y-2 text-gray-300">
     <button
       class="flex w-full items-center gap-3 px-4 py-3 rounded-xl border transition"

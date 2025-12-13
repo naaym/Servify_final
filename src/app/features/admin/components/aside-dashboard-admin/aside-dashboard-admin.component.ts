@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AdminDashboardStats } from '../../models/admin-dashboard-stats.model';
 
 @Component({
   selector: 'aside-dashboard-admin',
@@ -9,7 +8,6 @@ import { AdminDashboardStats } from '../../models/admin-dashboard-stats.model';
   styleUrl: './aside-dashboard-admin.scss',
 })
 export class AsideDashboardAdmin {
-  @Input() stats?: AdminDashboardStats;
   @Input() activeSection: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' = 'dashboard';
   @Output() sectionChange = new EventEmitter<'dashboard' | 'providers' | 'clients' | 'bookings' | 'services'>();
 
