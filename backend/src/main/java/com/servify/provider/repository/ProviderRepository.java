@@ -21,7 +21,6 @@ public interface ProviderRepository extends JpaRepository<ProviderEntity, Long> 
             SELECT p FROM ProviderEntity p
             WHERE (:serviceCategory IS NULL OR LOWER(p.serviceCategory) LIKE LOWER(CONCAT('%', :serviceCategory, '%')))
             AND (:governorate IS NULL OR LOWER(p.governorate) = LOWER(:governorate))
-            AND (:delegation IS NULL OR LOWER(p.delegation) = LOWER(:delegation))
             AND (:minPrice IS NULL OR p.basePrice >= :minPrice)
             AND (:maxPrice IS NULL OR p.basePrice <= :maxPrice)
             AND (:minRating IS NULL OR p.rating >= :minRating)
@@ -30,7 +29,6 @@ public interface ProviderRepository extends JpaRepository<ProviderEntity, Long> 
     List<ProviderEntity> searchApprovedProviders(
       @Param("serviceCategory") String serviceCategory,
       @Param("governorate") String governorate,
-      @Param("delegation") String delegation,
       @Param("minPrice") Double minPrice,
       @Param("maxPrice") Double maxPrice,
       @Param("minRating") Double minRating,

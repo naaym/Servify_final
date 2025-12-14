@@ -28,6 +28,7 @@ public class ProviderController {
 
     @GetMapping("/search")
     public ResponseEntity<ProviderSearchResult> searchProviders(ProviderSearchRequest request) {
+      System.out.println("REQUEST = {}"+ request);
         return ResponseEntity.ok(providerService.searchProviders(request));
     }
 

@@ -50,7 +50,6 @@ public class ProviderServiceImpl implements ProviderService{
         List<ProviderEntity> providers = providerRepository.searchApprovedProviders(
                 request.getServiceCategory(),
                 request.getGovernorate(),
-                request.getDelegation(),
                 request.getMinPrice(),
                 request.getMaxPrice(),
                 request.getMinRating(),

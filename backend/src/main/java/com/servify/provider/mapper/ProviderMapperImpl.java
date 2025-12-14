@@ -41,7 +41,6 @@ public  class ProviderMapperImpl implements ProviderMapper {
         response.setId(entity.getUserId());
         response.setName(entity.getName());
         response.setServiceCategory(entity.getServiceCategory());
-        response.setGovernorate(entity.getGovernorate());
         response.setDelegation(entity.getDelegation());
         response.setBasePrice(entity.getBasePrice());
         response.setRating(entity.getRating());

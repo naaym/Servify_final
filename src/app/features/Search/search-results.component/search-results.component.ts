@@ -34,10 +34,8 @@ export class SearchResultsComponent implements OnInit {
 
   ngOnInit(): void {
     this.serviceCategory =
-      this.activatedRoute.snapshot.queryParamMap.get('service') || '';
+    this.activatedRoute.snapshot.queryParamMap.get('service') || '';
     this.city = this.activatedRoute.snapshot.queryParamMap.get('city') || '';
-    this.delegation =
-      this.activatedRoute.snapshot.queryParamMap.get('delegation') || '';
     this.fetchResults();
   }
 
@@ -45,7 +43,6 @@ export class SearchResultsComponent implements OnInit {
     const request: SearchProviderRequest = {
       serviceCategory: this.serviceCategory,
       governorate: this.city,
-      delegation: this.delegation,
       minPrice: this.minPrice,
       maxPrice: this.maxPrice,
       minRating: this.minRating,

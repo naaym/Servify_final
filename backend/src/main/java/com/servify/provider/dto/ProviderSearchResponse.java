@@ -9,7 +9,6 @@ public class ProviderSearchResponse {
     private Long id;
     private String name;
     private String serviceCategory;
-    private String governorate;
     private String delegation;
     private Double basePrice;
     private Double rating;

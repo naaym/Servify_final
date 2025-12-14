@@ -8,7 +8,6 @@ export interface SearchProviderResult {
 export interface SearchProviderRequest {
   serviceCategory?: string;
   governorate?: string;
-  delegation?: string;
   minRating?: number;
   minPrice?: number;
   maxPrice?: number;
