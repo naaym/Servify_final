@@ -78,7 +78,13 @@ public class ProviderServiceImpl implements ProviderService{
 
         switch (sortBy) {
             case "PRICE_ASC" -> providers.sort(Comparator.comparing(ProviderEntity::getBasePrice, Comparator.nullsLast(Double::compareTo)));
-            case "PRICE_DESC" -> providers.sort(Comparator.comparing(ProviderEntity::getBasePrice, Comparator.nullsLast(Double::compareTo)).reversed());
+            case "PRICE_DESC" -> providers.sort(
+                    Comparator.comparing(
+                                    ProviderEntity::getBasePrice,
+                                    // Use nullsFirst then reverse so null prices remain last when sorting desc
+                                    Comparator.nullsFirst(Double::compareTo))
+                            .reversed()
+            );
             case "REVIEWS_DESC" -> providers.sort(Comparator.comparing(ProviderEntity::getReviewCount, Comparator.nullsLast(Integer::compareTo)).reversed());
             default -> providers.sort(Comparator.comparing(ProviderEntity::getRating, Comparator.nullsLast(Double::compareTo)).reversed());
         }
