@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ProviderCardComponent } from '../components/provider-card.component/provider-card.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SearchProviderService } from '../services/provider-search.service';
@@ -10,7 +11,7 @@ import { Header } from '../../../shared/header/header';
 @Component({
   selector: 'app-search-results.component',
   standalone: true,
-  imports: [CommonModule, ProviderCardComponent,Header],
+  imports: [CommonModule, FormsModule, ProviderCardComponent, Header],
   templateUrl: './search-results.component.html',
   styleUrl: './search-results.component.scss',
 })
@@ -26,6 +27,7 @@ export class SearchResultsComponent implements OnInit {
   maxPrice?: number;
   minRating?: number;
   sort: SearchProviderRequest['sortBy'] = 'RATING_DESC';
+  ratingOptions: number[] = [5, 4, 3];
 
   providers: Provider[] = [];
   total = 0;
@@ -64,27 +66,32 @@ export class SearchResultsComponent implements OnInit {
     this.router.navigate(['/providers', id, 'booking']);
   }
 
-  onMinPriceChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.minPrice = input.value ? +input.value : undefined;
+  onMinPriceChange(value: number | string | null | undefined) {
+    this.minPrice = value === null || value === undefined || value === ''
+      ? undefined
+      : Number(value);
     this.fetchResults();
   }
 
-  onMaxPriceChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.maxPrice = input.value ? +input.value : undefined;
+  onMaxPriceChange(value: number | string | null | undefined) {
+    this.maxPrice = value === null || value === undefined || value === ''
+      ? undefined
+      : Number(value);
     this.fetchResults();
   }
 
-  onRatingChange(rate: string) {
-    this.minRating = rate ? +rate : undefined;
+  onRatingChange(rate: number | null) {
+    this.minRating = rate ?? undefined;
     this.fetchResults();
   }
 
-  onSortChange(event: Event) {
-    const input = event.target as HTMLSelectElement;
-    const value = input.value as SearchProviderRequest['sortBy'];
+  onSortChange(value: SearchProviderRequest['sortBy']) {
     this.sort = value;
+    this.fetchResults();
+  }
+
+  onMaxPriceSliderChange(value: number | string | null) {
+    this.maxPrice = value === null || value === '' ? undefined : Number(value);
     this.fetchResults();
   }
 
