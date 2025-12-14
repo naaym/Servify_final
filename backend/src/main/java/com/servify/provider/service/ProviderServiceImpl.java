@@ -9,6 +9,7 @@ import com.servify.provider.dto.ProviderSearchResponse;
 import com.servify.provider.exceptions.EmailDuplicationException;
 import com.servify.provider.mapper.ProviderMapper;
 import com.servify.provider.model.ProviderEntity;
+import com.servify.provider.model.ProviderStatus;
 import com.servify.provider.repository.ProviderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,7 +53,8 @@ public class ProviderServiceImpl implements ProviderService{
                 request.getDelegation(),
                 request.getMinPrice(),
                 request.getMaxPrice(),
-                request.getMinRating()
+                request.getMinRating(),
+                ProviderStatus.ACCEPTED
         );
 
         sortProviders(providers, request.getSortBy());
