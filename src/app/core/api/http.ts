@@ -4,6 +4,8 @@ import { API_ENDPOINTS } from './endpoints';
 
 type QueryParams = HttpParams | Record<string, string | number | boolean>;
 
+type ParamsOptions = { params?: QueryParams };
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,12 +22,8 @@ export class Http {
     return this.http.post<T>(this.buildUrl(endpoint), body);
   }
 
-  get<T>(endpoint: string, options?: QueryParams | { params?: QueryParams }) {
-    const normalizedOptions = options && 'params' in (options as any)
-      ? (options as { params?: QueryParams })
-      : options
-        ? { params: options as QueryParams }
-        : {};
+  get<T>(endpoint: string, options?: QueryParams | ParamsOptions) {
+    const normalizedOptions = this.normalizeOptions(options);
 
     return this.http.get<T>(this.buildUrl(endpoint), {
       ...normalizedOptions,
@@ -51,5 +49,21 @@ export class Http {
 
   delete<T>(endpoint: string, id: number) {
     return this.http.delete<T>(this.buildUrl(`${endpoint}/${id}`));
+  }
+
+  private normalizeOptions(options?: QueryParams | ParamsOptions): ParamsOptions {
+    if (!options) {
+      return {};
+    }
+
+    if (this.isParamsOptions(options)) {
+      return options.params ? { params: options.params } : {};
+    }
+
+    return { params: options };
+  }
+
+  private isParamsOptions(options: unknown): options is ParamsOptions {
+    return typeof options === 'object' && options !== null && 'params' in options;
   }
 }
