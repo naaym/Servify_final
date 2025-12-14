@@ -19,7 +19,13 @@ export class Http {
   }
 
   get<T>(endpoint: string, options?: any) {
-    return this.http.get<T>(this.buildUrl(endpoint), { params: options });
+    const normalizedOptions = options
+      ? options.params
+        ? options
+        : { params: options }
+      : {};
+
+    return this.http.get<T>(this.buildUrl(endpoint), normalizedOptions);
   }
 
   getAll<T>(endpoint: string) {

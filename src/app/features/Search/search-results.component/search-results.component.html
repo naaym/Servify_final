@@ -47,8 +47,9 @@
                   type="radio"
                   name="rating"
                   class="accent-indigo-600"
+                  [value]="rating"
                   [(ngModel)]="minRating"
-      
+
                   (ngModelChange)="onRatingChange($event)"
                 />
               </label>
