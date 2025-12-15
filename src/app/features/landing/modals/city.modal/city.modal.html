@@ -10,18 +10,24 @@
       villes disponibles pour : {{ serviceName }}
     </h2>
 
-    @for(city of governorates; track city){
-    <ul class="space-y-3">
+    @if(isLoading){
+      <p class="text-center text-gray-500">Chargement des villes...</p>
+    } @else if(governorates.length === 0){
+      <p class="text-center text-gray-500">Aucune ville disponible</p>
+    } @else {
+      @for(city of governorates; track city){
+      <ul class="space-y-3">
 
-        <li >
-          <button
-          (click)="citySelected.emit(city)"
-          class="w-full text-left p-3 rounded-xl border hover:bg-purple-100">
-          {{ city }}
-        </button>
-      </li>
-    </ul>
-  }
+          <li >
+            <button
+            (click)="citySelected.emit(city)"
+            class="w-full text-left p-3 rounded-xl border hover:bg-purple-100">
+            {{ city }}
+          </button>
+        </li>
+      </ul>
+    }
+    }
     <div class="flex justify-between gap-3">
 
       <button (click)="retour.emit()" class="mt-5 text-sm text-gray-500 underline">

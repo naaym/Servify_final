@@ -45,7 +45,28 @@ public  abstract class UserEntity implements UserDetails {
 
   @PrePersist
   void onCreate() {
+    normalizeUserFields();
     this.createdAt = Instant.now();
+  }
+
+  @PreUpdate
+  void onUpdate() {
+    normalizeUserFields();
+  }
+
+  private void normalizeUserFields() {
+    if (name != null) {
+      name = name.trim();
+    }
+    if (email != null) {
+      email = email.trim().toLowerCase();
+    }
+    if (phone != null) {
+      phone = phone.trim();
+    }
+    if (governorate != null) {
+      governorate = governorate.trim().toLowerCase();
+    }
   }
 
 

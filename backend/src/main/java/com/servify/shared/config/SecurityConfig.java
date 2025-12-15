@@ -53,7 +53,8 @@ public class SecurityConfig {
           "/api/auth/login",
           "/api/clients/register",
           "/api/providers/register",
-          "/api/providers/search"
+          "/api/providers/search",
+          "/api/providers/search/options/**"
         ).permitAll()
         .anyRequest().authenticated()
       )

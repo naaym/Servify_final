@@ -8,17 +8,23 @@
 
     <h2 class="text-xl font-bold mb-4">Choisissez un service</h2>
 
-    <ul class="space-y-3">
-      @for( service of services ; track service ){
-        <li>
-          <button
-          (click)="selectService.emit(service)"
-          class="w-full text-left p-3 rounded-xl border hover:bg-purple-100">
-          {{ service }}
-        </button>
-      </li>
+    @if(isLoading){
+      <p class="text-center text-gray-500">Chargement des services...</p>
+    } @else if(services.length === 0){
+      <p class="text-center text-gray-500">Aucun service disponible</p>
+    } @else {
+      <ul class="space-y-3">
+        @for( service of services ; track service ){
+          <li>
+            <button
+            (click)="selectService.emit(service)"
+            class="w-full text-left p-3 rounded-xl border hover:bg-purple-100">
+            {{ service }}
+          </button>
+        </li>
+      }
+      </ul>
     }
-    </ul>
 
     <button (click)="close.emit()" class="mt-5 text-sm text-gray-500 underline">
       Fermer

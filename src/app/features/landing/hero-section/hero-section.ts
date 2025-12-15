@@ -34,19 +34,27 @@ export class HeroSection {
   }
 
   onServiceChosen(service: string) {
-    this.nameService = service;
+    this.nameService = service?.trim();
     this.toggleServiceModal(false)
     this.toggleCityModal(true);
   }
 
 
   onCityChosen(city: string) {
+     const queryParams: Record<string, string> = {};
+     const normalizedService = this.nameService?.trim();
+     const normalizedCity = city?.trim();
+
+     if (normalizedService) {
+       queryParams['serviceCategory'] = normalizedService;
+     }
+     if (normalizedCity) {
+       queryParams['governorate'] = normalizedCity;
+     }
+
      this.router.navigate(['/search'], {
-    queryParams: {
-      serviceCategory: this.nameService,
-      governorate: city
-    }
-  })
+      queryParams
+    })
 
 
   }

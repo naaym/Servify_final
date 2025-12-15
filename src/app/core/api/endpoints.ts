@@ -14,7 +14,11 @@ export const API_ENDPOINTS = {
     REGISTER: 'providers/register',
     SEARCH: 'providers/search',
     BY_ID: (id: number) => `providers/${id}`,
-    CHECK: 'providers/check'
+    CHECK: 'providers/check',
+    SEARCH_OPTIONS: {
+      SERVICES: 'providers/search/options/services',
+      GOVERNORATES: 'providers/search/options/governorates',
+    }
   },
   BOOKING:{
     BASE:'bookings',
