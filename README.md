@@ -58,6 +58,10 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
 
+## Onboarding and delivery practices
+
+New to the project? Start with [docs/PROJECT_ONBOARDING.md](docs/PROJECT_ONBOARDING.md) for expectations on architecture, secure coding, testing, and how we collaborate as a Scrum team.
+
 ## Backend (Spring Boot)
 
 The `/backend` directory contains a Spring Boot monolith structured by feature (e.g., `client`, `provider`). To run it locally:

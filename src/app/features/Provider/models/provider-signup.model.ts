@@ -6,6 +6,9 @@ export interface ProviderSignUpRequest {
   governorate:string;
   delegation:string;
   age:number;
+  serviceCategory:string;
+  basePrice:number;
+  description?:string;
 
   cin:File;
   cv:File;

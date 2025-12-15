@@ -28,6 +28,17 @@ public class ProviderEntity extends UserEntity {
     private ProviderStatus status;
     private int age;
 
+    @Column(nullable = false)
+    private String serviceCategory;
+
+    private Double basePrice;
+
+    private Double rating;
+
+    private Integer reviewCount;
+
+    private String description;
+
 
     private String cinUrl;
 

@@ -20,6 +20,11 @@ signUp(data:ProviderSignUpRequest){
     formData.append('governorate', data.governorate);
     formData.append('delegation', data.delegation);
     formData.append('phone', data.phone);
+    formData.append('serviceCategory', data.serviceCategory);
+    formData.append('basePrice', data.basePrice.toString());
+    if (data.description) {
+      formData.append('description', data.description);
+    }
 
     formData.append('cin', data.cin);
     formData.append('cv', data.cv);

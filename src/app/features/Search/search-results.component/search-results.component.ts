@@ -1,116 +1,102 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ProviderCardComponent } from '../components/provider-card.component/provider-card.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { searchProviderService } from '../services/provider-search.service';
+import { SearchProviderService } from '../services/provider-search.service';
 import { SearchProviderRequest } from '../models/relsult-search.model';
 import { Provider } from '../models/provider.model';
 import { Header } from '../../../shared/header/header';
 
 @Component({
   selector: 'app-search-results.component',
-  imports: [ProviderCardComponent,Header],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ProviderCardComponent, Header],
   templateUrl: './search-results.component.html',
   styleUrl: './search-results.component.scss',
 })
 export class SearchResultsComponent implements OnInit {
-  activatedRoute=inject(ActivatedRoute)
-  search=inject(searchProviderService)
-  router=inject(Router);
-  // initialisation mte3 searchProviderRequest
-  totalPages:number=3
-  service:string=""
-  city:string="";
-  minPrice!: number ;
-  maxPrice!: number;
-  rate!: number;
-  sort!:string;
-  page:number=0;
-  size:number=10;
-  providerInfoResults!:Provider[]
-  //----------------------------------
+  activatedRoute = inject(ActivatedRoute);
+  searchService = inject(SearchProviderService);
+  router = inject(Router);
+
+  serviceCategory = '';
+  governorate = '';
+  delegation = '';
+  minPrice?: number;
+  maxPrice?: number;
+  minRating?: number;
+  sort: SearchProviderRequest['sortBy'] = 'RATING_DESC';
+  ratingOptions: number[] = [5, 4, 3];
+
+  providers: Provider[] = [];
+  total = 0;
+
   ngOnInit(): void {
-    this.service=this.activatedRoute.snapshot.queryParamMap.get("service") || "";
-    this.city=this.activatedRoute.snapshot.queryParamMap.get("city") || "";
+  this.activatedRoute.queryParams.subscribe(params => {
+    this.serviceCategory = params['serviceCategory'] ?? '';
+    this.governorate = params['governorate'] ?? '';
     this.fetchResults();
+  });
+}
+  fetchResults() {
+    const request: SearchProviderRequest = {
+      serviceCategory: this.serviceCategory,
+      governorate: this.governorate,
+      minPrice: this.minPrice,
+      maxPrice: this.maxPrice,
+      minRating: this.minRating,
+      sortBy: this.sort,
+    };
 
+    this.searchService.searchProvider(request).subscribe((resp) => {
+      this.providers = resp.providers;
+      this.total = resp.total;
+    });
   }
 
-
-fetchResults(){
-      const request:SearchProviderRequest ={service : this.service,
-        governorate:this.city,
-        minPrice:this.minPrice,
-        maxPrice:this.maxPrice,
-        rate:this.rate,
-        skills:this.selectedSkills,
-        sort:this.sort,
-        page:this.page,
-        size:this.size}
-        console.log(request)
-         this.search.searchProvider(request).subscribe({next:(resp)=>{
-           this.providerInfoResults=resp.provider;
-           console.log(resp)}})
-      }
-
-
-      showProviderDetails(id:number){
-        this.router.navigate(["/search/providers",id])
-
+  showProviderDetails(id: number) {
+    this.router.navigate(['/search/providers', id]);
   }
-  newBooking(id:number){
-    this.router.navigate(["/providers",id,"booking"])
-  }
-  //extraction mte3 les donnes me template
 
-  onMinPriceChange(event:Event){
-    const input = event.target as HTMLInputElement
-    this.minPrice= +input.value
-
-    this.fetchResults()
-
+  newBooking(id: number) {
+    this.router.navigate(['/providers', id, 'booking']);
   }
-  onMaxPriceChange(event:Event){
-    const input = event.target as HTMLInputElement
-    this.maxPrice= +input.value
-    this.fetchResults()
-  }
-  onRatingChange(rate:string){
-    this.rate=+rate
+
+  onMinPriceChange(value: number | string | null | undefined) {
+    this.minPrice = value === null || value === undefined || value === ''
+      ? undefined
+      : Number(value);
     this.fetchResults();
   }
-  onSortChange(event:Event){
-    const input=event.target as HTMLInputElement
-    this.sort=input.value;
-    this.fetchResults()
-  }
-  resetFilters(){
-      this.sort = "rating,desc";
-  this.page = 0;
-  this.size = 10;
 
-  this.minPrice =0
-  this.maxPrice = 0
-  this.rate = 0
-  this.selectedSkills = [];
-  this.fetchResults()
+  onMaxPriceChange(value: number | string | null | undefined) {
+    this.maxPrice = value === null || value === undefined || value === ''
+      ? undefined
+      : Number(value);
+    this.fetchResults();
+  }
 
+  onRatingChange(rate: number | null) {
+    this.minRating = rate ?? undefined;
+    this.fetchResults();
   }
-  //---------------------------
-  nextPage(){
-    this.page++
-    this.fetchResults()
-  }
-  prevPage(){
-    this.page--
-    this.fetchResults()
 
+  onSortChange(value: SearchProviderRequest['sortBy']) {
+    this.sort = value;
+    this.fetchResults();
   }
-  //-------------- pour les skills selectionness
-  selectedSkills:string[]=[];
-  disabledSkills:{[key:string]:boolean}={};
-  toggleSkill(skill:string){
-      this.disabledSkills[skill]=true
-    this.selectedSkills.push(skill);
+
+  onMaxPriceSliderChange(value: number | string | null) {
+    this.maxPrice = value === null || value === '' ? undefined : Number(value);
+    this.fetchResults();
+  }
+
+  resetFilters() {
+    this.sort = 'RATING_DESC';
+    this.minPrice = undefined;
+    this.maxPrice = undefined;
+    this.minRating = undefined;
     this.fetchResults();
   }
 
@@ -136,37 +122,6 @@ fetchResults(){
 
 
 
-
-
-
-
-  // mock test
-  providers = [
-    {
-      providerId: 10,
-      name: 'iheb hkiri',
-      service: 'SWE',
-      governorate: 'Ariana',
-      delegation:'bir el bay',
-      reviewsCount: 20,
-      price: 50,
-      imageProviderUrl: 'kjsldfdf',
-      skills: ['pentesting'],
-      rate: 4.9,
-    },
-    {
-      providerId: 30,
-      name: 'fedi bazzi',
-      service: 'winou',
-      governorate: 'jandouba',
-      delegation:'bir el bay',
-      reviewsCount: 20,
-      price: 50,
-      imageProviderUrl: 'kjsldfdf',
-      skills: ['web dev '],
-      rate: 4.9,
-    },
-  ];
 }
 
 

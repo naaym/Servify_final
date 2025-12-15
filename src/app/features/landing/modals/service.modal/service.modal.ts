@@ -13,6 +13,7 @@ export class ServiceModal {
 
 
   services = [
+    'x',
     'Développement_Web',
     'Développement_Mobile',
     'Design_UI/UX',

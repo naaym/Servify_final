@@ -1,11 +1,9 @@
-import { UpperCasePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { LucideAngularModule, SearchIcon } from 'lucide-angular';
 import { ServiceModal } from '../modals/service.modal/service.modal';
 import { CityModal } from '../modals/city.modal/city.modal';
 import { Router } from '@angular/router';
 import { SearchStateService } from '../../../shared/services/serachstate.service';
-import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-hero-section',
@@ -15,7 +13,6 @@ import { HttpParams } from '@angular/common/http';
 })
 export class HeroSection {
   router = inject(Router);
-  searchcontext=inject(SearchStateService)
   icon = SearchIcon;
 
   isServiceModalOpen: boolean = false;
@@ -40,16 +37,14 @@ export class HeroSection {
     this.nameService = service;
     this.toggleServiceModal(false)
     this.toggleCityModal(true);
-    console.log(this.nameService);
   }
 
 
   onCityChosen(city: string) {
-    this.searchcontext.setSearchContext(city,this.nameService)
      this.router.navigate(['/search'], {
     queryParams: {
-      service: this.nameService,
-      city: city
+      serviceCategory: this.nameService,
+      governorate: city
     }
   })
 

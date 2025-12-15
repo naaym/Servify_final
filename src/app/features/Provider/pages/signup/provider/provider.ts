@@ -47,6 +47,9 @@ export class Provider {
       governorate: ['', Validators.required],
       delegation: ['', Validators.required],
       age: ['', [Validators.required, Validators.pattern('^\\d+$')]],
+      serviceCategory: ['', Validators.required],
+      basePrice: ['', [Validators.required, Validators.pattern('^\\d+(?:\\.\\d+)?$')]],
+      description: [''],
     },
     { validators: [passMatch] }
   );
@@ -97,6 +100,9 @@ export class Provider {
       governorate: this.form.value.governorate!,
       delegation: this.form.value.delegation!,
       age: Number(this.form.value.age),
+      serviceCategory: this.form.value.serviceCategory!,
+      basePrice: Number(this.form.value.basePrice),
+      description: this.form.value.description || undefined,
       cin: this.form.value.cin!,
       cv: this.form.value.cv!,
       diplome: this.form.value.diplome!,
