@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ClientBookingService } from '../../clientbooking.service';
 import { BookingResponse } from '../../../../../booking/models/booking-response.model';
@@ -14,6 +14,7 @@ export class BookingsListComponent implements OnInit{
  private readonly router=inject(Router)
   bookingsService=inject(ClientBookingService);
    listBookings:BookingResponse[]=[]
+  @Output() statusChanged = new EventEmitter<Status>();
 
   ngOnInit(): void {
 
@@ -27,6 +28,7 @@ export class BookingsListComponent implements OnInit{
     this.bookingsService.updateStatus(bookingId,'CANCELLED').subscribe({
       next:(updated)=>{
         this.listBookings=this.listBookings.map((b)=>b.bookingId===bookingId?{...b,status:updated.status as Status}:b)
+        this.statusChanged.emit(updated.status as Status);
       },
       error:(err)=>console.log(err.message)
     })

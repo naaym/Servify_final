@@ -40,4 +40,8 @@ export class AdminService {
       { status }
     );
   }
+
+  deleteProvider(providerId: number) {
+    return this.http.delete<void>(API_ENDPOINTS.ADMIN.PROVIDERS, providerId);
+  }
 }

@@ -107,6 +107,22 @@ export class DashboardAdmin implements OnInit {
     });
   }
 
+  deleteProvider(providerId: number) {
+    this.loadingRequests = true;
+    this.adminService.deleteProvider(providerId).subscribe({
+      next: () => {
+        if (this.selectedProvider?.id === providerId) {
+          this.closeApplication();
+        }
+        this.refreshData();
+      },
+      error: (err) => {
+        this.error = err.message ?? 'Impossible de supprimer le prestataire';
+        this.loadingRequests = false;
+      },
+    });
+  }
+
   viewApplication(provider: ProviderApplication) {
     this.selectedProvider = provider;
   }

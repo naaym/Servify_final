@@ -24,4 +24,6 @@ public interface AdminService {
     List<ProviderApplicationResponse> findProviderApplications(ProviderStatus status);
 
     ProviderApplicationResponse updateProviderStatus(Long providerId, ProviderStatus status);
+
+    void deleteProvider(Long providerId);
 }

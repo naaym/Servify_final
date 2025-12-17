@@ -140,6 +140,14 @@ public class AdminServiceImpl implements AdminService {
         return adminMapper.toProviderApplication(provider);
     }
 
+    @Override
+    public void deleteProvider(Long providerId) {
+        ProviderEntity provider = providerRepository.findById(providerId)
+            .orElseThrow(() -> new ResourceNotFoundException("Provider not found: " + providerId));
+
+        providerRepository.delete(provider);
+    }
+
     private void ensureEmailIsAvailable(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new UserNotFoundException("Email already used: " + email);

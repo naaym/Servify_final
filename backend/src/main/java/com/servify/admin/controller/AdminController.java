@@ -76,4 +76,11 @@ public class AdminController {
         @Valid @RequestBody UpdateProviderStatusRequest request ) {
         return ResponseEntity.ok(adminService.updateProviderStatus(providerId, request.getStatus()));
     }
+
+    @DeleteMapping("/providers/{providerId}")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
+    public ResponseEntity<Void> deleteProvider(@PathVariable("providerId") Long providerId) {
+        adminService.deleteProvider(providerId);
+        return ResponseEntity.noContent().build();
+    }
 }
