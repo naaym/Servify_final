@@ -10,6 +10,7 @@ import com.servify.admin.repository.AdminRepository;
 import com.servify.client.repository.ClientRepository;
 import com.servify.provider.model.ProviderEntity;
 import com.servify.provider.model.ProviderStatus;
+import com.servify.provider.service.SearchOptionsService;
 import com.servify.provider.repository.ProviderRepository;
 import com.servify.shared.exception.ResourceNotFoundException;
 import com.servify.user.UserNotFoundException;
@@ -37,6 +38,7 @@ public class AdminServiceImpl implements AdminService {
     private final ClientRepository clientRepository;
     private final UserRepository userRepository;
     private final AdminMapper adminMapper;
+    private final SearchOptionsService searchOptionsService;
 
     @Override
     public AdminResponse create(AdminRequest request) {
@@ -123,7 +125,15 @@ public class AdminServiceImpl implements AdminService {
     public ProviderApplicationResponse updateProviderStatus(Long providerId, ProviderStatus status) {
         ProviderEntity provider = providerRepository.findById(providerId)
             .orElseThrow(() -> new ResourceNotFoundException("Provider not found: " + providerId));
+        ProviderStatus previousStatus = provider.getStatus();
         provider.setStatus(status);
+
+        if (status == ProviderStatus.ACCEPTED && previousStatus != ProviderStatus.ACCEPTED) {
+            searchOptionsService.registerServiceAndGovernorate(
+                    provider.getServiceCategory(),
+                    provider.getGovernorate()
+            );
+        }
         return adminMapper.toProviderApplication(provider);
     }
 
