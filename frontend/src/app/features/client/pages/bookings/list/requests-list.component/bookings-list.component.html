@@ -1,0 +1,75 @@
+<div class="bg-[#16161C] p-6 rounded-2xl shadow text-white w-full">
+
+  <h2 class="text-lg font-semibold mb-6">Recent Requests</h2>
+
+  <!-- WRAPPER RESPONSIVE -->
+  <div class="overflow-x-auto -mx-2 sm:mx-0">
+    <table class="min-w-full text-sm">
+
+      <thead class="text-gray-400 border-b border-gray-700 bg-[#1D1D26]">
+        <tr>
+          <th class="text-left py-3 px-4 whitespace-nowrap">Service</th>
+          <th class="text-left py-3 px-4 whitespace-nowrap">Provider</th>
+          <th class="text-left py-3 px-4 whitespace-nowrap">Date</th>
+          <th class="text-left py-3 px-4 whitespace-nowrap">Status</th>
+          <th class="text-left py-3 px-4 whitespace-nowrap">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody class="divide-y divide-gray-800">
+
+        @for (r of listBookings; track r.bookingId) {
+        <tr class="hover:bg-[#1D1D26] transition">
+
+          <!-- Service -->
+          <td class="py-4 px-4 font-medium whitespace-nowrap">
+            {{ r.category }}
+          </td>
+
+          <!-- Provider -->
+          <td class="px-4 whitespace-nowrap">
+            {{ r.providerName }}
+          </td>
+
+          <!-- Date -->
+          <td class="px-4 whitespace-nowrap">
+            {{ r.date|date:'dd MMM yyyy' }}
+          </td>
+
+          <!-- Status -->
+          <td class="px-4 whitespace-nowrap">
+            <span
+              class="px-3 py-1 rounded-lg text-xs sm:text-sm"
+              [ngClass]="{
+                'bg-yellow-600/30 text-yellow-400': r.status === 'PENDING',
+                'bg-green-600/30 text-green-400': r.status === 'ACCEPTED',
+                'bg-blue-600/30 text-blue-400': r.status === 'DONE',
+                'bg-red-600/30 text-red-400': r.status === 'REJECTED',
+                'bg-gray-600/30 text-gray-300': r.status === 'CANCELLED'
+              }"
+            >
+              {{ r.status }}
+            </span>
+          </td>
+
+          <!-- Button -->
+          <td class="px-4 whitespace-nowrap">
+            <button class="text-purple-400 hover:underline text-xs sm:text-sm" (click)="toViewDetails(r.bookingId)">
+              View
+            </button>
+            @if(r.status!=='CANCELLED' && r.status!=='DONE'){
+            <button class="text-red-400 hover:underline text-xs sm:text-sm ml-2" (click)="onCancel(r.bookingId)">
+              Cancel
+            </button>
+            }
+          </td>
+
+        </tr>
+        }
+
+      </tbody>
+
+    </table>
+  </div>
+
+</div>

@@ -1,0 +1,92 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div
+    class="max-w-xl mx-auto lg:my-5 bg-[#16161C] p-8 rounded-2xl shadow-lg text-white space-y-6"
+  >
+    <!-- TITLE -->
+    <h2 class="text-2xl font-bold mb-4">Create a New Booking</h2>
+
+    <!-- DATE -->
+    <div class="space-y-2">
+      <label class="text-sm text-gray-300">Date</label>
+      <input
+        type="date"
+        class="w-full bg-[#0D0D11] border border-gray-700 focus:border-purple-500 rounded-xl px-4 py-3 outline-none transition"
+        formControlName="date"
+      />
+    </div>
+    @if(isValid("date")){
+    <p class="text-red-600 font-bold text-sm">please select date</p>
+
+    }
+    <!-- time -->
+    <div class="space-y-2">
+      <label class="text-sm text-gray-300">Time</label>
+      <input
+        type="time"
+        class="w-full bg-[#0D0D11] border border-gray-700 focus:border-purple-500 rounded-xl px-4 py-3 outline-none transition"
+        formControlName="time"
+      />
+    </div>
+    @if(isValid("time")){
+    <p class="text-red-600 font-bold text-sm">please select time</p>
+
+    }
+
+    <!-- DESCRIPTION -->
+    <div class="space-y-2">
+      <label class="text-sm text-gray-300">Description</label>
+      <textarea
+        rows="4"
+        placeholder="Describe your problems..."
+        class="w-full bg-[#0D0D11] border border-gray-700 focus:border-purple-500 rounded-xl px-4 py-3 resize-none outline-none transition placeholder-text-sm placeholder-gray-400"
+        formControlName="description"
+      ></textarea>
+    </div>
+    @if(isValid("description")){
+    <p class="text-red-600 font-bold text-sm">description is necessary</p>
+
+    }
+
+    <!-- FILE UPLOAD -->
+    <div class="space-y-2">
+      <label class="text-sm text-gray-300">Attachments</label>
+
+      <label
+        class="flex flex-col items-center justify-center w-full h-10 border-2 border-solid border-gray-700 hover:border-purple-500 cursor-pointer rounded-md bg-[#0D0D11] transition"
+      >
+        <span class="text-gray-400 text-center">Click to upload files</span>
+
+        <input
+          type="file"
+          class="hidden"
+          multiple
+          (change)="onUploadAttachments($event)"
+        />
+      </label>
+    </div>
+
+    <!-- IMAGE PREVIEW -->
+    @if(preview.length>0){
+    <label class="text-sm text-gray-300">Preview</label>
+    } @for(image of preview;track $index){
+
+    <div
+      class="flex gap-2 items-center justify-center w-full h-32 border-2 border-solid border-gray-700 hover:border-purple-500 cursor-pointer rounded-xl bg-[#0D0D11] transition"
+    >
+      <img [src]="image"  class="w-30 h-30 rounded-xl" />
+
+      <span class="text-red-600 cursor-pointer" (click)="deletePhoto($index)"
+        >&#10005;</span
+      >
+    </div>
+    }
+
+    <!-- SUBMIT -->
+    <button
+      class="w-full mt-4 bg-purple-600 py-3 rounded-xl font-semibold text-white hover:bg-purple-700 transition shadow-lg shadow-purple-600/20"
+    >
+      Submit Request
+    </button>
+  </div>
+</form>
+

@@ -1,0 +1,24 @@
+<div
+  class="bg-white shadow-sm border border-purple-50 rounded-2xl p-6 flex flex-col items-center text-center hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer focus-within:ring-2 focus-within:ring-purple-200"
+>
+
+  <!-- IMAGE CONTAINER -->
+  <div class="bg-purple-100 rounded-2xl w-32 h-32 md:w-36 md:h-40 flex items-center justify-center mb-4 overflow-hidden">
+    <img
+      [src]="image.src"
+      [alt]="image.alt"
+      class="w-full h-full object-cover md:object-contain"
+    />
+  </div>
+
+  <!-- TITLE -->
+  <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">
+    {{ titre }}
+  </h3>
+
+  <!-- DESCRIPTION -->
+  <p class="text-gray-600 text-sm md:text-base leading-relaxed">
+    {{ description }}
+  </p>
+
+</div>

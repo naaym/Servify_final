@@ -1,0 +1,443 @@
+<div class="min-h-screen bg-[#0B0B10] text-white flex">
+  <aside-dashboard-admin
+    [activeSection]="activeSection"
+    [isSuperAdmin]="isSuperAdmin"
+    (sectionChange)="switchSection($event)"
+  ></aside-dashboard-admin>
+
+  <div class="flex-1 ml-64">
+    <div class="mx-auto max-w-7xl px-6 py-10 space-y-8">
+      <div class="rounded-3xl border border-white/5 bg-gradient-to-r from-purple-900/40 via-purple-800/20 to-purple-700/20 px-8 py-10 shadow-2xl">
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div class="space-y-2">
+            @if (activeSection === 'dashboard') {
+              <h1 class="text-3xl font-bold">Espace Administrateur</h1>
+            }
+            @else if (activeSection === 'providers') {
+              <h1 class="text-3xl font-bold">Prestataires</h1>
+            }
+            @else if (activeSection === 'admins') {
+              <h1 class="text-3xl font-bold">Gestion des administrateurs</h1>
+            }
+            <p class="text-gray-200">
+              @switch (activeSection) {
+                @case ('dashboard') {
+                  <span>Vue d'ensemble de l'application et des indicateurs clés.</span>
+                }
+                @case ('providers') {
+                  <span>Demandes, validations et statistiques dédiées aux prestataires.</span>
+                }
+                @case ('admins') {
+                  <span>Création, mise à jour et suppression des comptes administrateurs.</span>
+                }
+                @default {
+                  <span>Sélectionnez une section pour consulter les détails.</span>
+                }
+              }
+            </p>
+          </div>
+          <div class="flex gap-3 flex-wrap">
+            <button
+              class="px-4 py-2 rounded-lg border border-gray-700 bg-white/5 text-white hover:border-purple-400 hover:bg-white/10 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
+              (click)="refreshData()"
+            >
+              Rafraîchir
+            </button>
+          </div>
+        </div>
+      </div>
+
+    @if (activeSection === 'dashboard') {
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+        <div class="bg-gradient-to-br from-purple-700/20 via-purple-900/30 to-purple-700/10 rounded-2xl p-5 border border-purple-700/40 shadow-lg">
+          @if(isSuperAdmin){
+
+            <p class="text-xs text-gray-400">Utilisateurs</p>
+            <div class="text-3xl font-bold mt-2">{{ dashboardStats?.users ?? 0 }}</div>
+          }
+          @if(!isSuperAdmin){
+
+            <p class="text-xs text-gray-400">Utilisateurs</p>
+            <div class="text-3xl font-bold mt-2">{{ dashboardStats!.users - dashboardStats!.admins  }}</div>
+          }
+        </div>
+        <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
+          <p class="text-xs text-gray-400">Prestataires</p>
+          <div class="text-3xl font-bold mt-2">{{ dashboardStats?.providers ?? 0 }}</div>
+        </div>
+        <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
+          <p class="text-xs text-gray-400">Clients</p>
+          <div class="text-3xl font-bold mt-2">{{ dashboardStats?.clients ?? 0 }}</div>
+        </div>
+        @if (isSuperAdmin) {
+          <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
+            <p class="text-xs text-gray-400">Admins</p>
+            <div class="text-3xl font-bold mt-2">{{ dashboardStats?.admins ?? 0 }}</div>
+          </div>
+        }
+      <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
+        <p class="text-xs text-gray-400">Services</p>
+        <div class="text-3xl font-bold mt-2">{{ dashboardStats?.services ?? 0 }}</div>
+      </div>
+    </div>
+  }
+
+  @if (activeSection === 'admins' && isSuperAdmin) {
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-gradient-to-br from-purple-700/20 via-purple-900/30 to-purple-700/10 rounded-2xl p-5 border border-purple-700/40 shadow-lg">
+        <p class="text-xs text-gray-400">Administrateurs</p>
+        <div class="text-3xl font-bold mt-2">{{ dashboardStats?.admins ?? 0 }}</div>
+        <p class="text-xs text-gray-500 mt-1">Gestion réservée au super administrateur.</p>
+      </div>
+    </div>
+
+    <div class="bg-[#12121A] p-6 rounded-2xl shadow space-y-4 border border-gray-800 mt-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-semibold">Liste des administrateurs</h2>
+          <p class="text-gray-400 text-sm">Créer, mettre à jour ou supprimer des comptes admin.</p>
+        </div>
+        <button
+          class="px-4 py-2 rounded-lg border border-purple-600 text-purple-200 hover:bg-purple-700/30"
+          (click)="startCreateAdmin()"
+        >
+          Nouvel administrateur
+        </button>
+      </div>
+
+      @if (adminError) {
+        <div class="bg-red-900/30 text-red-200 px-4 py-3 rounded-lg border border-red-800">{{ adminError }}</div>
+      }
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-800 text-sm">
+          <thead>
+            <tr class="text-left text-gray-400">
+              <th class="py-3">Nom</th>
+              <th>Email</th>
+              <th>Téléphone</th>
+              <th>Gouvernorat</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-800">
+            @if (loadingAdmins) {
+              <tr><td colspan="5" class="py-4 text-center text-gray-400">Chargement...</td></tr>
+            }
+            @else if (!admins.length) {
+              <tr><td colspan="5" class="py-4 text-center text-gray-400">Aucun administrateur pour le moment.</td></tr>
+            }
+            @else {
+              @for (admin of admins; track admin.id) {
+                <tr class="hover:bg-[#1D1D26]">
+                  <td class="py-3">
+                    <div class="font-semibold">{{ admin.name }}</div>
+                    <div class="text-xs text-gray-500">Créé le {{ admin.createdAt | date:'shortDate' }}</div>
+                  </td>
+                  <td>{{ admin.email }}</td>
+                  <td>{{ admin.phone }}</td>
+                  <td>{{ admin.governorate }}</td>
+                  <td class="text-right space-x-2">
+                    <button
+                      class="px-3 py-2 rounded-lg border border-blue-500 text-blue-200 hover:bg-blue-600/20"
+                      (click)="startEditAdmin(admin)"
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      class="px-3 py-2 rounded-lg border border-red-600 text-red-300 hover:bg-red-600/20"
+                      (click)="deleteAdmin(admin.id)"
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+    @if (activeSection === 'providers') {
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div class="bg-gradient-to-br from-purple-700/20 via-purple-900/30 to-purple-700/10 rounded-2xl p-5 border border-purple-700/40 shadow-lg">
+          <p class="text-xs text-gray-400">Prestataires totaux</p>
+          <div class="text-3xl font-bold mt-2">{{ dashboardStats?.providers ?? 0 }}</div>
+        </div>
+        <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
+          <p class="text-xs text-gray-400">En attente</p>
+          <div class="text-3xl font-bold mt-2 text-amber-300">{{ dashboardStats?.pendingProviders ?? 0 }}</div>
+        </div>
+        <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
+          <p class="text-xs text-gray-400">Acceptés</p>
+          <div class="text-3xl font-bold mt-2 text-green-300">{{ dashboardStats?.acceptedProviders ?? 0 }}</div>
+        </div>
+        <div class="bg-[#12121a] rounded-2xl p-5 border border-gray-800 shadow-lg">
+          <p class="text-xs text-gray-400">Rejetés</p>
+          <div class="text-3xl font-bold mt-2 text-red-300">{{ dashboardStats?.rejectedProviders ?? 0 }}</div>
+        </div>
+      </div>
+
+      <div class="bg-[#12121A] p-6 rounded-2xl shadow space-y-4 border border-gray-800">
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 class="text-lg font-semibold">Demandes de prestataires</h2>
+            <p class="text-gray-400 text-sm">
+              Consulter chaque dossier (CIN, CV, diplôme) et valider ou rejeter la demande.
+            </p>
+          </div>
+          <div class="flex gap-2 flex-wrap">
+            <button
+              class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
+              [class.bg-purple-600]="selectedStatus === undefined"
+              (click)="loadProviderRequests()"
+            >
+              Tous
+            </button>
+            <button
+              class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
+              [class.bg-yellow-700/40]="selectedStatus === 'PENDING'"
+              (click)="loadProviderRequests('PENDING')"
+            >
+              En attente
+            </button>
+            <button
+              class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
+              [class.bg-green-700/30]="selectedStatus === 'ACCEPTED'"
+              (click)="loadProviderRequests('ACCEPTED')"
+            >
+              Acceptés
+            </button>
+            <button
+              class="px-3 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
+              [class.bg-red-700/30]="selectedStatus === 'REJECTED'"
+              (click)="loadProviderRequests('REJECTED')"
+            >
+              Rejetés
+            </button>
+          </div>
+        </div>
+        @if (loadingRequests) {
+          <div class="text-gray-300">Chargement des demandes en cours...</div>
+        }
+        @if (!loadingRequests && providerRequests.length === 0) {
+          <div class="text-gray-500 text-sm">Aucune demande pour ce filtre.</div>
+        }
+
+        @if (providerRequests.length > 0) {
+          <table class="w-full text-sm">
+            <thead class="text-gray-400 border-b border-gray-800">
+              <tr>
+                <th class="text-left py-3">Nom</th>
+                <th class="text-left py-3">Contact</th>
+                <th class="text-left py-3">Localisation</th>
+                <th class="text-left py-3">Documents</th>
+                <th class="text-left py-3">Statut</th>
+                <th class="text-left py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-800">
+              @for (provider of providerRequests; track provider.id) {
+                <tr class="hover:bg-[#1D1D26]">
+                  <td class="py-4">
+                    <div class="font-semibold">{{ provider.name }}</div>
+                    <div class="text-xs text-gray-400">Inscription {{ provider.createdAt | date:'shortDate' }}</div>
+                  </td>
+                  <td>
+                    <div class="text-sm">{{ provider.email }}</div>
+                    <div class="text-xs text-gray-400">{{ provider.phone }}</div>
+                  </td>
+                  <td>
+                    <div class="text-sm">{{ provider.governorate }}</div>
+                    <div class="text-xs text-gray-400">{{ provider.delegation }}</div>
+                  </td>
+                  <td class="space-y-1 text-xs">
+                    <div class="text-gray-300">CIN: {{ provider.cinName }}</div>
+                    <div class="text-gray-300">CV: {{ provider.cvName }}</div>
+                    <div class="text-gray-300">Diplôme: {{ provider.diplomeName }}</div>
+                  </td>
+                  <td>
+                    <span
+                      class="px-3 py-1 rounded text-xs"
+                      [ngClass]="{
+                        'bg-yellow-600/30 text-yellow-300': provider.status === 'PENDING',
+                        'bg-green-600/30 text-green-300': provider.status === 'ACCEPTED',
+                        'bg-red-600/30 text-red-300': provider.status === 'REJECTED'
+                      }"
+                    >
+                      {{ provider.status }}
+                    </span>
+                  </td>
+                  <td class="flex gap-2 py-4 flex-wrap">
+                    <button
+                      class="px-3 py-2 rounded-lg border border-purple-500 text-purple-200 hover:bg-purple-600/20"
+                      (click)="viewApplication(provider)"
+                    >
+                      Voir
+                    </button>
+                    <button
+                      class="px-3 py-2 rounded-lg border border-red-700 text-red-200 hover:bg-red-700/20"
+                      (click)="deleteProvider(provider.id)"
+                    >
+                      Supprimer
+                    </button>
+                    @if(provider.status==="PENDING"){
+
+                      <button
+                      class="px-3 py-2 rounded-lg border border-green-600 text-green-300 hover:bg-green-600/20"
+                      (click)="updateStatus(provider.id, 'ACCEPTED')"
+                      >
+                      Accepter
+                    </button>
+                    <button
+                    class="px-3 py-2 rounded-lg border border-red-600 text-red-300 hover:bg-red-600/20"
+                    (click)="updateStatus(provider.id, 'REJECTED')"
+                    >
+                    Rejeter
+                  </button>
+                }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+    }
+  </div>
+
+  @if (showAdminModal) {
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-30">
+      <div class="bg-[#12121A] rounded-2xl max-w-3xl w-full p-6 shadow-2xl border border-purple-800/40 relative">
+        <button class="absolute top-4 right-4 text-gray-400 hover:text-white" (click)="closeAdminModal()">✕</button>
+
+        <div class="space-y-1">
+          <p class="text-xs uppercase tracking-[0.2em] text-purple-300">Administration</p>
+          <h3 class="text-2xl font-semibold">@if (editingAdminId) {Éditer un admin} @else {Créer un admin}</h3>
+          <p class="text-gray-400 text-sm">Le mot de passe est requis lors de la création et optionnel lors d'une mise à jour.</p>
+        </div>
+
+        @if (adminError) {
+          <div class="bg-red-900/30 text-red-200 px-4 py-3 rounded-lg border border-red-800 mt-4">{{ adminError }}</div>
+        }
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+          <label class="block text-sm text-gray-300">Nom
+            <input class="mt-2 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-3 focus:border-purple-500" [(ngModel)]="adminForm.name" />
+          </label>
+          <label class="block text-sm text-gray-300">Email
+            <input type="email" class="mt-2 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-3 focus:border-purple-500" [(ngModel)]="adminForm.email" />
+          </label>
+          <label class="block text-sm text-gray-300">Téléphone
+            <input class="mt-2 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-3 focus:border-purple-500" [(ngModel)]="adminForm.phone" />
+          </label>
+          <label class="block text-sm text-gray-300">Gouvernorat
+            <input class="mt-2 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-3 focus:border-purple-500" [(ngModel)]="adminForm.governorate" />
+          </label>
+          <label class="block text-sm text-gray-300 md:col-span-2">Mot de passe
+            <input type="password" class="mt-2 w-full bg-[#0B0B10] border border-gray-800 rounded-lg p-3 focus:border-purple-500" [(ngModel)]="adminForm.password" placeholder="8 caractères minimum" />
+          </label>
+        </div>
+
+        <div class="flex justify-end gap-3 mt-6">
+          <button class="px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:border-purple-400" type="button" (click)="closeAdminModal()">Annuler</button>
+          <button
+            class="px-4 py-2 rounded-lg border border-purple-600 text-purple-200 hover:bg-purple-700/30"
+            (click)="saveAdmin()"
+            [disabled]="loadingAdmins"
+          >
+            @if (editingAdminId) {Mettre à jour} @else {Créer}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (selectedProvider; as provider) {
+    <div
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-20"
+    >
+      <div class="bg-[#12121A] rounded-2xl max-w-4xl w-full p-6 shadow-2xl border border-purple-800/40">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-2xl font-semibold">Dossier de {{ provider.name }}</h3>
+            <p class="text-gray-400 text-sm">Coordonnées, localisation et pièces jointes.</p>
+          </div>
+          <button class="text-gray-400 hover:text-white" (click)="closeApplication()">✕</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 text-sm">
+          <div class="space-y-2 bg-[#1A1A24] p-4 rounded-xl border border-gray-800">
+            <div class="flex justify-between"><span class="text-gray-400">Email</span><span class="font-semibold">{{ provider.email }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Téléphone</span><span class="font-semibold">{{ provider.phone }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Gouvernorat</span><span class="font-semibold">{{ provider.governorate }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Délégation</span><span class="font-semibold">{{ provider.delegation }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Âge</span><span class="font-semibold">{{ provider.age}}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Statut</span><span class="font-semibold">{{ provider.status }}</span></div>
+          </div>
+          <div class="space-y-3">
+            <div class="text-gray-400 text-xs uppercase tracking-widest">Documents</div>
+            
+              <div class="bg-[#1A1A24] p-4 rounded-xl border border-gray-800">
+              <ul class="space-y-4 text-sm">
+  <li class="flex items-start gap-3">
+    <span class="mt-1 text-white-400 text-3xl">•</span>
+    <div>
+      <div class="text-xs text-gray-400">CIN</div>
+      <a
+        [href]="provider.cinUrl"
+        target="_blank"
+        class="text-purple-300 hover:underline break-all"
+      >
+        {{ provider.cinName || 'Ouvrir le fichier' }}
+      </a>
+    </div>
+  </li>
+
+  <li class="flex items-start gap-3">
+    <span class="mt-1 text-white-400 text-3xl">•</span>
+    <div>
+      <div class="text-xs text-gray-400">CV</div>
+      <a
+        [href]="provider.cvUrl"
+        target="_blank"
+        class="text-purple-300 hover:underline break-all"
+      >
+        {{ provider.cvName || 'Ouvrir le fichier' }}
+      </a>
+    </div>
+  </li>
+
+  <li class="flex items-start gap-3">
+    <span class="mt-1 text-white-400 text-3xl">•</span>
+    <div>
+      <div class="text-xs text-gray-400">Diplôme</div>
+      <a
+        [href]="provider.diplomeUrl"
+        target="_blank"
+        class="text-purple-300 hover:underline break-all"
+      >
+        {{ provider.diplomeName || 'Ouvrir le fichier' }}
+      </a>
+    </div>
+  </li>
+</ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 mt-6">
+          <button class="px-4 py-2 rounded-lg border border-gray-700 hover:border-purple-400" (click)="closeApplication()">Fermer</button>
+          <button class="px-4 py-2 rounded-lg border border-red-700 text-red-200 hover:bg-red-700/20" (click)="deleteProvider(provider.id)">Supprimer</button>
+                    @if(provider.status==="PENDING"){
+
+          <button class="px-4 py-2 rounded-lg border border-green-600 text-green-200 hover:bg-green-600/20" (click)="updateStatus(provider.id, 'ACCEPTED')">Accepter</button>
+          <button class="px-4 py-2 rounded-lg border border-red-600 text-red-200 hover:bg-red-600/20" (click)="updateStatus(provider.id, 'REJECTED')">Rejeter</button>
+                    }
+        </div>
+      </div>
+    </div>
+  }
+</div>

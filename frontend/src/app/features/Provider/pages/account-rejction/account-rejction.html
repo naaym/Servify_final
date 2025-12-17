@@ -1,0 +1,50 @@
+<app-logo></app-logo>
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-6">
+  <div class="bg-white shadow-lg rounded-2xl p-10 max-w-lg w-full text-center">
+
+    <!-- Icon -->
+    <div class="flex justify-center mb-6">
+      <div class="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v3m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-2xl font-bold text-gray-900 mb-4">
+      Your Application Account Has Been Rejected
+    </h1>
+
+    <!-- Message -->
+    <p class="text-gray-600 leading-relaxed mb-8">
+      After reviewing your application, we are unable to approve your provider account.
+      You cannot access your provider dashboard at this time.
+    </p>
+
+    <!-- Reason (optional) -->
+    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-8">
+      <p class="font-semibold">Reason for rejection:</p>
+      <p class="text-sm mt-1">
+        Your submitted information or documents do not meet the required criteria.
+      </p>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex flex-col gap-4">
+      <a
+        routerLink="/contact-support"
+        class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-xl transition">
+        Contact Support
+      </a>
+
+      <a
+        routerLink="/provider/resubmit"
+        class="text-red-600 hover:text-red-800 font-medium transition">
+        Resubmit my information →
+      </a>
+    </div>
+  </div>
+</div>

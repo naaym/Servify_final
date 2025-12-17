@@ -1,0 +1,104 @@
+<div class="min-h-screen bg-[#0D0D11] text-white p-6 md:p-10">
+  <div class="max-w-5xl mx-auto space-y-6">
+    <div class="flex items-center gap-4 text-sm text-gray-300">
+      <a class="text-purple-400 hover:underline" routerLink="/providers/dashboard">Retour au tableau de bord</a>
+      <span class="text-gray-500">/</span>
+      <span class="text-gray-400">Réservation</span>
+    </div>
+
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold">Réservation #{{ booking?.bookingId }}</h1>
+        <p class="text-gray-400">Mise à jour : {{ booking?.updatedAt | date: 'dd MMM yyyy HH:mm' }}</p>
+      </div>
+      <span
+        class="px-4 py-2 rounded-full text-sm font-semibold"
+        [ngClass]="{
+          'bg-yellow-600/30 text-yellow-300': booking?.status === 'PENDING',
+          'bg-green-600/30 text-green-200': booking?.status === 'ACCEPTED',
+          'bg-blue-600/30 text-blue-200': booking?.status === 'DONE',
+          'bg-red-600/30 text-red-200': booking?.status === 'REJECTED',
+          'bg-gray-600/30 text-gray-200': booking?.status === 'CANCELLED'
+        }"
+      >
+        {{ booking?.status || '...' }}
+      </span>
+    </div>
+
+    @if(errorMessage){
+      <div class="bg-red-900/40 border border-red-700 text-red-200 px-4 py-3 rounded-xl">{{ errorMessage }}</div>
+    }
+
+    @if(loading){
+      <div class="bg-[#16161C] border border-gray-800 p-6 rounded-2xl text-gray-300">Chargement des détails...</div>
+    } @else if (booking) {
+      <div class="bg-[#16161C] border border-gray-800 p-6 rounded-2xl space-y-6">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <p class="text-gray-400 text-sm">Client</p>
+            <p class="text-lg font-semibold">{{ booking.clientName }}</p>
+            <p class="text-gray-300">{{ booking.clientPhone }}</p>
+          </div>
+          <div class="space-y-2">
+            <p class="text-gray-400 text-sm">Service</p>
+            <p class="text-gray-400">{{ booking.serviceGategory }}</p>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-gray-400 text-sm">Date</p>
+          <p class="text-gray-200 text-lg">{{ booking.date | date: 'dd MMM yyyy' }}</p>
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-gray-400 text-sm">Description</p>
+          <p class="bg-[#1D1D26] rounded-xl p-4 text-gray-200">
+            {{ booking.description || 'Aucune description fournie.' }}
+          </p>
+        </div>
+
+        @if(booking.attachments?.length){
+          <div class="space-y-3">
+            <p class="text-gray-400 text-sm">Pièces jointes</p>
+            <div class="flex flex-wrap gap-3">
+              @for (file of booking.attachments; track file.name) {
+                <a
+                  [href]="file.url"
+                  target="_blank"
+                  class="px-3 py-2 rounded-lg bg-[#1D1D26] border border-gray-800 text-indigo-300 hover:text-indigo-100"
+                 download="file.name.png">
+                  {{ file.name }}
+                </a>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="flex flex-wrap gap-3 pt-4 border-t border-gray-800">
+          @if(canAcceptOrReject){
+            <button
+              class="px-5 py-3 rounded-xl bg-green-600 hover:bg-green-700"
+              (click)="updateStatus('ACCEPTED')"
+            >
+              Accepter
+            </button>
+            <button
+              class="px-5 py-3 rounded-xl bg-red-600 hover:bg-red-700"
+              (click)="updateStatus('REJECTED')"
+            >
+              Rejeter
+            </button>
+          }
+          @if(canComplete){
+            <button
+              class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700"
+              (click)="updateStatus('DONE')"
+            >
+              Marquer comme terminé
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
