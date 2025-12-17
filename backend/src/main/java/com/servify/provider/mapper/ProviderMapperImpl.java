@@ -47,6 +47,7 @@ public  class ProviderMapperImpl implements ProviderMapper {
         response.setRating(entity.getRating());
         response.setReviewCount(entity.getReviewCount());
         response.setDescription(entity.getDescription());
+        response.setImageProviderUrl(entity.getProfileImageUrl());
         return response;
     }
 

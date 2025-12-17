@@ -33,7 +33,6 @@ public class SearchOptionsService {
         if (normalizedService == null) {
             return List.of();
         }
-
         return serviceCategoryRepository.findByNameIgnoreCase(normalizedService)
                 .map(service -> governorateRepository.findByServiceOrderByNameAsc(service)
                         .stream()
@@ -41,6 +40,7 @@ public class SearchOptionsService {
                         .filter(Objects::nonNull)
                         .toList())
                 .orElseGet(List::of);
+
     }
 
     @Transactional

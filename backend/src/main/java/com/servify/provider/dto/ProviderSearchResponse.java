@@ -14,4 +14,5 @@ public class ProviderSearchResponse {
     private Double rating;
     private Integer reviewCount;
     private String description;
+    private String imageProviderUrl;
 }
