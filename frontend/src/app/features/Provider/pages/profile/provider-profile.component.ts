@@ -15,15 +15,15 @@ export class ProviderProfileComponent implements OnInit {
   private readonly profileService = inject(ProviderProfileService);
 
   profileForm = this.fb.group({
-    name: ['', Validators.required],
-    email: [{ value: '', disabled: true }],
-    phone: ['', Validators.required],
-    governorate: ['', Validators.required],
-    delegation: ['', Validators.required],
-    age: [null],
-    serviceCategory: ['', Validators.required],
-    basePrice: [null, Validators.required],
-    description: ['']
+    name: this.fb.control<string | null>('', { validators: [Validators.required] }),
+    email: this.fb.control({ value: '', disabled: true }),
+    phone: this.fb.control<string | null>('', { validators: [Validators.required] }),
+    governorate: this.fb.control<string | null>('', { validators: [Validators.required] }),
+    delegation: this.fb.control<string | null>('', { validators: [Validators.required] }),
+    age: this.fb.control<number | null>(null),
+    serviceCategory: this.fb.control<string | null>('', { validators: [Validators.required] }),
+    basePrice: this.fb.control<number | null>(null, { validators: [Validators.required] }),
+    description: this.fb.control<string | null>('')
   });
 
   loading = false;

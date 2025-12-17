@@ -51,10 +51,10 @@
             <input formControlName="name" class="w-full bg-[#0D0D11] border border-white/10 rounded-xl px-3 py-2 focus:outline-none focus:border-purple-500" />
           </label>
 
-          <label class="block text-sm text-gray-300 space-y-2">
-            <span>Email</span>
-            <input formControlName="email" disabled class="w-full bg-[#0D0D11] border border-white/10 rounded-xl px-3 py-2 opacity-70" />
-          </label>
+            <label class="block text-sm text-gray-300 space-y-2">
+              <span>Email</span>
+              <input formControlName="email" [disabled]="true" class="w-full bg-[#0D0D11] border border-white/10 rounded-xl px-3 py-2 opacity-70" />
+            </label>
 
           <label class="block text-sm text-gray-300 space-y-2">
             <span>Téléphone</span>
