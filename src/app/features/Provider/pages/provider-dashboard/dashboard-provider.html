@@ -2,83 +2,90 @@
 <div class="min-h-screen bg-[#0D0D11] text-white flex">
 
   <!-- SIDEBAR PROVIDER -->
-  <div class="w-64 h-full bg-[#141418] fixed left-0 top-0 shadow-2xl flex flex-col">
+  <div class="w-64 h-full bg-[#141418] fixed left-0 top-0 shadow-2xl flex flex-col border-r border-gray-900">
 
     <div class="p-6 border-b border-gray-800">
       <h1 class="text-2xl font-bold text-purple-500">Provider</h1>
     </div>
 
-    <nav class="flex-1 p-4 space-y-2">
-      <a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-600/20 cursor-pointer">
+    <nav class="flex-1 p-4 space-y-2 text-gray-200">
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-600/25 border border-purple-500/40 cursor-pointer shadow-sm transition hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500">
         <span></span> Dashboard
       </a>
 
-      <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/20 cursor-pointer">
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-800 hover:border-purple-500/40 hover:bg-purple-600/10 cursor-pointer transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500">
         <span></span> Incoming Requests
       </a>
 
-      <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/20 cursor-pointer">
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-800 hover:border-purple-500/40 hover:bg-purple-600/10 cursor-pointer transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500">
         <span></span> My Appointments
       </a>
 
-      <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/20 cursor-pointer">
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-800 hover:border-purple-500/40 hover:bg-purple-600/10 cursor-pointer transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500">
         <span></span> Earnings
       </a>
 
-      <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-600/20 cursor-pointer">
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-800 hover:border-purple-500/40 hover:bg-purple-600/10 cursor-pointer transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500">
         <span></span> Settings
       </a>
     </nav>
 
     <div class="p-4 border-t border-gray-800">
-      <button class="w-full bg-purple-600 py-2 rounded-xl hover:bg-purple-700 transition" (click)="logout()">
+      <button class="w-full bg-purple-600 py-2 rounded-xl hover:bg-purple-700 transition font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400" (click)="logout()">
         Logout
       </button>
     </div>
   </div>
 
   <!-- MAIN PROVIDER DASHBOARD -->
-  <div class="flex-1 ml-64 p-8 space-y-10">
+  <div class="flex-1 ml-64">
+    <div class="mx-auto max-w-6xl px-6 py-10 space-y-8">
 
     <!-- HEADER -->
-    <div>
-      <h1 class="text-3xl font-bold">Provider Dashboard</h1>
-      <p class="text-gray-400">Manage your requests & earnings</p>
-    </div>
+      <div class="rounded-3xl border border-white/5 bg-gradient-to-r from-purple-900/40 via-purple-800/20 to-purple-700/20 px-8 py-10 shadow-2xl">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-purple-200">Prestataire</p>
+        <h1 class="mt-2 text-3xl font-bold">Tableau de bord</h1>
+        <p class="mt-2 text-sm text-gray-300">Suivez vos demandes, revenus et rendez-vous en un coup d'œil.</p>
+      </div>
 
     <!-- CARDS -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4 border border-white/5">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 flex justify-center items-center text-xl font-bold">📨</div>
+          <div>
+            <p class="text-gray-400 text-sm">Total demandes</p>
+            <h2 class="text-2xl font-bold">{{ bookings.length }}</h2>
+          </div>
+        </div>
 
-      <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4">
-        <div class="w-14 h-14 bg-purple-600 rounded-xl flex justify-center items-center text-xl"></div>
-        <div>
-          <p class="text-gray-400 text-sm">Total demandes</p>
-          <h2 class="text-2xl font-bold">{{ bookings.length }}</h2>
+        <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4 border border-white/5">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-500 flex justify-center items-center text-xl font-bold">⏳</div>
+          <div>
+            <p class="text-gray-400 text-sm">En attente</p>
+            <h2 class="text-2xl font-bold">{{ pendingCount }}</h2>
+          </div>
+        </div>
+
+        <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4 border border-white/5">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex justify-center items-center text-xl font-bold">✔</div>
+          <div>
+            <p class="text-gray-400 text-sm">Terminées</p>
+            <h2 class="text-2xl font-bold">{{ completedCount }}</h2>
+          </div>
         </div>
       </div>
-
-      <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4">
-        <div class="w-14 h-14 bg-yellow-600 rounded-xl flex justify-center items-center text-xl"></div>
-        <div>
-          <p class="text-gray-400 text-sm">En attente</p>
-          <h2 class="text-2xl font-bold">{{ pendingCount }}</h2>
-        </div>
-      </div>
-
-      <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4">
-        <div class="w-14 h-14 bg-green-600 rounded-xl flex justify-center items-center text-xl"></div>
-        <div>
-          <p class="text-gray-400 text-sm">Terminées</p>
-          <h2 class="text-2xl font-bold">{{ completedCount }}</h2>
-        </div>
-      </div>
-
-    </div>
 
     <!-- LATEST REQUESTS -->
-    <div class="bg-[#16161C] p-6 rounded-2xl shadow">
+      <div class="bg-[#16161C] p-6 rounded-3xl shadow-xl border border-white/5">
 
-      <h2 class="text-lg font-semibold mb-6">Dernières demandes</h2>
+        <div class="flex flex-col gap-2 mb-6 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-purple-200">Activité récente</p>
+            <h2 class="text-lg font-semibold">Dernières demandes</h2>
+            <p class="text-sm text-gray-400">Consultez les nouvelles requêtes et mettez à jour leur statut.</p>
+          </div>
+          <span class="rounded-full bg-purple-700/30 px-3 py-1 text-xs font-semibold text-purple-100">Synchronisé</span>
+        </div>
 
       @if(errorMessage){
         <div class="text-red-400 mb-4">{{errorMessage}}</div>
@@ -86,32 +93,32 @@
 
       <div class="overflow-x-auto" *ngIf="!loading">
         <table class="w-full text-sm">
-          <thead class="text-gray-400 border-b border-gray-700">
+          <thead class="text-gray-400 border-b border-gray-800">
             <tr>
-              <th class="text-left py-3">Client</th>
-              <th class="text-left py-3">Service</th>
-              <th class="text-left py-3">Date</th>
-              <th class="text-left py-3">Status</th>
-              <th class="text-left py-3">Détails</th>
-              <th class="text-left py-3">Actions</th>
+              <th class="text-left py-3 font-semibold text-gray-300">Client</th>
+              <th class="text-left py-3 font-semibold text-gray-300">Service</th>
+              <th class="text-left py-3 font-semibold text-gray-300">Date</th>
+              <th class="text-left py-3 font-semibold text-gray-300">Status</th>
+              <th class="text-left py-3 font-semibold text-gray-300">Détails</th>
+              <th class="text-left py-3 font-semibold text-gray-300">Actions</th>
             </tr>
           </thead>
 
           <tbody class="divide-y divide-gray-800" *ngIf="bookings.length > 0; else emptyState">
             @for (booking of bookings; track booking.bookingId) {
-              <tr class="hover:bg-[#1D1D26]">
-                <td class="py-4">{{ booking.clientName || 'Client' }}</td>
-                <td>{{ booking.category }}</td>
-                <td>{{ booking.date | date: 'dd MMM yyyy' }}</td>
+              <tr class="hover:bg-[#1D1D26] transition">
+                <td class="py-4 font-semibold">{{ booking.clientName || 'Client' }}</td>
+                <td class="text-gray-200">{{ booking.category }}</td>
+                <td class="text-gray-300">{{ booking.date | date: 'dd MMM yyyy' }}</td>
                 <td>
                   <span
-                    class="px-3 py-1 rounded-lg"
+                    class="px-3 py-1 rounded-lg text-xs font-semibold"
                     [ngClass]="{
-                      'bg-yellow-600/30 text-yellow-400': booking.status === 'PENDING',
-                      'bg-green-600/30 text-green-400': booking.status === 'ACCEPTED',
-                      'bg-blue-600/30 text-blue-400': booking.status === 'DONE',
-                      'bg-red-600/30 text-red-400': booking.status === 'REJECTED',
-                      'bg-gray-600/30 text-gray-300': booking.status === 'CANCELLED'
+                      'bg-yellow-600/30 text-yellow-300': booking.status === 'PENDING',
+                      'bg-green-600/30 text-green-300': booking.status === 'ACCEPTED',
+                      'bg-blue-600/30 text-blue-300': booking.status === 'DONE',
+                      'bg-red-600/30 text-red-300': booking.status === 'REJECTED',
+                      'bg-gray-600/30 text-gray-200': booking.status === 'CANCELLED'
                     }"
                   >
                     {{ booking.status }}
@@ -119,7 +126,7 @@
                 </td>
                 <td class="py-3">
                   <a
-                    class="text-indigo-400 hover:underline"
+                    class="text-indigo-300 hover:text-indigo-200 hover:underline font-medium"
                     [routerLink]="['/providers/bookings', booking.bookingId]"
                   >
                     Voir détails
@@ -127,11 +134,11 @@
                 </td>
                 <td class="flex flex-wrap gap-3 py-3">
                   @if(booking.status === 'PENDING'){
-                    <button class="text-green-400 hover:underline" (click)="onUpdateStatus(booking.bookingId, 'ACCEPTED')">Accepter</button>
-                    <button class="text-red-400 hover:underline" (click)="onUpdateStatus(booking.bookingId, 'REJECTED')">Rejeter</button>
+                    <button class="rounded-lg px-3 py-2 text-sm font-semibold text-green-100 bg-green-600/30 hover:bg-green-600/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400" (click)="onUpdateStatus(booking.bookingId, 'ACCEPTED')">Accepter</button>
+                    <button class="rounded-lg px-3 py-2 text-sm font-semibold text-red-100 bg-red-600/25 hover:bg-red-600/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400" (click)="onUpdateStatus(booking.bookingId, 'REJECTED')">Rejeter</button>
                   }
                   @if(booking.status === 'ACCEPTED'){
-                    <button class="text-blue-400 hover:underline" (click)="onUpdateStatus(booking.bookingId, 'DONE')">Terminer</button>
+                    <button class="rounded-lg px-3 py-2 text-sm font-semibold text-blue-100 bg-blue-600/30 hover:bg-blue-600/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400" (click)="onUpdateStatus(booking.bookingId, 'DONE')">Terminer</button>
                   }
                 </td>
               </tr>
@@ -147,6 +154,8 @@
       @if(loading){
         <div class="text-gray-400">Chargement des demandes...</div>
       }
+
+      </div>
 
     </div>
 
