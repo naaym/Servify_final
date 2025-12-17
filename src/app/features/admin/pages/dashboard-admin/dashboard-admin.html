@@ -5,44 +5,47 @@
     (sectionChange)="switchSection($event)"
   ></aside-dashboard-admin>
 
-  <div class="flex-1 ml-64 p-8 space-y-10">
-    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-      <div>
-        @if (activeSection === 'dashboard') {
-          <h1 class="text-3xl font-bold">Espace Administrateur</h1>
-        }
-        @else if (activeSection === 'providers') {
-          <h1 class="text-3xl font-bold">Prestataires</h1>
-        }
-        @else if (activeSection === 'admins') {
-          <h1 class="text-3xl font-bold">Gestion des administrateurs</h1>
-        }
-        <p class="text-gray-400">
-          @switch (activeSection) {
-            @case ('dashboard') {
-              <span>Vue d'ensemble de l'application et des indicateurs clés.</span>
+  <div class="flex-1 ml-64">
+    <div class="mx-auto max-w-7xl px-6 py-10 space-y-8">
+      <div class="rounded-3xl border border-white/5 bg-gradient-to-r from-purple-900/40 via-purple-800/20 to-purple-700/20 px-8 py-10 shadow-2xl">
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div class="space-y-2">
+            @if (activeSection === 'dashboard') {
+              <h1 class="text-3xl font-bold">Espace Administrateur</h1>
             }
-            @case ('providers') {
-              <span>Demandes, validations et statistiques dédiées aux prestataires.</span>
+            @else if (activeSection === 'providers') {
+              <h1 class="text-3xl font-bold">Prestataires</h1>
             }
-            @case ('admins') {
-              <span>Création, mise à jour et suppression des comptes administrateurs.</span>
+            @else if (activeSection === 'admins') {
+              <h1 class="text-3xl font-bold">Gestion des administrateurs</h1>
             }
-            @default {
-              <span>Sélectionnez une section pour consulter les détails.</span>
-            }
-          }
-        </p>
+            <p class="text-gray-200">
+              @switch (activeSection) {
+                @case ('dashboard') {
+                  <span>Vue d'ensemble de l'application et des indicateurs clés.</span>
+                }
+                @case ('providers') {
+                  <span>Demandes, validations et statistiques dédiées aux prestataires.</span>
+                }
+                @case ('admins') {
+                  <span>Création, mise à jour et suppression des comptes administrateurs.</span>
+                }
+                @default {
+                  <span>Sélectionnez une section pour consulter les détails.</span>
+                }
+              }
+            </p>
+          </div>
+          <div class="flex gap-3 flex-wrap">
+            <button
+              class="px-4 py-2 rounded-lg border border-gray-700 bg-white/5 text-white hover:border-purple-400 hover:bg-white/10 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
+              (click)="refreshData()"
+            >
+              Rafraîchir
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="flex gap-3 flex-wrap">
-        <button
-          class="px-4 py-2 rounded-lg border border-gray-700 hover:border-purple-400"
-          (click)="refreshData()"
-        >
-          Rafraîchir
-        </button>
-      </div>
-    </div>
 
     @if (activeSection === 'dashboard') {
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-4">

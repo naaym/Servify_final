@@ -1,40 +1,56 @@
-<section class="bg-purple-400 text-white text-center py-16 px-5 rounded-2xl max-w-4xl mx-auto mt-10">
+<section class="relative overflow-hidden rounded-3xl max-w-6xl mx-auto mt-10 bg-gradient-to-br from-purple-500 via-purple-400 to-blue-500 text-white shadow-xl">
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.15),transparent_45%)]"></div>
+  <div class="relative text-center py-16 px-6 md:px-12 lg:px-16 space-y-10">
 
-  <!-- Titre -->
-  <h1 class="text-3xl md:text-5xl font-serif font-medium leading-tight mb-10">
-    Trouver les bons <span class="text-blue-600 italic">Prestataire</span><br>
-    pour tous vos projets
-  </h1>
-
-  <!-- Champ de recherche -->
- <div class="flex justify-center items-center mb-10 w-full max-w-xl mx-auto " (click)="toggleServiceModal(true)">
-  <button
-
-    class="w-full text-left px-4 py-3 bg-white text-gray-900 rounded-l-xl outline-none">
-    Que cherchez-vous ? Par exemple : Applications mobiles
-  </button>
-
-  <button
-    class="bg-purple-600 p-3 rounded-r-xl text-white hover:bg-blue-600">
-    <lucide-angular [img]="icon"></lucide-angular>
-  </button>
-</div>
-
-  <!-- Liste des avantages -->
-  <div class="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-8 text-sm md:text-base font-semibold text-black">
-
-    <div class="flex items-center gap-2 text-white">
-      <span>200.000 francophones sur la plateforme</span>
+    <!-- Titre -->
+    <div class="space-y-4">
+      <p class="uppercase tracking-[0.3em] text-white/80 text-xs md:text-sm font-semibold">Marketplace de services</p>
+      <h1 class="text-3xl md:text-5xl font-serif font-semibold leading-tight">
+        Trouver les bons <span class="text-white drop-shadow-sm underline decoration-4 decoration-blue-200">Prestataire</span><br>
+        pour tous vos projets
+      </h1>
+      <p class="text-white/85 max-w-3xl mx-auto text-base md:text-lg">
+        Comparez les meilleurs profils, échangez avec eux et réservez rapidement pour faire avancer vos projets en toute confiance.
+      </p>
     </div>
 
-    <div class="flex items-center gap-2 text-white">
-      <span>Une assistance 24h/24 et 7j/7</span>
+    <!-- Champ de recherche -->
+    <div class="flex flex-col md:flex-row justify-center items-stretch gap-3 mb-8 w-full max-w-2xl mx-auto" (click)="toggleServiceModal(true)">
+      <label class="sr-only" for="service-search">Rechercher un service</label>
+      <button
+        id="service-search"
+        class="w-full text-left px-5 py-3.5 bg-white/95 text-gray-900 rounded-2xl md:rounded-2xl shadow-sm md:shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      >
+        Que cherchez-vous ? Par exemple : Applications mobiles
+      </button>
+
+      <button
+        class="md:w-auto w-full md:flex-none inline-flex items-center justify-center gap-2 bg-purple-700 px-5 py-3.5 rounded-2xl text-white font-semibold shadow-lg hover:bg-purple-800 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        aria-label="Ouvrir la recherche de service"
+      >
+        <lucide-angular [img]="icon"></lucide-angular>
+        <span class="md:hidden">Rechercher</span>
+      </button>
     </div>
 
-    <div class="flex items-center gap-2 text-white">
-      <span>Paiement sécurisé</span>
-    </div>
+    <!-- Liste des avantages -->
+    <div class="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 text-sm md:text-base font-semibold text-white/90">
+      <div class="flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 backdrop-blur">
+        <span class="inline-block h-2 w-2 rounded-full bg-emerald-300"></span>
+        <span>200.000 francophones sur la plateforme</span>
+      </div>
 
+      <div class="flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 backdrop-blur">
+        <span class="inline-block h-2 w-2 rounded-full bg-emerald-300"></span>
+        <span>Une assistance 24h/24 et 7j/7</span>
+      </div>
+
+      <div class="flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 backdrop-blur">
+        <span class="inline-block h-2 w-2 rounded-full bg-emerald-300"></span>
+        <span>Paiement sécurisé</span>
+      </div>
+
+    </div>
   </div>
 
 </section>
@@ -48,6 +64,3 @@
  (close)="toggleCityModal(false)"
  (citySelected)="onCityChosen($event)"  [serviceName]="nameService"
  (retour)="backToServiceModal()" ></app-city>
-
-
-

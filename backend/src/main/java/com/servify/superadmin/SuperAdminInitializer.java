@@ -15,6 +15,9 @@ public class SuperAdminInitializer  implements CommandLineRunner {
   private final SuperAdminRepository superAdminRepository;
   @Override
     public void run(String... args) throws Exception {
+    if(superAdminRepository.existsByEmail("supadmins@admin.com")){
+      return ;
+  }
     SuperAdminEntity superAdminEntity = new SuperAdminEntity();
     superAdminEntity.setEmail("supadmins@admin.com");
     superAdminEntity.setPassword(passwordEncoder.encode("123456"));

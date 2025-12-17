@@ -1,19 +1,20 @@
-<div class="mx-4 md:mx-20 mt-10">
+<div class="mx-4 md:mx-12 lg:mx-20 mt-14">
 
-  <section class="py-10 bg-white">
+  <section class="py-12 bg-gradient-to-b from-white to-purple-50/50 rounded-3xl shadow-sm">
 
     <!-- TITRE -->
-    <div class="text-start px-4 md:px-8 mb-10">
-      <h2 class="text-2xl md:text-3xl font-bold text-black">
+    <div class="text-start px-4 md:px-8 mb-10 max-w-2xl">
+      <p class="text-sm uppercase tracking-[0.2em] text-purple-600 font-semibold">Catégories</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-2">
         Services les plus demandés
       </h2>
-      <p class="text-gray-500 text-sm md:text-base">
+      <p class="text-gray-600 text-sm md:text-base mt-2">
         Trouvez votre prestataire idéal en quelques clics.
       </p>
     </div>
 
     <!-- GRID RESPONSIVE -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 justify-items-center">
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 justify-items-center px-4 md:px-8">
 
       <app-service-icon [image]="{src:'plombier.jpg', alt:'7aja aal kif'}" titre="Plombier"></app-service-icon>
       <app-service-icon [image]="{src:'mecanicien.jpg', alt:'7aja aal kif'}" titre="Mécanicien"></app-service-icon>
@@ -23,13 +24,13 @@
 
       <!-- Voir plus -->
       <div class="flex flex-col justify-center items-center w-full">
-        <div class="bg-purple-50 border border-purple-200 rounded-2xl w-20 h-20 flex items-center justify-center shadow hover:bg-purple-100 cursor-pointer transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-purple-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="bg-white border border-purple-200 rounded-2xl w-24 h-24 flex items-center justify-center shadow-sm hover:shadow-md hover:-translate-y-1 hover:bg-purple-50 cursor-pointer transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-purple-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" role="img" aria-label="Voir plus">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
         </div>
         <p class="text-sm font-semibold text-purple-700 mt-2">
-          <a routerLink="/list-service">Voir plus</a>
+          <a routerLink="/list-service" class="hover:underline">Voir plus</a>
         </p>
       </div>
 
