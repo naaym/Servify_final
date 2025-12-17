@@ -6,6 +6,8 @@ export const API_ENDPOINTS = {
 
   CLIENT: {
     REGISTER: 'clients/register',
+    PROFILE: 'clients/profile',
+    PROFILE_PHOTO: 'clients/profile/photo',
 
   },
 

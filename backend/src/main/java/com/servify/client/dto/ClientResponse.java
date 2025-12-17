@@ -15,6 +15,7 @@ public class ClientResponse {
     private String email;
     private String phone;
     private String governorate;
+    private String profileImageUrl;
     private Instant createdAt;
 
 

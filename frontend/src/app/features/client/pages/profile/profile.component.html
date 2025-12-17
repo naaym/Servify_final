@@ -1,145 +1,76 @@
-<div class="p-6 max-w-4xl mx-auto">
+<div class="p-6 max-w-4xl mx-auto space-y-6">
+  <div class="flex flex-col gap-2">
+    <h1 class="text-3xl font-bold text-gray-900">Mon Profil</h1>
+    <p class="text-gray-600">Consultez vos informations et mettez à jour votre photo de profil.</p>
+  </div>
 
-  <h1 class="text-3xl font-bold text-gray-900 mb-8">Mon Profil</h1>
+  <div *ngIf="error" class="p-4 rounded-xl bg-red-50 text-red-700 border border-red-200">
+    {{ error }}
+  </div>
 
-  <!-- 🟦 Photo de profil -->
-  <div class="bg-white p-6 rounded-2xl shadow mb-10">
+  <div class="bg-white p-6 rounded-2xl shadow">
     <h2 class="text-xl font-semibold mb-4">Photo de profil</h2>
-
-    <div class="flex items-center gap-6">
-
+    <div class="flex items-center gap-6 flex-wrap">
       <div class="w-28 h-28 rounded-full overflow-hidden shadow border">
-        @if (profileImage) {
-          <img [src]="profileImage.preview" class="w-full h-full object-cover" />
-        } @else {
-          <img src="/assets/default-avatar.png" class="w-full h-full object-cover" />
-        }
+        <img [src]="profileImage" alt="Photo de profil" class="w-full h-full object-cover" />
       </div>
 
-      <div>
-        <input type="file" (change)="onImageChange($event)" class="mt-2">
-        <p class="text-sm text-gray-500 mt-2">
-          JPG ou PNG · Max 2MB
-        </p>
+      <div class="space-y-3">
+        <p class="text-gray-600">Ajoutez ou mettez à jour votre photo. La modification est appliquée dès l'enregistrement.</p>
+        <div class="flex flex-wrap items-center gap-3">
+          <input type="file" (change)="onPhotoSelected($event)" accept="image/png, image/jpeg" class="block" />
+          <button
+            (click)="uploadPhoto()"
+            [disabled]="!pendingPhotoFile || photoSaving"
+            class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {{ photoSaving ? 'Enregistrement...' : 'Mettre à jour' }}
+          </button>
+        </div>
+        <p class="text-sm text-gray-500">JPEG ou PNG • Max 5MB</p>
       </div>
-
     </div>
   </div>
 
-  <!-- 🟩 Informations personnelles -->
-  <div class="bg-white p-6 rounded-2xl shadow mb-10">
-    <h2 class="text-xl font-semibold mb-4">Informations personnelles</h2>
-
-    <label class="block mb-5">
-      <span class="text-gray-600">Nom complet</span>
-      <input
-        [(ngModel)]="user.name"
-        class="w-full mt-2 p-3 border rounded-lg shadow-sm"
-      />
-    </label>
-
-    <label class="block mb-5">
-      <span class="text-gray-600">Email</span>
-      <input
-        type="email"
-        [(ngModel)]="user.email"
-        class="w-full mt-2 p-3 border rounded-lg shadow-sm"
-      />
-    </label>
-
-    <label class="block mb-5">
-      <span class="text-gray-600">Téléphone</span>
-      <input
-        [(ngModel)]="user.phone"
-        class="w-full mt-2 p-3 border rounded-lg shadow-sm"
-      />
-    </label>
-
-    <button
-      (click)="updateProfile()"
-      class="mt-4 bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition">
-      Enregistrer les modifications
-    </button>
-  </div>
-
-  <!-- 🟧 Adresse -->
-  <div class="bg-white p-6 rounded-2xl shadow mb-10">
-    <h2 class="text-xl font-semibold mb-4">Adresse</h2>
-
-    <label class="block mb-5">
-      <span class="text-gray-600">Gouvernorat</span>
-      <select
-        [(ngModel)]="user.gouvernorat"
-        class="w-full mt-2 p-3 border rounded-lg shadow-sm bg-white"
+  <div class="bg-white p-6 rounded-2xl shadow">
+    <div class="flex items-center justify-between gap-3 mb-4">
+      <h2 class="text-xl font-semibold">Informations personnelles</h2>
+      <button
+        type="button"
+        (click)="loadProfile()"
+        class="text-sm text-indigo-700 font-medium hover:underline"
       >
-        <option>Tunis</option>
-        <option>Ariana</option>
-        <option>Sousse</option>
-        <option>Sfax</option>
-      </select>
-    </label>
+        Rafraîchir
+      </button>
+    </div>
 
-    <label class="block mb-5">
-      <span class="text-gray-600">Adresse complète</span>
-      <input
-        [(ngModel)]="user.address"
-        class="w-full mt-2 p-3 border rounded-lg shadow-sm"
-      />
-    </label>
+    <ng-container *ngIf="!loading; else loadingState">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-4 rounded-xl bg-gray-50">
+          <p class="text-sm text-gray-500">Nom complet</p>
+          <p class="text-lg font-semibold text-gray-900">{{ profile?.name || '—' }}</p>
+        </div>
+        <div class="p-4 rounded-xl bg-gray-50">
+          <p class="text-sm text-gray-500">Email</p>
+          <p class="text-lg font-semibold text-gray-900">{{ profile?.email || '—' }}</p>
+        </div>
+        <div class="p-4 rounded-xl bg-gray-50">
+          <p class="text-sm text-gray-500">Téléphone</p>
+          <p class="text-lg font-semibold text-gray-900">{{ profile?.phone || '—' }}</p>
+        </div>
+        <div class="p-4 rounded-xl bg-gray-50">
+          <p class="text-sm text-gray-500">Gouvernorat</p>
+          <p class="text-lg font-semibold text-gray-900">{{ profile?.governorate || '—' }}</p>
+        </div>
+        <div class="p-4 rounded-xl bg-gray-50 md:col-span-2">
+          <p class="text-sm text-gray-500">Membre depuis</p>
+          <p class="text-lg font-semibold text-gray-900">{{ profile?.createdAt | date: 'longDate' : undefined : 'fr' }}</p>
+        </div>
+      </div>
+    </ng-container>
 
-    <button
-      (click)="updateProfile()"
-      class="mt-4 bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition">
-      Mettre à jour l'adresse
-    </button>
+    <ng-template #loadingState>
+      <p class="text-gray-500">Chargement du profil...</p>
+    </ng-template>
   </div>
-
-  <!-- 🟨 Préférences -->
-  <div class="bg-white p-6 rounded-2xl shadow mb-10">
-    <h2 class="text-xl font-semibold mb-4">Préférences</h2>
-
-    <label class="flex items-center gap-3 mb-4">
-      <input type="checkbox" [(ngModel)]="user.notifications" />
-      <span>Notifications email</span>
-    </label>
-
-    <label class="flex items-center gap-3 mb-4">
-      <input type="checkbox" [(ngModel)]="user.darkMode" />
-      <span>Mode sombre</span>
-    </label>
-
-    <button
-      (click)="updateProfile()"
-      class="mt-4 bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition">
-      Enregistrer
-    </button>
-  </div>
-
-  <!-- 🟥 Sécurité -->
-  <div class="bg-white p-6 rounded-2xl shadow mb-10">
-    <h2 class="text-xl font-semibold mb-4">Sécurité</h2>
-
-    <label class="block mb-5">
-      <span class="text-gray-600">Nouveau mot de passe</span>
-      <input
-        type="password"
-        class="w-full mt-2 p-3 border rounded-lg shadow-sm"
-      />
-    </label>
-
-    <label class="block mb-5">
-      <span class="text-gray-600">Confirmer</span>
-      <input
-        type="password"
-        class="w-full mt-2 p-3 border rounded-lg shadow-sm"
-      />
-    </label>
-
-    <button
-      (click)="updateSecurity()"
-      class="mt-4 bg-red-600 text-white px-6 py-3 rounded-xl hover:bg-red-700 transition">
-      Mettre à jour le mot de passe
-    </button>
-  </div>
-
 </div>
