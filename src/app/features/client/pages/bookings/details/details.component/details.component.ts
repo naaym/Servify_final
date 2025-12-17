@@ -29,7 +29,7 @@ export class DetailsComponent implements OnInit {
     }
 
     updateStatus(status:Status){
-      if(!this.bookingDetails) return;
+      if(status !== 'CANCELLED' || !this.bookingDetails) return;
       this.clientbookingservice.updateStatus(this.bookingDetails.bookingId,status).subscribe({
         next:(updated)=>this.bookingDetails=updated,
         error:(err)=>this.errorMessage=err.message

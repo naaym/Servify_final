@@ -7,6 +7,7 @@ import com.servify.booking.dto.BookingStatusUpdateRequest;
 import com.servify.booking.model.BookingStatus;
 import com.servify.booking.service.BookingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -61,11 +63,40 @@ public class BookingController {
 
     @PreAuthorize("hasRole('CLIENT')")
     @PatchMapping("/{id}/status")
-    public ResponseEntity<BookingDetailsResponse> updateStatus(
+    public ResponseEntity<BookingDetailsResponse> cancelBooking(
+            @PathVariable("id") Long bookingId,
+            @RequestBody BookingStatusUpdateRequest request
+    ) {
+        if (request.getStatus() != BookingStatus.CANCELLED) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Clients can only cancel bookings");
+        }
+
+        return ResponseEntity.ok(bookingService.cancelBooking(bookingId));
+    }
+
+    @PreAuthorize("hasRole('PROVIDER')")
+    @GetMapping("/provider")
+    public ResponseEntity<List<BookingResponse>> getProviderBookings() {
+        return ResponseEntity.ok(bookingService.getProviderBookings());
+    }
+
+    @PreAuthorize("hasRole('PROVIDER')")
+    @GetMapping("/provider/{id}")
+    public ResponseEntity<BookingDetailsResponse> getProviderBookingDetails(@PathVariable("id") Long bookingId) {
+        return ResponseEntity.ok(bookingService.getProviderBookingDetails(bookingId));
+    }
+
+    @PreAuthorize("hasRole('PROVIDER')")
+    @PatchMapping("/provider/{id}/status")
+    public ResponseEntity<BookingDetailsResponse> updateStatusAsProvider(
             @PathVariable("id") Long bookingId,
             @RequestBody BookingStatusUpdateRequest request
     ) {
         BookingStatus status = request.getStatus();
-        return ResponseEntity.ok(bookingService.updateStatus(bookingId, status));
+        if (status != BookingStatus.ACCEPTED && status != BookingStatus.REJECTED && status != BookingStatus.DONE) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unsupported status change for providers");
+        }
+
+        return ResponseEntity.ok(bookingService.updateStatusAsProvider(bookingId, status));
     }
 }

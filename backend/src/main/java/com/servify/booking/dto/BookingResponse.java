@@ -11,5 +11,6 @@ public class BookingResponse {
     private BookingStatus status;
     private String category;
     private String providerName;
+    private String clientName;
     private Long date;
 }

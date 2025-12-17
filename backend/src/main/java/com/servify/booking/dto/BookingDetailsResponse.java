@@ -16,6 +16,8 @@ public class BookingDetailsResponse {
     private Long date;
     private Long updatedAt;
     private ProviderDetails providerInfo;
+    private String clientName;
+    private String clientPhone;
     private String serviceName;
     private String serviceGategory;
     private List<FileMetadata> attachments;

@@ -23,7 +23,8 @@ export const API_ENDPOINTS = {
   BOOKING:{
     BASE:'bookings',
     ME:'me',
-    STATS:'stats'
+    STATS:'stats',
+    PROVIDER:'provider'
 
   }
   ,

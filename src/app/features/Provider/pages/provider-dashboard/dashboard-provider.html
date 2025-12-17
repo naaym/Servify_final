@@ -52,24 +52,24 @@
       <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4">
         <div class="w-14 h-14 bg-purple-600 rounded-xl flex justify-center items-center text-xl"></div>
         <div>
-          <p class="text-gray-400 text-sm">Today's Requests</p>
-          <h2 class="text-2xl font-bold">5</h2>
+          <p class="text-gray-400 text-sm">Total demandes</p>
+          <h2 class="text-2xl font-bold">{{ bookings.length }}</h2>
         </div>
       </div>
 
       <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4">
         <div class="w-14 h-14 bg-yellow-600 rounded-xl flex justify-center items-center text-xl"></div>
         <div>
-          <p class="text-gray-400 text-sm">Pending</p>
-          <h2 class="text-2xl font-bold">4</h2>
+          <p class="text-gray-400 text-sm">En attente</p>
+          <h2 class="text-2xl font-bold">{{ pendingCount }}</h2>
         </div>
       </div>
 
       <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4">
         <div class="w-14 h-14 bg-green-600 rounded-xl flex justify-center items-center text-xl"></div>
         <div>
-          <p class="text-gray-400 text-sm">Earnings (Month)</p>
-          <h2 class="text-2xl font-bold">480 DT</h2>
+          <p class="text-gray-400 text-sm">Terminées</p>
+          <h2 class="text-2xl font-bold">{{ completedCount }}</h2>
         </div>
       </div>
 
@@ -78,9 +78,13 @@
     <!-- LATEST REQUESTS -->
     <div class="bg-[#16161C] p-6 rounded-2xl shadow">
 
-      <h2 class="text-lg font-semibold mb-6">Latest Requests</h2>
+      <h2 class="text-lg font-semibold mb-6">Dernières demandes</h2>
 
-      <div class="overflow-x-auto">
+      @if(errorMessage){
+        <div class="text-red-400 mb-4">{{errorMessage}}</div>
+      }
+
+      <div class="overflow-x-auto" *ngIf="!loading">
         <table class="w-full text-sm">
           <thead class="text-gray-400 border-b border-gray-700">
             <tr>
@@ -92,37 +96,48 @@
             </tr>
           </thead>
 
-          <tbody class="divide-y divide-gray-800">
-
-            <tr class="hover:bg-[#1D1D26]">
-              <td class="py-4">Oussama</td>
-              <td>Electricity Fix</td>
-              <td>21 Jan 2025</td>
-              <td>
-                <span class="px-3 py-1 bg-yellow-600/30 rounded-lg text-yellow-400">Pending</span>
-              </td>
-              <td class="flex gap-3">
-                <button class="text-green-400 hover:underline">Accept</button>
-                <button class="text-red-400 hover:underline">Reject</button>
-              </td>
-            </tr>
-
-            <tr class="hover:bg-[#1D1D26]">
-              <td class="py-4">Nader</td>
-              <td>Roof Repair</td>
-              <td>19 Jan 2025</td>
-              <td>
-                <span class="px-3 py-1 bg-green-600/30 rounded-lg text-green-400">Completed</span>
-              </td>
-              <td class="flex gap-3">
-                <button class="text-purple-400 hover:underline">Details</button>
-              </td>
-            </tr>
-
+          <tbody class="divide-y divide-gray-800" *ngIf="bookings.length > 0; else emptyState">
+            @for (booking of bookings; track booking.bookingId) {
+              <tr class="hover:bg-[#1D1D26]">
+                <td class="py-4">{{ booking.clientName || 'Client' }}</td>
+                <td>{{ booking.category }}</td>
+                <td>{{ booking.date | date: 'dd MMM yyyy' }}</td>
+                <td>
+                  <span
+                    class="px-3 py-1 rounded-lg"
+                    [ngClass]="{
+                      'bg-yellow-600/30 text-yellow-400': booking.status === 'PENDING',
+                      'bg-green-600/30 text-green-400': booking.status === 'ACCEPTED',
+                      'bg-blue-600/30 text-blue-400': booking.status === 'DONE',
+                      'bg-red-600/30 text-red-400': booking.status === 'REJECTED',
+                      'bg-gray-600/30 text-gray-300': booking.status === 'CANCELLED'
+                    }"
+                  >
+                    {{ booking.status }}
+                  </span>
+                </td>
+                <td class="flex flex-wrap gap-3 py-3">
+                  @if(booking.status === 'PENDING'){
+                    <button class="text-green-400 hover:underline" (click)="onUpdateStatus(booking.bookingId, 'ACCEPTED')">Accepter</button>
+                    <button class="text-red-400 hover:underline" (click)="onUpdateStatus(booking.bookingId, 'REJECTED')">Rejeter</button>
+                  }
+                  @if(booking.status === 'ACCEPTED'){
+                    <button class="text-blue-400 hover:underline" (click)="onUpdateStatus(booking.bookingId, 'DONE')">Terminer</button>
+                  }
+                </td>
+              </tr>
+            }
           </tbody>
-
         </table>
       </div>
+
+      <ng-template #emptyState>
+        <div class="text-gray-400 py-4">Aucune demande pour le moment.</div>
+      </ng-template>
+
+      @if(loading){
+        <div class="text-gray-400">Chargement des demandes...</div>
+      }
 
     </div>
 

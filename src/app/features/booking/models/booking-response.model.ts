@@ -4,7 +4,8 @@ export interface BookingResponse {
   bookingId:number;
   status:Status;
   category:string;
-  providerName:string;
+  providerName?:string;
+  clientName?:string;
   date:number;
 
 

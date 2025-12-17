@@ -13,5 +13,8 @@ public interface BookingService {
     List<BookingResponse> getMyBookings();
     BookingStatsResponse getMyStats();
     BookingDetailsResponse getBookingDetails(Long bookingId);
-    BookingDetailsResponse updateStatus(Long bookingId, BookingStatus status);
+    BookingDetailsResponse cancelBooking(Long bookingId);
+    List<BookingResponse> getProviderBookings();
+    BookingDetailsResponse getProviderBookingDetails(Long bookingId);
+    BookingDetailsResponse updateStatusAsProvider(Long bookingId, BookingStatus status);
 }

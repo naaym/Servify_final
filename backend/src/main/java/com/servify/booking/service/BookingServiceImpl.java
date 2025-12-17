@@ -97,10 +97,49 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDetailsResponse updateStatus(Long bookingId, BookingStatus status) {
+    public BookingDetailsResponse cancelBooking(Long bookingId) {
         BookingEntity booking = findOwnedBooking(bookingId);
 
         if (booking.getStatus() == BookingStatus.DONE || booking.getStatus() == BookingStatus.CANCELLED) {
+            return mapToBookingDetails(booking);
+        }
+
+        booking.setStatus(BookingStatus.CANCELLED);
+        BookingEntity saved = bookingRepository.save(booking);
+        return mapToBookingDetails(saved);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BookingResponse> getProviderBookings() {
+        ProviderEntity provider = getCurrentProvider();
+        return bookingRepository.findByProviderUserIdOrderByCreatedAtDesc(provider.getUserId())
+                .stream()
+                .map(this::mapToProviderBookingResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BookingDetailsResponse getProviderBookingDetails(Long bookingId) {
+        BookingEntity booking = findOwnedBookingForProvider(bookingId);
+        return mapToBookingDetails(booking);
+    }
+
+    @Override
+    public BookingDetailsResponse updateStatusAsProvider(Long bookingId, BookingStatus status) {
+        BookingEntity booking = findOwnedBookingForProvider(bookingId);
+
+        if (booking.getStatus() == BookingStatus.CANCELLED || booking.getStatus() == BookingStatus.DONE) {
+            return mapToBookingDetails(booking);
+        }
+
+        boolean isAllowedTransition =
+                status == BookingStatus.ACCEPTED ||
+                status == BookingStatus.REJECTED ||
+                (status == BookingStatus.DONE && booking.getStatus() == BookingStatus.ACCEPTED);
+
+        if (!isAllowedTransition) {
             return mapToBookingDetails(booking);
         }
 
@@ -115,10 +154,22 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
     }
 
+    private BookingEntity findOwnedBookingForProvider(Long bookingId) {
+        ProviderEntity provider = getCurrentProvider();
+        return bookingRepository.findByBookingIdAndProviderUserId(bookingId, provider.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+    }
+
     private ClientEntity getCurrentClient() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return clientRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
+    }
+
+    private ProviderEntity getCurrentProvider() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return providerRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Provider not found"));
     }
 
     private BookingAttachmentEntity mapToAttachment(MultipartFile file) {
@@ -139,6 +190,17 @@ public class BookingServiceImpl implements BookingService {
                 .status(booking.getStatus())
                 .category(booking.getProvider().getServiceCategory())
                 .providerName(booking.getProvider().getName())
+                .clientName(booking.getClient().getName())
+                .date(toEpochMilli(booking))
+                .build();
+    }
+
+    private BookingResponse mapToProviderBookingResponse(BookingEntity booking) {
+        return BookingResponse.builder()
+                .bookingId(booking.getBookingId())
+                .status(booking.getStatus())
+                .category(booking.getProvider().getServiceCategory())
+                .clientName(booking.getClient().getName())
                 .date(toEpochMilli(booking))
                 .build();
     }
@@ -154,6 +216,8 @@ public class BookingServiceImpl implements BookingService {
                 .serviceName(booking.getProvider().getDescription() != null ? booking.getProvider().getDescription() : booking.getProvider().getServiceCategory())
                 .serviceGategory(booking.getProvider().getServiceCategory())
                 .providerInfo(mapToProviderDetails(booking.getProvider()))
+                .clientName(booking.getClient().getName())
+                .clientPhone(booking.getClient().getPhone())
                 .attachments(mapToFileMetadata(booking.getAttachments()))
                 .build();
     }
