@@ -1,9 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Attachment,DetailsRequest,TimelineStep } from '../../../../models/details.model';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ClientBookingService } from '../../clientbooking.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ClientBookingDetails } from '../../clientbookingdetail.model';
+import { Status } from '../../../../../booking/models/status.model';
 
 @Component({
   selector: 'app-details.component',
@@ -28,9 +28,12 @@ export class DetailsComponent implements OnInit {
 
     }
 
-
-    cancelRequest() {
-      console.log('Request cancelled');
+    updateStatus(status:Status){
+      if(!this.bookingDetails) return;
+      this.clientbookingservice.updateStatus(this.bookingDetails.bookingId,status).subscribe({
+        next:(updated)=>this.bookingDetails=updated,
+        error:(err)=>this.errorMessage=err.message
+      })
     }
 
     contactProvider() {

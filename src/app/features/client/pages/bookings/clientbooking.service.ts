@@ -5,6 +5,7 @@ import { API_ENDPOINTS } from '../../../../core/api/endpoints';
 import { catchError, throwError } from 'rxjs';
 import { StatsBooking } from './statsbooking.model';
 import { ClientBookingDetails } from './clientbookingdetail.model';
+import { Status } from '../../../booking/models/status.model';
 
 @Injectable({ providedIn: 'root' })
 export class ClientBookingService {
@@ -47,6 +48,12 @@ export class ClientBookingService {
           return throwError(() => normalized);
         })
       );
+  }
+  updateStatus(bookingId: number, status: Status) {
+    return this.http.patch<ClientBookingDetails>(
+      `${API_ENDPOINTS.BOOKING.BASE}/${bookingId}/status`,
+      { status }
+    );
   }
   //getMyRecentBookings()
 }

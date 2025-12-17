@@ -44,7 +44,8 @@
                 'bg-yellow-600/30 text-yellow-400': r.status === 'PENDING',
                 'bg-green-600/30 text-green-400': r.status === 'ACCEPTED',
                 'bg-blue-600/30 text-blue-400': r.status === 'DONE',
-                'bg-red-600/30 text-red-400': r.status === 'REJECTED'
+                'bg-red-600/30 text-red-400': r.status === 'REJECTED',
+                'bg-gray-600/30 text-gray-300': r.status === 'CANCELLED'
               }"
             >
               {{ r.status }}
@@ -56,6 +57,11 @@
             <button class="text-purple-400 hover:underline text-xs sm:text-sm" (click)="toViewDetails(r.bookingId)">
               View
             </button>
+            @if(r.status!=='CANCELLED' && r.status!=='DONE'){
+            <button class="text-red-400 hover:underline text-xs sm:text-sm ml-2" (click)="onCancel(r.bookingId)">
+              Cancel
+            </button>
+            }
           </td>
 
         </tr>
