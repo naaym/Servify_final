@@ -20,4 +20,5 @@ public class BookingDetailsResponse {
     private String clientPhone;
     private String serviceGategory;
     private List<FileMetadata> attachments;
+
 }

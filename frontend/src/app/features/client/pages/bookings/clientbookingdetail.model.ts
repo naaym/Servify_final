@@ -14,4 +14,5 @@ export interface ClientBookingDetails{
   serviceGategory:string;
   attachments?:metadata[];
 
+
 }

@@ -228,7 +228,7 @@ public class BookingServiceImpl implements BookingService {
                 .providerName(provider.getName())
                 .providerPhone(provider.getPhone())
                 .providerRate(provider.getRating() != null ? provider.getRating() : 0.0)
-                .providerImage(null)
+                .profileImageUrl(provider.getProfileImageUrl())
                 .build();
     }
 

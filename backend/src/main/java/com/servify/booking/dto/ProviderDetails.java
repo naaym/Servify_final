@@ -12,4 +12,5 @@ public class ProviderDetails {
     private String providerPhone;
     private FileMetadata providerImage;
     private Double providerRate;
+    private String profileImageUrl;
 }

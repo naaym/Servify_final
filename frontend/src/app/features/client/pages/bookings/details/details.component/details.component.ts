@@ -39,21 +39,8 @@ export class DetailsComponent implements OnInit {
     contactProvider() {
       console.log('Contact provider');
     }
-    //-----------------------------------------------------------------
 
-    //  request = {
-    //   id: 1,
-    //   category: 'Plomberie – Fuite salle de bain',
-    //   date: '12 Jan 2025',
-    //   provider: 'Ahmed',
-    //   status: 'accepted',
-    //   description: 'Fuite sous le lavabo, urgence.',
-    //   timeline: [
-    //     { label: 'Demande créée', date: '12 Jan, 14:20' },
-    //     { label: 'Consultée par Ahmed', date: '12 Jan, 14:35' },
-    //     { label: 'Acceptée', date: '12 Jan, 14:40' }
-    //   ]
-    // };
+
 
 
 }
