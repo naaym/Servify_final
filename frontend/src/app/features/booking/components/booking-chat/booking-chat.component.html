@@ -1,0 +1,81 @@
+<div
+  class="rounded-2xl border p-5 space-y-4"
+  [ngClass]="
+    theme === 'dark'
+      ? 'bg-[#16161C] border-gray-800 text-gray-100'
+      : 'bg-white border-gray-100 text-gray-900'
+  "
+>
+  <div class="flex items-center justify-between">
+    <h3 class="text-lg font-semibold">Messagerie en temps réel</h3>
+    <span class="text-xs text-gray-400">Réservation #{{ bookingId }}</span>
+  </div>
+
+  @if (errorMessage) {
+    <div class="text-sm text-red-500">{{ errorMessage }}</div>
+  }
+
+  <div
+    #messagesContainer
+    class="space-y-3 max-h-80 overflow-y-auto pr-2"
+    [ngClass]="theme === 'dark' ? 'text-gray-200' : 'text-gray-700'"
+  >
+    @if (loading) {
+      <p class="text-sm text-gray-400">Chargement des messages...</p>
+    } @else if (messages.length === 0) {
+      <p class="text-sm text-gray-400">Aucun message pour le moment.</p>
+    } @else {
+      @for (message of messages; track message.messageId) {
+        <div
+          class="flex"
+          [ngClass]="isOwnMessage(message) ? 'justify-end' : 'justify-start'"
+        >
+          <div
+            class="rounded-2xl px-4 py-2 max-w-[75%]"
+            [ngClass]="
+              isOwnMessage(message)
+                ? theme === 'dark'
+                  ? 'bg-purple-600/30 text-purple-100'
+                  : 'bg-indigo-100 text-indigo-900'
+                : theme === 'dark'
+                  ? 'bg-[#1D1D26] text-gray-100'
+                  : 'bg-gray-100 text-gray-900'
+            "
+          >
+            <p class="text-xs uppercase tracking-wide text-gray-400 mb-1">
+              {{ message.senderRole }} • {{ message.createdAt | date: 'HH:mm' }}
+            </p>
+            <p class="whitespace-pre-line">{{ message.content }}</p>
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+  <div class="flex gap-2 items-center">
+    <input
+      type="text"
+      [(ngModel)]="newMessage"
+      (keydown.enter)="sendMessage()"
+      class="flex-1 rounded-xl px-4 py-2 border focus:outline-none"
+      [ngClass]="
+        theme === 'dark'
+          ? 'bg-[#0D0D11] border-gray-700 text-white placeholder-gray-500'
+          : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+      "
+      placeholder="Écrire un message..."
+    />
+    <button
+      type="button"
+      class="px-4 py-2 rounded-xl font-semibold"
+      [ngClass]="
+        theme === 'dark'
+          ? 'bg-purple-600 text-white hover:bg-purple-700'
+          : 'bg-indigo-600 text-white hover:bg-indigo-700'
+      "
+      (click)="sendMessage()"
+    >
+      Envoyer
+    </button>
+  </div>
+</div>

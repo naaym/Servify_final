@@ -1,5 +1,6 @@
 export const API_ENDPOINTS = {
   BASE: 'http://localhost:8084/api',
+  WS_BASE: 'http://localhost:8084/ws',
   AUTH: {
     LOGIN: 'auth/login',
   },
@@ -28,7 +29,8 @@ export const API_ENDPOINTS = {
     BASE:'bookings',
     ME:'me',
     STATS:'stats',
-    PROVIDER:'provider'
+    PROVIDER:'provider',
+    MESSAGES:(id:number)=>`bookings/${id}/messages`
 
   }
   ,
