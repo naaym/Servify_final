@@ -31,7 +31,7 @@ public class ProviderController {
     }
 
     @GetMapping("/{providerId:\\d+}")
-    public ResponseEntity<ProviderDetailsResponse> getProviderDetails(@PathVariable Long providerId) {
+    public ResponseEntity<ProviderDetailsResponse> getProviderDetails(@PathVariable(name = "providerId") Long providerId) {
         return ResponseEntity.ok(providerService.getProviderDetails(providerId));
     }
 

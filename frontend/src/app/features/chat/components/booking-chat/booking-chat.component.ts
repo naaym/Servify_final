@@ -62,7 +62,7 @@ export class BookingChatComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!this.initialized) return; // ignore avant ngOnInit
+    if (!this.initialized) return; 
 
     if (changes['bookingId']) {
       const newId = changes['bookingId'].currentValue as number;
