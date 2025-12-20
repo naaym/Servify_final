@@ -16,6 +16,7 @@ import {
   ChatMessage,
   ChatMessageRequest,
 } from '../../models/chat-message.model';
+import { ChatNotificationService } from '../../services/chat-notification.service';
 import { ChatService } from '../../services/chat.service';
 
 @Component({
@@ -42,7 +43,8 @@ export class BookingChatComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private readonly chatService: ChatService,
-    private readonly tokenService: TokenService
+    private readonly tokenService: TokenService,
+    private readonly chatNotificationService: ChatNotificationService,
   ) {
     const storedId = this.tokenService.getUserId();
     this.currentUserId = storedId ? Number(storedId) : null;
@@ -92,6 +94,7 @@ export class BookingChatComponent implements OnInit, OnChanges, OnDestroy {
           this.messages = messages;
           this.loading = false;
           this.scrollToBottom();
+          this.chatNotificationService.markConversationAsRead(bookingId);
         },
         error: (err) => {
           this.errorMessage = err?.message || 'Erreur chargement historique.';
@@ -106,6 +109,7 @@ export class BookingChatComponent implements OnInit, OnChanges, OnDestroy {
         next: (message) => {
           this.messages = [...this.messages, message];
           this.scrollToBottom();
+          this.chatNotificationService.markConversationAsRead(bookingId);
         },
         error: (err) => {
           this.errorMessage = err?.message || 'Erreur websocket.';

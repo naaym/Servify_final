@@ -4,7 +4,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Status } from '../../../booking/models/status.model';
 import { ClientBookingDetails } from '../../../client/pages/bookings/clientbookingdetail.model';
 import { ProviderBookingService } from '../../services/provider-booking.service';
-import { BookingChatComponent } from '../../../booking/components/booking-chat/booking-chat.component';
+import { BookingChatComponent } from '../../../chat/components/booking-chat/booking-chat.component';
 
 @Component({
   selector: 'app-provider-booking-details',

@@ -4,7 +4,7 @@ import { ClientBookingService } from '../../clientbooking.service';
 import { ActivatedRoute } from '@angular/router';
 import { ClientBookingDetails } from '../../clientbookingdetail.model';
 import { Status } from '../../../../../booking/models/status.model';
-import { BookingChatComponent } from '../../../../../booking/components/booking-chat/booking-chat.component';
+import { BookingChatComponent } from '../../../../../chat/components/booking-chat/booking-chat.component';
 
 @Component({
   selector: 'app-details.component',

@@ -5,7 +5,7 @@ import { Subject, Observable } from 'rxjs';
 import { API_ENDPOINTS } from '../../../core/api/endpoints';
 import { Http } from '../../../core/api/http';
 import { TokenService } from '../../../core/services/token.service';
-import { ChatConversation, ChatMessage, ChatMessageRequest } from '../models/chat-message.model';
+import { ChatConversation, ChatMessage, ChatMessageRequest } from '../../chat/models/chat-message.model';
 
 @Injectable({
   providedIn: 'root',

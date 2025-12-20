@@ -7,7 +7,7 @@ import { AccountRejction } from "./pages/account-rejction/account-rejction.compo
 import { ProviderDashboard } from "./pages/provider-dashboard/dashboard-provider.component";
 import { ProviderBookingDetailsComponent } from "./pages/booking-details/provider-booking-details.component";
 import { ProviderProfileComponent } from "./pages/profile/provider-profile.component";
-import { BookingChatsComponent } from "../booking/pages/chats/chats.component";
+import { BookingChatsComponent } from "../chat/chat.component";
 
 
 
