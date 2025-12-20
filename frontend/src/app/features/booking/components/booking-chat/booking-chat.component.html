@@ -8,7 +8,6 @@
 >
   <div class="flex items-center justify-between">
     <h3 class="text-lg font-semibold">Messagerie en temps réel</h3>
-    <span class="text-xs text-gray-400">Réservation #{{ bookingId }}</span>
   </div>
 
   @if (errorMessage) {
@@ -51,7 +50,7 @@
               <div class="text-xs">
                 <p class="font-semibold">{{ message.senderName }}</p>
                 <p class="uppercase tracking-wide text-gray-400">
-                  {{ message.senderRole }} • {{ message.createdAt | date: 'HH:mm' }}
+                   {{ message.createdAt | date: 'HH:mm' }}
                 </p>
               </div>
             </div>

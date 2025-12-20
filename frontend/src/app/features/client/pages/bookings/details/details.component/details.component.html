@@ -107,11 +107,6 @@
         </div>
       </div>
     }
-
-    @if (bookingDetails?.bookingId) {
-      <app-booking-chat [bookingId]="bookingDetails!.bookingId"></app-booking-chat>
-    }
-
     <div class="flex flex-wrap gap-4 pt-6 border-t">
 
       @if(bookingDetails?.status!=='DONE' && bookingDetails?.status!=='CANCELLED'){
