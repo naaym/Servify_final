@@ -3,6 +3,7 @@ import { DetailsComponent } from './pages/bookings/details/details.component/det
 import { ProfileComponent } from './pages/profile/profile.component';
 import { Routes } from '@angular/router';
 import { Client } from './pages/signup/client/client';
+import { BookingChatsComponent } from '../booking/pages/chats/chats.component';
 
 export const CLIENTS_ROUTES: Routes = [
   {
@@ -10,6 +11,7 @@ export const CLIENTS_ROUTES: Routes = [
     component: DashboardComponent,
   },
   { path: 'profil', component: ProfileComponent },
+  { path: 'chats', component: BookingChatsComponent },
   {
     path: 'bookings',
     children: [

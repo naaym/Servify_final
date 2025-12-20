@@ -1,0 +1,76 @@
+<div class="min-h-screen bg-[#F5F5F5] p-6">
+  <div class="mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-[280px_1fr_280px] gap-6">
+    <aside class="bg-white rounded-3xl shadow-sm border border-gray-100 p-4 flex flex-col h-[80vh]">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold">Chats</h2>
+      </div>
+      <div class="mt-4">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="applyFilter()"
+          placeholder="Search Messenger"
+          class="w-full rounded-2xl border border-gray-200 px-4 py-2 text-sm focus:outline-none"
+        />
+      </div>
+
+      <div class="mt-4 flex-1 overflow-y-auto space-y-3">
+        @if(loading){
+          <p class="text-sm text-gray-400">Chargement...</p>
+        }
+        @if(errorMessage){
+          <p class="text-sm text-red-500">{{ errorMessage }}</p>
+        }
+        @if(!loading && !errorMessage && filteredConversations.length === 0){
+          <p class="text-sm text-gray-400">Aucune conversation.</p>
+        }
+        @for (conversation of filteredConversations; track conversation.bookingId) {
+          <button
+            type="button"
+            class="w-full flex items-center gap-3 p-3 rounded-2xl text-left hover:bg-gray-50"
+            [ngClass]="selectedConversation?.bookingId === conversation.bookingId ? 'bg-gray-100' : ''"
+            (click)="selectConversation(conversation)"
+          >
+            <img
+              [src]="conversation.participantImageUrl || 'https://placehold.co/48x48?text=User'"
+              alt="Participant avatar"
+              class="w-12 h-12 rounded-full object-cover"
+            />
+            <div class="flex-1">
+              <p class="font-semibold text-sm">{{ conversation.participantName }}</p>
+              <p class="text-xs text-gray-500 truncate">{{ conversation.lastMessage }}</p>
+            </div>
+          </button>
+        }
+      </div>
+    </aside>
+
+    <section class="bg-white rounded-3xl shadow-sm border border-gray-100 p-4 h-[80vh] flex flex-col">
+      @if(!selectedConversation){
+        <div class="flex-1 flex items-center justify-center text-gray-400">
+          Sélectionnez une conversation.
+        </div>
+      } @else {
+        <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+          <div class="flex items-center gap-3">
+            <img
+              [src]="selectedConversation.participantImageUrl || 'https://placehold.co/40x40?text=User'"
+              alt="Participant avatar"
+              class="w-10 h-10 rounded-full object-cover"
+            />
+            <div>
+              <p class="font-semibold">{{ selectedConversation.participantName }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-1 mt-4">
+          <app-booking-chat [bookingId]="selectedConversation.bookingId"></app-booking-chat>
+        </div>
+      }
+    </section>
+
+
+
+  </div>
+</div>

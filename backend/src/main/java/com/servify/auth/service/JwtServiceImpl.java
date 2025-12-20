@@ -20,9 +20,9 @@ public class JwtServiceImpl implements  JwtService {
   private final long expirationMillis;
 
   public JwtServiceImpl(@Value("${app.security.jwt.secret}") String secret,
-                        @Value("${app.security.jwt.expiration:3600000}") long expirationMillis) {
+                        @Value("${app.security.jwt.expiration:3600000}") String expirationMillis) {
     this.signingKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-    this.expirationMillis = expirationMillis;
+    this.expirationMillis = parseExpirationMillis(expirationMillis);
   }
 @Override
   public String generateToken(UserEntity user) {
@@ -71,6 +71,17 @@ public class JwtServiceImpl implements  JwtService {
       return (extractAllClaims(token).getSubject().equals(user.getUsername()) && !isTokenExpired(token));
     } catch (Exception e) {
       return false;
+    }
+  }
+
+  private long parseExpirationMillis(String expirationMillis) {
+    if (expirationMillis == null || expirationMillis.isBlank()) {
+      return 3_600_000L;
+    }
+    try {
+      return Long.parseLong(expirationMillis);
+    } catch (NumberFormatException ex) {
+      return 3_600_000L;
     }
   }
 }

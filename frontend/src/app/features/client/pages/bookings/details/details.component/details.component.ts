@@ -4,10 +4,11 @@ import { ClientBookingService } from '../../clientbooking.service';
 import { ActivatedRoute } from '@angular/router';
 import { ClientBookingDetails } from '../../clientbookingdetail.model';
 import { Status } from '../../../../../booking/models/status.model';
+import { BookingChatComponent } from '../../../../../booking/components/booking-chat/booking-chat.component';
 
 @Component({
   selector: 'app-details.component',
-  imports: [CommonModule,DatePipe],
+  imports: [CommonModule, DatePipe, BookingChatComponent],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
