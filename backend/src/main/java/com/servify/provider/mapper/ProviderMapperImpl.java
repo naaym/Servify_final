@@ -1,5 +1,6 @@
 package com.servify.provider.mapper;
 
+import com.servify.provider.dto.ProviderDetailsResponse;
 import com.servify.provider.dto.ProviderProfileResponse;
 import com.servify.provider.dto.ProviderRegistrationRequest;
 import com.servify.provider.dto.ProviderSearchResponse;
@@ -42,6 +43,22 @@ public  class ProviderMapperImpl implements ProviderMapper {
         response.setId(entity.getUserId());
         response.setName(entity.getName());
         response.setServiceCategory(entity.getServiceCategory());
+        response.setDelegation(entity.getDelegation());
+        response.setBasePrice(entity.getBasePrice());
+        response.setRating(entity.getRating());
+        response.setReviewCount(entity.getReviewCount());
+        response.setDescription(entity.getDescription());
+        response.setImageProviderUrl(entity.getProfileImageUrl());
+        return response;
+    }
+
+    @Override
+    public ProviderDetailsResponse toDetailsResponse(ProviderEntity entity) {
+        ProviderDetailsResponse response = new ProviderDetailsResponse();
+        response.setId(entity.getUserId());
+        response.setName(entity.getName());
+        response.setServiceCategory(entity.getServiceCategory());
+        response.setGovernorate(entity.getGovernorate());
         response.setDelegation(entity.getDelegation());
         response.setBasePrice(entity.getBasePrice());
         response.setRating(entity.getRating());

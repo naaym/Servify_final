@@ -1,1 +1,44 @@
-<p>provider-details works!</p>
+<app-header></app-header>
+
+<section class="provider-details">
+  <div *ngIf="isLoading" class="provider-details__state">Chargement des informations...</div>
+
+  <div *ngIf="!isLoading && errorMessage" class="provider-details__state provider-details__state--error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!isLoading && provider" class="provider-details__content">
+    <div class="provider-details__header">
+      <img
+        class="provider-details__avatar"
+        [src]="provider.imageProviderUrl || defaultAvatarUrl"
+        [alt]="provider.name"
+      />
+      <div class="provider-details__info">
+        <h1>{{ provider.name }}</h1>
+        <p class="provider-details__category">{{ provider.serviceCategory }}</p>
+        <p class="provider-details__location">
+          {{ provider.governorate }} · {{ provider.delegation }}
+        </p>
+      </div>
+      <div class="provider-details__meta">
+        <div class="provider-details__price">
+          <span>À partir de</span>
+          <strong>{{ provider.basePrice || 0 }} DT</strong>
+        </div>
+        <div class="provider-details__rating">
+          <strong>{{ provider.rating || 0 }}/5</strong>
+          <span>({{ provider.reviewCount || 0 }} avis)</span>
+        </div>
+        <button class="provider-details__cta" type="button" (click)="bookProvider()">
+          Réserver
+        </button>
+      </div>
+    </div>
+
+    <div class="provider-details__section">
+      <h2>À propos</h2>
+      <p>{{ provider.description || 'Ce provider n’a pas encore ajouté de description.' }}</p>
+    </div>
+  </div>
+</section>

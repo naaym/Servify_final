@@ -1,5 +1,6 @@
 package com.servify.provider.service;
 
+import com.servify.provider.dto.ProviderDetailsResponse;
 import com.servify.provider.dto.ProviderProfileResponse;
 import com.servify.provider.dto.ProviderRegistrationRequest;
 import com.servify.provider.dto.ProviderRegistrationResponse;
@@ -68,6 +69,14 @@ public class ProviderServiceImpl implements ProviderService{
                 .toList();
 
         return new ProviderSearchResult(results, results.size());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ProviderDetailsResponse getProviderDetails(Long providerId) {
+        ProviderEntity provider = providerRepository.findByUserIdAndStatus(providerId, ProviderStatus.ACCEPTED)
+                .orElseThrow(() -> new ResourceNotFoundException("Provider not found"));
+        return providerMapper.toDetailsResponse(provider);
     }
 
     @Override

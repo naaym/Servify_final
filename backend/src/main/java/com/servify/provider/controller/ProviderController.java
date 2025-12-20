@@ -1,5 +1,6 @@
 package com.servify.provider.controller;
 
+import com.servify.provider.dto.ProviderDetailsResponse;
 import com.servify.provider.dto.ProviderProfileResponse;
 import com.servify.provider.dto.ProviderRegistrationRequest;
 import com.servify.provider.dto.ProviderRegistrationResponse;
@@ -27,6 +28,11 @@ public class ProviderController {
     public ResponseEntity<ProviderSearchResult> searchProviders( @ModelAttribute ProviderSearchRequest request) {
       System.out.println("REQUEST = {}"+ request);
         return ResponseEntity.ok(providerService.searchProviders(request));
+    }
+
+    @GetMapping("/{providerId:\\d+}")
+    public ResponseEntity<ProviderDetailsResponse> getProviderDetails(@PathVariable Long providerId) {
+        return ResponseEntity.ok(providerService.getProviderDetails(providerId));
     }
 
     @GetMapping("/profile")

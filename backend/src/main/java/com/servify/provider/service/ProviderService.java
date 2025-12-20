@@ -1,5 +1,6 @@
 package com.servify.provider.service;
 
+import com.servify.provider.dto.ProviderDetailsResponse;
 import com.servify.provider.dto.ProviderRegistrationRequest;
 import com.servify.provider.dto.ProviderRegistrationResponse;
 import com.servify.provider.dto.ProviderSearchRequest;
@@ -12,6 +13,8 @@ public interface ProviderService {
   ProviderRegistrationResponse register(ProviderRegistrationRequest request);
 
   ProviderSearchResult searchProviders(ProviderSearchRequest request);
+
+  ProviderDetailsResponse getProviderDetails(Long providerId);
 
   ProviderProfileResponse getCurrentProfile();
 

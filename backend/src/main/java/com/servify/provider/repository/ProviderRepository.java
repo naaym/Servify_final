@@ -15,6 +15,8 @@ public interface ProviderRepository extends JpaRepository<ProviderEntity, Long> 
 
     List<ProviderEntity> findAllByStatus(ProviderStatus status);
 
+    Optional<ProviderEntity> findByUserIdAndStatus(Long userId, ProviderStatus status);
+
     long countByStatus(ProviderStatus status);
 
     @Query("""
