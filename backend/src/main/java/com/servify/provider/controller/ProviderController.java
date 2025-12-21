@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 @Validated
 @RestController
@@ -48,6 +49,11 @@ public class ProviderController {
     @PostMapping(value = "/profile/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProviderProfileResponse> updateProfilePhoto(@RequestPart("photo") MultipartFile photo) {
         return ResponseEntity.ok(providerService.updateProfilePhoto(photo));
+    }
+
+    @PostMapping(value = "/profile/work-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProviderProfileResponse> addWorkImages(@RequestPart("images") List<MultipartFile> images) {
+        return ResponseEntity.ok(providerService.addWorkImages(images));
     }
 
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

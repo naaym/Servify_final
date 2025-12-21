@@ -10,6 +10,7 @@ export interface ProviderProfile {
   basePrice: number | null;
   description?: string;
   profileImageUrl?: string;
+  workImages?: string[];
 }
 
 export interface UpdateProviderProfileRequest {

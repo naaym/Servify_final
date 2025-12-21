@@ -29,10 +29,14 @@ export class ProviderProfileComponent implements OnInit {
   loading = false;
   saving = false;
   photoSaving = false;
+  workImagesSaving = false;
   error = '';
   profileImageUrl: string | null = null;
   pendingPhotoFile: File | null = null;
   pendingPhotoPreview: string | null = null;
+  workImages: string[] = [];
+  pendingWorkImageFiles: File[] = [];
+  pendingWorkImagePreviews: string[] = [];
 
   ngOnInit(): void {
     this.loadProfile();
@@ -66,6 +70,7 @@ export class ProviderProfileComponent implements OnInit {
       description: profile.description || ''
     });
     this.profileImageUrl = profile.profileImageUrl || null;
+    this.workImages = profile.workImages ?? [];
   }
 
   onSubmit() {
@@ -126,6 +131,7 @@ export class ProviderProfileComponent implements OnInit {
     this.profileService.updateProfilePhoto(this.pendingPhotoFile).subscribe({
       next: (profile) => {
         this.profileImageUrl = profile.profileImageUrl || null;
+        this.workImages = profile.workImages ?? [];
         this.pendingPhotoFile = null;
         this.pendingPhotoPreview = null;
         this.photoSaving = false;
@@ -133,6 +139,49 @@ export class ProviderProfileComponent implements OnInit {
       error: (err) => {
         this.error = err.message ?? 'Impossible de mettre à jour la photo.';
         this.photoSaving = false;
+      }
+    });
+  }
+
+  onWorkImagesSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+
+    const newFiles = Array.from(input.files);
+    this.pendingWorkImageFiles = [...this.pendingWorkImageFiles, ...newFiles];
+
+    newFiles.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result) {
+          this.pendingWorkImagePreviews = [...this.pendingWorkImagePreviews, reader.result as string];
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    input.value = '';
+  }
+
+  uploadWorkImages() {
+    if (this.pendingWorkImageFiles.length === 0) {
+      return;
+    }
+
+    this.workImagesSaving = true;
+    this.error = '';
+    this.profileService.addWorkImages(this.pendingWorkImageFiles).subscribe({
+      next: (profile) => {
+        this.workImages = profile.workImages ?? [];
+        this.pendingWorkImageFiles = [];
+        this.pendingWorkImagePreviews = [];
+        this.workImagesSaving = false;
+      },
+      error: (err) => {
+        this.error = err.message ?? 'Impossible de mettre à jour les images.';
+        this.workImagesSaving = false;
       }
     });
   }

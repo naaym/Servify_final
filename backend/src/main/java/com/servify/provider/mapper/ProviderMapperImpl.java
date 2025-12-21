@@ -6,7 +6,10 @@ import com.servify.provider.dto.ProviderRegistrationRequest;
 import com.servify.provider.dto.ProviderSearchResponse;
 import com.servify.provider.model.ProviderEntity;
 import com.servify.provider.model.ProviderStatus;
+import com.servify.provider.model.ProviderWorkImage;
 import com.servify.user.enums.Role;
+import java.util.Collections;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -65,6 +68,7 @@ public  class ProviderMapperImpl implements ProviderMapper {
         response.setReviewCount(entity.getReviewCount());
         response.setDescription(entity.getDescription());
         response.setImageProviderUrl(entity.getProfileImageUrl());
+        response.setWorkImages(mapWorkImages(entity));
         return response;
     }
 
@@ -82,7 +86,17 @@ public  class ProviderMapperImpl implements ProviderMapper {
                 .basePrice(entity.getBasePrice())
                 .description(entity.getDescription())
                 .profileImageUrl(entity.getProfileImageUrl())
+                .workImages(mapWorkImages(entity))
                 .build();
+    }
+
+    private List<String> mapWorkImages(ProviderEntity entity) {
+        if (entity.getWorkImages() == null || entity.getWorkImages().isEmpty()) {
+            return Collections.emptyList();
+        }
+        return entity.getWorkImages().stream()
+                .map(ProviderWorkImage::getImageUrl)
+                .toList();
     }
 
 }

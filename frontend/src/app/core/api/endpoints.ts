@@ -23,6 +23,7 @@ export const API_ENDPOINTS = {
     CHECK: 'providers/check',
     PROFILE: 'providers/profile',
     PROFILE_PHOTO: 'providers/profile/photo',
+    PROFILE_WORK_IMAGES: 'providers/profile/work-images',
     SEARCH_OPTIONS: {
       SERVICES: 'providers/search/options/services',
       GOVERNORATES: 'providers/search/options/governorates',

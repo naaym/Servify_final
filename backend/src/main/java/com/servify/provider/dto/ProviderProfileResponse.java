@@ -2,6 +2,7 @@ package com.servify.provider.dto;
 
 import lombok.Builder;
 import lombok.Value;
+import java.util.List;
 
 @Value
 @Builder
@@ -17,4 +18,5 @@ public class ProviderProfileResponse {
   Double basePrice;
   String description;
   String profileImageUrl;
+  List<String> workImages;
 }

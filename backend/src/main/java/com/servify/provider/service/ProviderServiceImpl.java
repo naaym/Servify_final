@@ -13,6 +13,7 @@ import com.servify.provider.exceptions.EmailDuplicationException;
 import com.servify.provider.mapper.ProviderMapper;
 import com.servify.provider.model.ProviderEntity;
 import com.servify.provider.model.ProviderStatus;
+import com.servify.provider.model.ProviderWorkImage;
 import com.servify.provider.repository.ProviderRepository;
 import com.servify.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -124,6 +125,25 @@ public class ProviderServiceImpl implements ProviderService{
         ProviderEntity provider = getCurrentProvider();
         String imageUrl = storageFilesService.storeImage(photo, "servify/providers/profile");
         provider.setProfileImageUrl(imageUrl);
+        ProviderEntity saved = providerRepository.save(provider);
+        return providerMapper.toProfileResponse(saved);
+    }
+
+    @Override
+    public ProviderProfileResponse addWorkImages(List<MultipartFile> images) {
+        ProviderEntity provider = getCurrentProvider();
+        if (images == null || images.isEmpty()) {
+            return providerMapper.toProfileResponse(provider);
+        }
+
+        for (MultipartFile image : images) {
+            String imageUrl = storageFilesService.storeImage(image, "servify/providers/work");
+            ProviderWorkImage workImage = new ProviderWorkImage();
+            workImage.setImageUrl(imageUrl);
+            workImage.setProvider(provider);
+            provider.getWorkImages().add(workImage);
+        }
+
         ProviderEntity saved = providerRepository.save(provider);
         return providerMapper.toProfileResponse(saved);
     }

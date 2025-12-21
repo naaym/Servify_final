@@ -20,4 +20,12 @@ export class ProviderProfileService {
     formData.append('photo', file);
     return this.http.post<ProviderProfile>(API_ENDPOINTS.PROVIDER.PROFILE_PHOTO, formData);
   }
+
+  addWorkImages(files: File[]) {
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append('images', file);
+    });
+    return this.http.post<ProviderProfile>(API_ENDPOINTS.PROVIDER.PROFILE_WORK_IMAGES, formData);
+  }
 }

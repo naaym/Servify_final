@@ -99,5 +99,46 @@
         </div>
       </form>
     </div>
+
+    <div class="bg-[#16161C] border border-white/5 rounded-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-semibold">Photos de vos travaux</h2>
+          <p class="text-sm text-gray-400">Ajoutez quelques réalisations pour rassurer vos clients.</p>
+        </div>
+        <span *ngIf="workImagesSaving" class="text-sm text-gray-400">Chargement...</span>
+      </div>
+
+      <div *ngIf="workImages.length === 0 && pendingWorkImagePreviews.length === 0" class="text-sm text-gray-400">
+        Aucune image ajoutée pour le moment.
+      </div>
+
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <img
+          *ngFor="let preview of pendingWorkImagePreviews"
+          [src]="preview"
+          class="w-full h-36 rounded-xl object-cover border border-white/10"
+          alt="Prévisualisation"
+        />
+        <img
+          *ngFor="let image of workImages"
+          [src]="image"
+          class="w-full h-36 rounded-xl object-cover border border-white/10"
+          alt="Travail"
+        />
+      </div>
+
+      <div class="space-y-3">
+        <label class="block text-sm text-gray-300">Choisir des images (JPG ou PNG)</label>
+        <input type="file" accept="image/*" multiple (change)="onWorkImagesSelected($event)" class="w-full text-sm text-gray-200" />
+        <button
+          class="bg-purple-600 hover:bg-purple-700 transition rounded-xl px-6 py-2 font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
+          [disabled]="workImagesSaving || pendingWorkImageFiles.length === 0"
+          (click)="uploadWorkImages()"
+        >
+          {{ workImagesSaving ? 'Chargement...' : 'Publier les images' }}
+        </button>
+      </div>
+    </div>
   </div>
 </div>

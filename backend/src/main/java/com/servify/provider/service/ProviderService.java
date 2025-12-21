@@ -7,6 +7,7 @@ import com.servify.provider.dto.ProviderSearchRequest;
 import com.servify.provider.dto.ProviderSearchResult;
 import com.servify.provider.dto.ProviderProfileResponse;
 import com.servify.provider.dto.UpdateProviderProfileRequest;
+import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ProviderService {
@@ -21,4 +22,6 @@ public interface ProviderService {
   ProviderProfileResponse updateProfile(UpdateProviderProfileRequest request);
 
   ProviderProfileResponse updateProfilePhoto(MultipartFile photo);
+
+  ProviderProfileResponse addWorkImages(List<MultipartFile> images);
 }

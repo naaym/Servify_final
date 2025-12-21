@@ -9,4 +9,5 @@ export interface Provider {
   reviewCount?: number;
   description?: string;
   imageProviderUrl?: string;
+  workImages?: string[];
 }

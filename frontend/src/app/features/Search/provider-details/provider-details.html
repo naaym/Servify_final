@@ -1,44 +1,77 @@
 <app-header></app-header>
 
-<section class="provider-details">
-  <div *ngIf="isLoading" class="provider-details__state">Chargement des informations...</div>
+<section class="mx-auto max-w-[1100px] px-6 py-8">
+  <div *ngIf="isLoading" class="rounded-xl bg-slate-100 px-6 py-4 text-center font-medium text-slate-900">
+    Chargement des informations...
+  </div>
 
-  <div *ngIf="!isLoading && errorMessage" class="provider-details__state provider-details__state--error">
+  <div *ngIf="!isLoading && errorMessage" class="rounded-xl bg-red-100 px-6 py-4 text-center font-medium text-red-800">
     {{ errorMessage }}
   </div>
 
-  <div *ngIf="!isLoading && provider" class="provider-details__content">
-    <div class="provider-details__header">
+  <div *ngIf="!isLoading && provider" class="flex flex-col gap-8">
+    <div class="grid items-center gap-6 rounded-2xl bg-white p-6 shadow-[0_8px_24px_rgba(0,0,0,0.06)] lg:grid-cols-[auto_1fr_auto]">
       <img
-        class="provider-details__avatar"
+        class="h-36 w-36 rounded-full border-4 border-slate-100 object-cover"
         [src]="provider.imageProviderUrl || defaultAvatarUrl"
         [alt]="provider.name"
       />
-      <div class="provider-details__info">
-        <h1>{{ provider.name }}</h1>
-        <p class="provider-details__category">{{ provider.serviceCategory }}</p>
-        <p class="provider-details__location">
+      <div class="text-center lg:text-left">
+        <h1 class="mb-1 text-3xl font-semibold text-slate-900">{{ provider.name }}</h1>
+        <p class="text-base font-semibold text-slate-600">{{ provider.serviceCategory }}</p>
+        <p class="mt-1 text-sm text-slate-500">
           {{ provider.governorate }} · {{ provider.delegation }}
         </p>
       </div>
-      <div class="provider-details__meta">
-        <div class="provider-details__price">
-          <span>À partir de</span>
-          <strong>{{ provider.basePrice || 0 }} DT</strong>
+      <div class="flex min-w-[180px] flex-col items-center gap-3 text-center lg:items-end lg:text-right">
+        <div class="text-sm text-slate-500">
+          <span class="block">À partir de</span>
+          <strong class="text-xl text-slate-900">{{ provider.basePrice || 0 }} DT</strong>
         </div>
-        <div class="provider-details__rating">
-          <strong>{{ provider.rating || 0 }}/5</strong>
+        <div class="text-sm text-slate-500">
+          <strong class="block text-lg text-slate-900">{{ provider.rating || 0 }}/5</strong>
           <span>({{ provider.reviewCount || 0 }} avis)</span>
         </div>
-        <button class="provider-details__cta" type="button" (click)="bookProvider()">
+        <button
+          class="rounded-full bg-slate-900 px-5 py-2 font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+          type="button"
+          (click)="bookProvider()"
+        >
           Réserver
         </button>
       </div>
     </div>
 
-    <div class="provider-details__section">
-      <h2>À propos</h2>
-      <p>{{ provider.description || 'Ce provider n’a pas encore ajouté de description.' }}</p>
+    <div class="rounded-2xl bg-white p-6 shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
+      <h2 class="mb-2 text-xl font-semibold text-slate-900">À propos</h2>
+      <p class="text-sm text-slate-600">
+        {{ provider.description || 'Ce provider n’a pas encore ajouté de description.' }}
+      </p>
+    </div>
+
+    <div class="rounded-2xl bg-white p-6 shadow-[0_8px_24px_rgba(0,0,0,0.06)]" *ngIf="provider.workImages && provider.workImages.length">
+      <h2 class="mb-4 text-xl font-semibold text-slate-900">Réalisations</h2>
+      <div class="grid gap-4">
+        <div class="flex h-80 w-full items-center justify-center overflow-hidden rounded-[18px] bg-slate-50 shadow-[0_10px_24px_rgba(0,0,0,0.08)] sm:h-[820px]">
+          <img
+            *ngIf="activeWorkImage"
+            [src]="activeWorkImage"
+            class="h-full w-full object-cover"
+            alt="Réalisation principale"
+          />
+        </div>
+        <div class="flex justify-center gap-3 overflow-x-auto pb-1">
+          <button
+            *ngFor="let image of provider.workImages; let index = index"
+            class="h-[84px] w-[84px] flex-shrink-0 overflow-hidden rounded-2xl border-2 border-transparent transition hover:-translate-y-0.5"
+            [class.border-slate-900]="index === selectedWorkImageIndex"
+            type="button"
+            (click)="selectWorkImage(index)"
+          >
+            <img [src]="image" class="h-full w-full object-cover"  />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
