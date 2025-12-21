@@ -1,14 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ClientBookingService } from '../../clientbooking.service';
 import { ActivatedRoute } from '@angular/router';
 import { ClientBookingDetails } from '../../clientbookingdetail.model';
 import { Status } from '../../../../../booking/models/status.model';
-import { BookingChatComponent } from '../../../../../chat/components/booking-chat/booking-chat.component';
+import { ReviewRequest } from '../../review-request.model';
 
 @Component({
   selector: 'app-details.component',
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe, FormsModule],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
@@ -17,6 +18,15 @@ export class DetailsComponent implements OnInit {
   private readonly route=inject(ActivatedRoute)
   bookingDetails:ClientBookingDetails|null=null;
   errorMessage:string="";
+  reviewError = '';
+  reviewSuccess = '';
+  isSubmittingReview = false;
+  reviewPayload: ReviewRequest = {
+    politenessRating: 5,
+    qualityRating: 5,
+    punctualityRating: 5,
+    comment: '',
+  };
 
   ngOnInit(): void {
     const bookingId=Number(this.route.snapshot.paramMap.get("bookingId"));
@@ -39,6 +49,26 @@ export class DetailsComponent implements OnInit {
 
     contactProvider() {
       console.log('Contact provider');
+    }
+
+    submitReview() {
+      if (!this.bookingDetails || this.bookingDetails.reviewSubmitted || this.bookingDetails.status !== 'DONE') {
+        return;
+      }
+      this.reviewError = '';
+      this.reviewSuccess = '';
+      this.isSubmittingReview = true;
+      this.clientbookingservice.submitReview(this.bookingDetails.bookingId, this.reviewPayload).subscribe({
+        next: () => {
+          this.isSubmittingReview = false;
+          this.reviewSuccess = 'Merci ! Votre avis a bien été envoyé.';
+          this.bookingDetails = { ...this.bookingDetails!, reviewSubmitted: true };
+        },
+        error: (err) => {
+          this.isSubmittingReview = false;
+          this.reviewError = err?.message || "Impossible d'envoyer votre avis.";
+        },
+      });
     }
 
 

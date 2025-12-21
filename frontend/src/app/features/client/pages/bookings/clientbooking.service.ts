@@ -6,6 +6,7 @@ import { catchError, throwError } from 'rxjs';
 import { StatsBooking } from './statsbooking.model';
 import { ClientBookingDetails } from './clientbookingdetail.model';
 import { Status } from '../../../booking/models/status.model';
+import { ReviewRequest } from './review-request.model';
 
 @Injectable({ providedIn: 'root' })
 export class ClientBookingService {
@@ -53,6 +54,12 @@ export class ClientBookingService {
     return this.http.patch<ClientBookingDetails>(
       `${API_ENDPOINTS.BOOKING.BASE}/${bookingId}/status`,
       { status }
+    );
+  }
+  submitReview(bookingId: number, review: ReviewRequest) {
+    return this.http.post(
+      `${API_ENDPOINTS.BOOKING.BASE}/${bookingId}/reviews`,
+      review
     );
   }
   //getMyRecentBookings()

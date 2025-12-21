@@ -107,6 +107,81 @@
         </div>
       </div>
     }
+
+    @if (bookingDetails?.status === 'DONE') {
+      <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Votre avis</h3>
+        <p class="text-sm text-gray-500 mb-4">
+          Notez votre prestataire et partagez votre expérience.
+        </p>
+
+        @if (bookingDetails?.reviewSubmitted) {
+          <div class="rounded-xl bg-green-50 px-4 py-3 text-sm font-semibold text-green-700">
+            Merci ! Votre avis a déjà été enregistré.
+          </div>
+        } @else {
+          <form class="space-y-4" #reviewForm="ngForm" (ngSubmit)="submitReview()">
+            <div class="grid gap-4 md:grid-cols-3">
+              <label class="flex flex-col gap-2 text-sm font-medium text-gray-700">
+                Politesse
+                <select
+                  class="rounded-xl border border-gray-200 px-3 py-2"
+                  name="politenessRating"
+                  [(ngModel)]="reviewPayload.politenessRating"
+                  required
+                >
+                  <option *ngFor="let rating of [5,4,3,2,1]" [value]="rating">{{ rating }}</option>
+                </select>
+              </label>
+              <label class="flex flex-col gap-2 text-sm font-medium text-gray-700">
+                Qualité
+                <select
+                  class="rounded-xl border border-gray-200 px-3 py-2"
+                  name="qualityRating"
+                  [(ngModel)]="reviewPayload.qualityRating"
+                  required
+                >
+                  <option *ngFor="let rating of [5,4,3,2,1]" [value]="rating">{{ rating }}</option>
+                </select>
+              </label>
+              <label class="flex flex-col gap-2 text-sm font-medium text-gray-700">
+                Ponctualité
+                <select
+                  class="rounded-xl border border-gray-200 px-3 py-2"
+                  name="punctualityRating"
+                  [(ngModel)]="reviewPayload.punctualityRating"
+                  required
+                >
+                  <option *ngFor="let rating of [5,4,3,2,1]" [value]="rating">{{ rating }}</option>
+                </select>
+              </label>
+            </div>
+
+            <label class="flex flex-col gap-2 text-sm font-medium text-gray-700">
+              Commentaire (optionnel)
+              <textarea
+                class="min-h-[120px] rounded-xl border border-gray-200 px-3 py-2"
+                name="comment"
+                [(ngModel)]="reviewPayload.comment"
+                placeholder="Votre retour..."
+              ></textarea>
+            </label>
+
+            <div class="flex flex-wrap items-center gap-4">
+              <button
+                type="submit"
+                [disabled]="reviewForm.invalid || isSubmittingReview"
+                class="rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Envoyer mon avis
+              </button>
+              <span *ngIf="reviewSuccess" class="text-sm font-semibold text-green-600">{{ reviewSuccess }}</span>
+              <span *ngIf="reviewError" class="text-sm font-semibold text-red-600">{{ reviewError }}</span>
+            </div>
+          </form>
+        }
+      </div>
+    }
     <div class="flex flex-wrap gap-4 pt-6 border-t">
 
       @if(bookingDetails?.status!=='DONE' && bookingDetails?.status!=='CANCELLED'){

@@ -15,6 +15,10 @@ import com.servify.provider.model.ProviderEntity;
 import com.servify.provider.model.ProviderStatus;
 import com.servify.provider.model.ProviderWorkImage;
 import com.servify.provider.repository.ProviderRepository;
+import com.servify.review.dto.ReviewItemResponse;
+import com.servify.review.dto.ReviewSummary;
+import com.servify.review.model.ReviewEntity;
+import com.servify.review.repository.ReviewRepository;
 import com.servify.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,6 +41,7 @@ public class ProviderServiceImpl implements ProviderService{
     private final ProviderMapper providerMapper;
     private final PasswordEncoder passwordEncoder ;
     private  final StorageFilesService storageFilesService;
+    private final ReviewRepository reviewRepository;
 
 
 
@@ -77,7 +82,22 @@ public class ProviderServiceImpl implements ProviderService{
     public ProviderDetailsResponse getProviderDetails(Long providerId) {
         ProviderEntity provider = providerRepository.findByUserIdAndStatus(providerId, ProviderStatus.ACCEPTED)
                 .orElseThrow(() -> new ResourceNotFoundException("Provider not found"));
-        return providerMapper.toDetailsResponse(provider);
+        ProviderDetailsResponse response = providerMapper.toDetailsResponse(provider);
+        ReviewSummary summary = reviewRepository.findSummaryByProviderId(providerId);
+        if (summary != null && summary.reviewCount() != null && summary.reviewCount() > 0) {
+            response.setPolitenessRating(roundRating(summary.politenessAverage()));
+            response.setQualityRating(roundRating(summary.qualityAverage()));
+            response.setPunctualityRating(roundRating(summary.punctualityAverage()));
+            response.setRating(roundRating(summary.overallAverage()));
+            response.setReviewCount(summary.reviewCount().intValue());
+        } else {
+            response.setPolitenessRating(0.0);
+            response.setQualityRating(0.0);
+            response.setPunctualityRating(0.0);
+            response.setRating(0.0);
+            response.setReviewCount(0);
+        }
+        return response;
     }
 
     @Override
@@ -148,6 +168,17 @@ public class ProviderServiceImpl implements ProviderService{
         return providerMapper.toProfileResponse(saved);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReviewItemResponse> getProviderReviews(Long providerId) {
+        providerRepository.findByUserIdAndStatus(providerId, ProviderStatus.ACCEPTED)
+                .orElseThrow(() -> new ResourceNotFoundException("Provider not found"));
+
+        return reviewRepository.findByProviderUserIdOrderByCreatedAtDesc(providerId).stream()
+                .map(this::toReviewItemResponse)
+                .toList();
+    }
+
     private void sortProviders(List<ProviderEntity> providers, String sortBy) {
         if (providers == null || providers.isEmpty()) {
             return;
@@ -182,6 +213,31 @@ public class ProviderServiceImpl implements ProviderService{
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return providerRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Provider not found"));
+    }
+
+    private ReviewItemResponse toReviewItemResponse(ReviewEntity review) {
+       double ratings= roundRating((review.getPolitenessRating()
+                + review.getQualityRating()
+                + review.getPunctualityRating()) / 3.0);
+        return ReviewItemResponse.builder()
+                .id(review.getId())
+                .clientName(review.getClient().getName())
+                .clientProfileImageUrl(review.getClient().getProfileImageUrl())
+                .overallRating(toInt(ratings))
+                .politenessRating(review.getPolitenessRating())
+                .qualityRating(review.getQualityRating())
+                .punctualityRating(review.getPunctualityRating())
+                .comment(review.getComment())
+                .createdAt(review.getCreatedAt().toEpochMilli())
+                .build();
+    }
+
+    private Double roundRating(double rating) {
+
+        return Math.round (rating * 100.0) / 100.0;
+    }
+    private  int toInt(double ratings) {
+        return (int) ratings ;
     }
 
 

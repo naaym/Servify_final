@@ -6,10 +6,13 @@ import com.servify.booking.dto.BookingStatsResponse;
 import com.servify.booking.dto.BookingStatusUpdateRequest;
 import com.servify.booking.model.BookingStatus;
 import com.servify.booking.service.BookingService;
+import com.servify.review.dto.ReviewRequest;
+import com.servify.review.dto.ReviewResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -98,5 +101,14 @@ public class BookingController {
         }
 
         return ResponseEntity.ok(bookingService.updateStatusAsProvider(bookingId, status));
+    }
+
+    @PreAuthorize("hasRole('CLIENT')")
+    @PostMapping("/{id:\\d+}/reviews")
+    public ResponseEntity<ReviewResponse> submitReview(
+            @PathVariable("id") Long bookingId,
+            @Validated @RequestBody ReviewRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.submitReview(bookingId, request));
     }
 }

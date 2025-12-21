@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SearchProviderService } from '../services/provider-search.service';
 import { Provider } from '../models/provider.model';
 import { Header } from '../../../shared/header/header';
+import { ProviderReview } from '../models/provider-review.model';
 
 @Component({
   selector: 'app-provider-details',
@@ -16,10 +17,14 @@ export class ProviderDetails implements OnInit, OnDestroy {
   private readonly router = inject(Router);
 
   provider?: Provider;
+  reviews: ProviderReview[] = [];
   isLoading = true;
+  isReviewsLoading = true;
   errorMessage = '';
+  reviewsErrorMessage = '';
   readonly defaultAvatarUrl = '/assets/default-avatar.png';
   selectedWorkImageIndex = 0;
+  readonly ratingStars = [1, 2, 3, 4, 5];
   private rotationIntervalId?: number;
 
   ngOnInit(): void {
@@ -44,6 +49,19 @@ export class ProviderDetails implements OnInit, OnDestroy {
         error: () => {
           this.errorMessage = 'Impossible de charger le profil du provider.';
           this.isLoading = false;
+        },
+      });
+
+      this.isReviewsLoading = true;
+      this.reviewsErrorMessage = '';
+      this.searchService.getProviderReviews(providerId).subscribe({
+        next: (reviews) => {
+          this.reviews = reviews;
+          this.isReviewsLoading = false;
+        },
+        error: () => {
+          this.reviewsErrorMessage = 'Impossible de charger les avis.';
+          this.isReviewsLoading = false;
         },
       });
     });
