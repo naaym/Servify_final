@@ -49,6 +49,58 @@
       </p>
     </div>
 
+    <div class="rounded-2xl bg-white p-6 shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
+      <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <h2 class="text-xl font-semibold text-slate-900">Note clients</h2>
+        <span class="text-sm text-slate-500">({{ provider.reviewCount || 0 }} avis)</span>
+      </div>
+
+      <p *ngIf="!provider.reviewCount" class="text-sm text-slate-500">
+        Aucun avis pour le moment. Soyez le premier à partager votre expérience.
+      </p>
+
+      <div *ngIf="provider.reviewCount" class="space-y-4">
+        <div class="flex items-center gap-4">
+          <span class="w-28 text-sm font-medium text-slate-600">Politesse</span>
+          <div class="flex-1 rounded-full bg-slate-100">
+            <div
+              class="h-3 rounded-full bg-amber-400"
+              [style.width.%]="(provider.politenessRating || 0) * 20"
+            ></div>
+          </div>
+          <span class="w-10 text-right text-sm font-semibold text-slate-700">
+            {{ provider.politenessRating || 0 | number: '1.2-2' }}
+          </span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <span class="w-28 text-sm font-medium text-slate-600">Qualité</span>
+          <div class="flex-1 rounded-full bg-slate-100">
+            <div
+              class="h-3 rounded-full bg-amber-400"
+              [style.width.%]="(provider.qualityRating || 0) * 20"
+            ></div>
+          </div>
+          <span class="w-10 text-right text-sm font-semibold text-slate-700">
+            {{ provider.qualityRating || 0 | number: '1.2-2' }}
+          </span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <span class="w-28 text-sm font-medium text-slate-600">Ponctualité</span>
+          <div class="flex-1 rounded-full bg-slate-100">
+            <div
+              class="h-3 rounded-full bg-amber-400"
+              [style.width.%]="(provider.punctualityRating || 0) * 20"
+            ></div>
+          </div>
+          <span class="w-10 text-right text-sm font-semibold text-slate-700">
+            {{ provider.punctualityRating || 0 | number: '1.2-2' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
     <div class="rounded-2xl bg-white p-6 shadow-[0_8px_24px_rgba(0,0,0,0.06)]" *ngIf="provider.workImages && provider.workImages.length">
       <h2 class="mb-4 text-xl font-semibold text-slate-900">Réalisations</h2>
       <div class="grid gap-4">

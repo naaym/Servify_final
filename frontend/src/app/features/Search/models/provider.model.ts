@@ -7,6 +7,9 @@ export interface Provider {
   basePrice?: number;
   rating?: number;
   reviewCount?: number;
+  politenessRating?: number;
+  qualityRating?: number;
+  punctualityRating?: number;
   description?: string;
   imageProviderUrl?: string;
   workImages?: string[];

@@ -15,6 +15,9 @@ public class ProviderDetailsResponse {
     private Double basePrice;
     private Double rating;
     private Integer reviewCount;
+    private Double politenessRating;
+    private Double qualityRating;
+    private Double punctualityRating;
     private String description;
     private String imageProviderUrl;
     private List<String> workImages;

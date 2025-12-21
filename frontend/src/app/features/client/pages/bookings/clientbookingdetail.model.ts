@@ -13,6 +13,7 @@ export interface ClientBookingDetails{
   clientPhone?:string;
   serviceGategory:string;
   attachments?:metadata[];
+  reviewSubmitted?: boolean;
 
 
 }

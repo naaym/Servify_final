@@ -13,12 +13,19 @@ import com.servify.client.model.ClientEntity;
 import com.servify.client.repository.ClientRepository;
 import com.servify.provider.model.ProviderEntity;
 import com.servify.provider.repository.ProviderRepository;
+import com.servify.review.dto.ReviewRequest;
+import com.servify.review.dto.ReviewResponse;
+import com.servify.review.dto.ReviewSummary;
+import com.servify.review.model.ReviewEntity;
+import com.servify.review.repository.ReviewRepository;
 import com.servify.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -38,6 +45,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final ProviderRepository providerRepository;
     private final ClientRepository clientRepository;
+    private final ReviewRepository reviewRepository;
 
     @Override
     public BookingResponse createBooking(Long providerId, String date, String time, String description, List<MultipartFile> attachments) {
@@ -148,6 +156,42 @@ public class BookingServiceImpl implements BookingService {
         return mapToBookingDetails(saved);
     }
 
+    @Override
+    public ReviewResponse submitReview(Long bookingId, ReviewRequest request) {
+        BookingEntity booking = findOwnedBooking(bookingId);
+
+        if (booking.getStatus() != BookingStatus.DONE) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Booking must be done to review");
+        }
+
+        if (reviewRepository.existsByBooking_BookingId(bookingId)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Review already submitted");
+        }
+
+        ReviewEntity review = new ReviewEntity();
+        review.setBooking(booking);
+        review.setProvider(booking.getProvider());
+        review.setClient(booking.getClient());
+        review.setPolitenessRating(request.getPolitenessRating());
+        review.setQualityRating(request.getQualityRating());
+        review.setPunctualityRating(request.getPunctualityRating());
+        review.setComment(normalizeComment(request.getComment()));
+
+        ReviewEntity savedReview = reviewRepository.save(review);
+        updateProviderRating(booking.getProvider());
+
+        return ReviewResponse.builder()
+                .id(savedReview.getId())
+                .bookingId(bookingId)
+                .overallRating(calculateOverallRating(savedReview))
+                .politenessRating(savedReview.getPolitenessRating())
+                .qualityRating(savedReview.getQualityRating())
+                .punctualityRating(savedReview.getPunctualityRating())
+                .comment(savedReview.getComment())
+                .createdAt(savedReview.getCreatedAt().toEpochMilli())
+                .build();
+    }
+
     private BookingEntity findOwnedBooking(Long bookingId) {
         ClientEntity client = getCurrentClient();
         return bookingRepository.findByBookingIdAndClientUserId(bookingId, client.getUserId())
@@ -218,6 +262,7 @@ public class BookingServiceImpl implements BookingService {
                 .clientName(booking.getClient().getName())
                 .clientPhone(booking.getClient().getPhone())
                 .attachments(mapToFileMetadata(booking.getAttachments()))
+                .reviewSubmitted(reviewRepository.existsByBooking_BookingId(booking.getBookingId()))
                 .build();
     }
 
@@ -253,5 +298,37 @@ public class BookingServiceImpl implements BookingService {
     private long toEpochMilli(BookingEntity booking) {
         LocalDateTime dateTime = LocalDateTime.of(booking.getAppointmentDate(), booking.getAppointmentTime());
         return dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    private void updateProviderRating(ProviderEntity provider) {
+        ReviewSummary summary = reviewRepository.findSummaryByProviderId(provider.getUserId());
+        if (summary == null || summary.reviewCount() == null || summary.reviewCount() == 0) {
+            provider.setRating(0.0);
+            provider.setReviewCount(0);
+            providerRepository.save(provider);
+            return;
+        }
+        provider.setRating(roundRating(summary.overallAverage()));
+        provider.setReviewCount(summary.reviewCount().intValue());
+        providerRepository.save(provider);
+    }
+
+    private Double calculateOverallRating(ReviewEntity review) {
+        return roundRating((review.getPolitenessRating() + review.getQualityRating() + review.getPunctualityRating()) / 3.0);
+    }
+
+    private Double roundRating(Double rating) {
+        if (rating == null) {
+            return 0.0;
+        }
+        return Math.round(rating * 100.0) / 100.0;
+    }
+
+    private String normalizeComment(String comment) {
+        if (comment == null) {
+            return null;
+        }
+        String trimmed = comment.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 }
