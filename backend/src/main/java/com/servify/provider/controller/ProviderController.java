@@ -7,6 +7,7 @@ import com.servify.provider.dto.ProviderRegistrationResponse;
 import com.servify.provider.dto.ProviderSearchRequest;
 import com.servify.provider.dto.ProviderSearchResult;
 import com.servify.provider.dto.UpdateProviderProfileRequest;
+import com.servify.review.dto.ReviewItemResponse;
 import com.servify.provider.service.ProviderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,11 @@ public class ProviderController {
     @GetMapping("/{providerId:\\d+}")
     public ResponseEntity<ProviderDetailsResponse> getProviderDetails(@PathVariable(name = "providerId") Long providerId) {
         return ResponseEntity.ok(providerService.getProviderDetails(providerId));
+    }
+
+    @GetMapping("/{providerId:\\d+}/reviews")
+    public ResponseEntity<List<ReviewItemResponse>> getProviderReviews(@PathVariable(name = "providerId") Long providerId) {
+        return ResponseEntity.ok(providerService.getProviderReviews(providerId));
     }
 
     @GetMapping("/profile")

@@ -118,6 +118,64 @@
       </div>
     </div>
 
+    <div class="rounded-2xl bg-white p-6 shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
+      <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <h2 class="text-xl font-semibold text-slate-900">Commentaires</h2>
+        <span class="text-sm text-slate-500">{{ reviews.length }} avis</span>
+      </div>
+
+      <div *ngIf="isReviewsLoading" class="text-sm text-slate-500">
+        Chargement des avis...
+      </div>
+
+      <div *ngIf="!isReviewsLoading && reviewsErrorMessage" class="text-sm text-red-600">
+        {{ reviewsErrorMessage }}
+      </div>
+
+      <p *ngIf="!isReviewsLoading && !reviewsErrorMessage && reviews.length === 0" class="text-sm text-slate-500">
+        Aucun commentaire pour le moment.
+      </p>
+
+      <div *ngIf="!isReviewsLoading && !reviewsErrorMessage && reviews.length" class="space-y-6">
+        <div *ngFor="let review of reviews" class="flex flex-col gap-3 border-b border-slate-100 pb-6 last:border-b-0 last:pb-0">
+          <div class="flex items-start gap-4">
+            <img
+              class="h-12 w-12 rounded-full object-cover"
+              [src]="review.clientProfileImageUrl || defaultAvatarUrl"
+              [alt]="review.clientName"
+            />
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <p class="text-sm font-semibold text-slate-900">{{ review.clientName }}</p>
+                <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">Vérifié</span>
+              </div>
+              <div class="mt-1 flex items-center gap-2">
+                <div class="flex items-center gap-1 text-amber-400">
+                  <ng-container *ngFor="let star of ratingStars">
+                    <span
+                      [ngClass]="(review.overallRating || 0) >= star ? 'text-amber-400' : 'text-slate-300'"
+                      aria-hidden="true"
+                    >
+                      ★
+                    </span>
+                  </ng-container>
+                </div>
+                <span class="text-sm font-semibold text-slate-700">
+                  {{ review.overallRating || 0 | number: '1.0-1' }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <p *ngIf="review.comment" class="text-sm text-slate-600">
+            {{ review.comment }}
+          </p>
+          <p class="text-xs text-slate-400">
+            {{ review.createdAt | date: 'EEEE, d MMMM y' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div class="rounded-2xl bg-white p-6 shadow-[0_8px_24px_rgba(0,0,0,0.06)]" *ngIf="provider.workImages && provider.workImages.length">
       <h2 class="mb-4 text-xl font-semibold text-slate-900">Réalisations</h2>
       <div class="grid gap-4">
