@@ -20,6 +20,7 @@ export class ProviderDetails implements OnInit, OnDestroy {
   errorMessage = '';
   readonly defaultAvatarUrl = '/assets/default-avatar.png';
   selectedWorkImageIndex = 0;
+  readonly ratingStars = [1, 2, 3, 4, 5];
   private rotationIntervalId?: number;
 
   ngOnInit(): void {

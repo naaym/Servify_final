@@ -60,6 +60,23 @@
       </p>
 
       <div *ngIf="provider.reviewCount" class="space-y-4">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="text-sm font-semibold text-slate-700">
+            {{ provider.rating || 0 | number: '1.2-2' }}
+          </span>
+          <div class="flex items-center gap-1 text-amber-400">
+            <ng-container *ngFor="let star of ratingStars">
+              <span
+                [ngClass]="(provider.rating || 0) >= star ? 'text-amber-400' : 'text-slate-300'"
+                aria-hidden="true"
+              >
+                ★
+              </span>
+            </ng-container>
+          </div>
+          <span class="text-xs text-slate-500">Note globale</span>
+        </div>
+
         <div class="flex items-center gap-4">
           <span class="w-28 text-sm font-medium text-slate-600">Politesse</span>
           <div class="flex-1 rounded-full bg-slate-100">
