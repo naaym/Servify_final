@@ -7,6 +7,7 @@ import { StatsBooking } from './statsbooking.model';
 import { ClientBookingDetails } from './clientbookingdetail.model';
 import { Status } from '../../../booking/models/status.model';
 import { ReviewRequest } from './review-request.model';
+import { BookingUpdatePayload } from './booking-update.model';
 
 @Injectable({ providedIn: 'root' })
 export class ClientBookingService {
@@ -54,6 +55,12 @@ export class ClientBookingService {
     return this.http.patch<ClientBookingDetails>(
       `${API_ENDPOINTS.BOOKING.BASE}/${bookingId}/status`,
       { status }
+    );
+  }
+  updateBooking(bookingId: number, payload: BookingUpdatePayload) {
+    return this.http.patch<ClientBookingDetails>(
+      `${API_ENDPOINTS.BOOKING.BASE}/${bookingId}`,
+      payload
     );
   }
   submitReview(bookingId: number, review: ReviewRequest) {

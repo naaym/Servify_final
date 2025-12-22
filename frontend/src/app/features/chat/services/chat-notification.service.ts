@@ -73,6 +73,7 @@ export class ChatNotificationService implements OnDestroy {
     const lastSeen = this.getLastSeenMap();
     const unreadCount = conversations.filter(
       (conversation) =>
+        conversation.lastMessage?.trim().length &&
         conversation.lastMessageAt > (lastSeen[conversation.bookingId] ?? 0),
     ).length;
     this.unreadCountSubject.next(unreadCount);

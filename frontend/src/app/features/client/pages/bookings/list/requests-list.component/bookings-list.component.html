@@ -57,6 +57,14 @@
             <button class="text-purple-400 hover:underline text-xs sm:text-sm" (click)="toViewDetails(r.bookingId)">
               View
             </button>
+            @if (r.status === 'PENDING') {
+              <button
+                class="text-blue-400 hover:underline text-xs sm:text-sm ml-2"
+                (click)="onModify(r.bookingId)"
+              >
+                Modifier
+              </button>
+            }
             @if(r.status!=='CANCELLED' && r.status!=='DONE'){
             <button class="text-red-400 hover:underline text-xs sm:text-sm ml-2" (click)="onCancel(r.bookingId)">
               Cancel

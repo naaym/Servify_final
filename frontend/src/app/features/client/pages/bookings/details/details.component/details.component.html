@@ -81,9 +81,57 @@
     <!-- DESCRIPTION -->
     <div>
       <h3 class="text-xl font-semibold text-gray-800 mb-3">Description</h3>
-      <p class="text-gray-700 leading-relaxed bg-gray-50 p-5 rounded-xl border">
-        {{ bookingDetails?.description }}
-      </p>
+      @if (editMode && bookingDetails?.status === 'PENDING') {
+        <div class="space-y-4">
+          <label class="flex flex-col gap-2 text-sm font-medium text-gray-700">
+            Date
+            <input
+              type="date"
+              class="rounded-xl border border-gray-200 px-3 py-2"
+              [(ngModel)]="editPayload.date"
+            />
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium text-gray-700">
+            Heure
+            <input
+              type="time"
+              class="rounded-xl border border-gray-200 px-3 py-2"
+              [(ngModel)]="editPayload.time"
+            />
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium text-gray-700">
+            Description
+            <textarea
+              class="min-h-[120px] rounded-xl border border-gray-200 px-3 py-2"
+              [(ngModel)]="editPayload.description"
+            ></textarea>
+          </label>
+          @if (editError) {
+            <p class="text-sm font-semibold text-red-600">{{ editError }}</p>
+          }
+          <div class="flex flex-wrap gap-4">
+            <button
+              type="button"
+              (click)="saveEdit()"
+              [disabled]="isSavingEdit"
+              class="rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              Enregistrer
+            </button>
+            <button
+              type="button"
+              (click)="toggleEdit()"
+              class="rounded-xl bg-gray-100 px-6 py-2.5 text-sm font-semibold text-gray-700 shadow transition hover:bg-gray-200"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
+      } @else {
+        <p class="text-gray-700 leading-relaxed bg-gray-50 p-5 rounded-xl border">
+          {{ bookingDetails?.description }}
+        </p>
+      }
     </div>
 
     <!-- ATTACHMENTS -->
@@ -183,6 +231,14 @@
       </div>
     }
     <div class="flex flex-wrap gap-4 pt-6 border-t">
+      @if(bookingDetails?.status === 'PENDING'){
+        <button
+          (click)="toggleEdit()"
+          class="bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 shadow transition"
+        >
+          Modifier
+        </button>
+      }
 
       @if(bookingDetails?.status!=='DONE' && bookingDetails?.status!=='CANCELLED'){
         <button

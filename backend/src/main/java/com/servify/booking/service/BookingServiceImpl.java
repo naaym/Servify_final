@@ -105,6 +105,28 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public BookingDetailsResponse updateBooking(Long bookingId, String date, String time, String description) {
+        BookingEntity booking = findOwnedBooking(bookingId);
+
+        if (booking.getStatus() == BookingStatus.DONE) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Booking cannot be modified once done");
+        }
+
+        if (date != null) {
+            booking.setAppointmentDate(LocalDate.parse(date));
+        }
+        if (time != null) {
+            booking.setAppointmentTime(LocalTime.parse(time));
+        }
+        if (description != null) {
+            booking.setDescription(description);
+        }
+
+        BookingEntity saved = bookingRepository.save(booking);
+        return mapToBookingDetails(saved);
+    }
+
+    @Override
     public BookingDetailsResponse cancelBooking(Long bookingId) {
         BookingEntity booking = findOwnedBooking(bookingId);
 

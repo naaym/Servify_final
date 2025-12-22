@@ -4,6 +4,7 @@ import com.servify.booking.dto.BookingDetailsResponse;
 import com.servify.booking.dto.BookingResponse;
 import com.servify.booking.dto.BookingStatsResponse;
 import com.servify.booking.dto.BookingStatusUpdateRequest;
+import com.servify.booking.dto.BookingUpdateRequest;
 import com.servify.booking.model.BookingStatus;
 import com.servify.booking.service.BookingService;
 import com.servify.review.dto.ReviewRequest;
@@ -62,6 +63,17 @@ public class BookingController {
     @GetMapping("/{id:\\d+}")
     public ResponseEntity<BookingDetailsResponse> getBookingDetails(@PathVariable("id") Long bookingId) {
         return ResponseEntity.ok(bookingService.getBookingDetails(bookingId));
+    }
+
+    @PreAuthorize("hasRole('CLIENT')")
+    @PatchMapping("/{id:\\d+}")
+    public ResponseEntity<BookingDetailsResponse> updateBooking(
+            @PathVariable("id") Long bookingId,
+            @RequestBody BookingUpdateRequest request
+    ) {
+        return ResponseEntity.ok(
+                bookingService.updateBooking(bookingId, request.getDate(), request.getTime(), request.getDescription())
+        );
     }
 
     @PreAuthorize("hasRole('CLIENT')")

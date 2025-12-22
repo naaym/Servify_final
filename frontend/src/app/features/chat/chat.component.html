@@ -39,7 +39,9 @@
             />
             <div class="flex-1">
               <p class="font-semibold text-sm">{{ conversation.participantName }}</p>
-              <p class="text-xs text-gray-500 truncate">{{ conversation.lastMessage }}</p>
+              <p class="text-xs text-gray-500 truncate">
+                {{ conversation.lastMessage || 'Démarrez la conversation' }}
+              </p>
             </div>
           </button>
         }

@@ -40,5 +40,9 @@ export class BookingsListComponent implements OnInit{
     this.router.navigate([`/clients/bookings/${id}`])
   }
 
+  onModify(id: number) {
+    this.router.navigate([`/clients/bookings/${id}`], { queryParams: { edit: 'true' } });
+  }
+
 
 }

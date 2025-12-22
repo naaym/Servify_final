@@ -15,6 +15,7 @@ public interface BookingService {
     List<BookingResponse> getMyBookings();
     BookingStatsResponse getMyStats();
     BookingDetailsResponse getBookingDetails(Long bookingId);
+    BookingDetailsResponse updateBooking(Long bookingId, String date, String time, String description);
     BookingDetailsResponse cancelBooking(Long bookingId);
     List<BookingResponse> getProviderBookings();
     BookingDetailsResponse getProviderBookingDetails(Long bookingId);
