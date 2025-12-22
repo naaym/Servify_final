@@ -85,16 +85,19 @@ public class ChatMessageServiceImpl implements ChatMessageService {
             latestMessages.putIfAbsent(message.getBooking().getBookingId(), message);
         }
 
-        List<ChatConversationResponse> conversations = new ArrayList<>();
+        Map<Long, ChatConversationResponse> conversationsByParticipant = new HashMap<>();
         for (BookingEntity booking : bookings) {
             Long bookingId = booking.getBookingId();
             ChatMessageEntity message = latestMessages.get(bookingId);
+            Long participantId;
             String participantName;
             String participantImageUrl;
             if (requester.getRole() == Role.CLIENT) {
+                participantId = booking.getProvider().getUserId();
                 participantName = booking.getProvider().getName();
                 participantImageUrl = booking.getProvider().getProfileImageUrl();
             } else {
+                participantId = booking.getClient().getUserId();
                 participantName = booking.getClient().getName();
                 participantImageUrl = booking.getClient().getProfileImageUrl();
             }
@@ -104,15 +107,19 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                     ? message.getCreatedAt().toEpochMilli()
                     : booking.getCreatedAt().toEpochMilli();
 
-            conversations.add(ChatConversationResponse.builder()
-                    .bookingId(bookingId)
-                    .participantName(participantName)
-                    .participantImageUrl(participantImageUrl)
-                    .lastMessage(lastMessage)
-                    .lastMessageAt(lastMessageAt)
-                    .build());
+            ChatConversationResponse existing = conversationsByParticipant.get(participantId);
+            if (existing == null || lastMessageAt > existing.getLastMessageAt()) {
+                conversationsByParticipant.put(participantId, ChatConversationResponse.builder()
+                        .bookingId(bookingId)
+                        .participantName(participantName)
+                        .participantImageUrl(participantImageUrl)
+                        .lastMessage(lastMessage)
+                        .lastMessageAt(lastMessageAt)
+                        .build());
+            }
         }
 
+        List<ChatConversationResponse> conversations = new ArrayList<>(conversationsByParticipant.values());
         conversations.sort(Comparator.comparing(ChatConversationResponse::getLastMessageAt).reversed());
         return conversations;
     }
