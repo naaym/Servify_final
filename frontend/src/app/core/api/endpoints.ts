@@ -50,6 +50,12 @@ export const API_ENDPOINTS = {
     STATS:'admins/stats',
     PROVIDER_REQUESTS:'admins/providers',
     PROVIDER_STATUS:(id:number)=>`admins/providers/${id}/status`,
-    PROVIDERS:'admins/providers'
+    PROVIDERS:'admins/providers',
+    CLIENTS:'admins/clients'
+  },
+  ADMIN_CHAT: {
+    THREADS: 'admin-chats/threads',
+    THREAD_MESSAGES: (threadId: number) => `admin-chats/threads/${threadId}/messages`,
+    ADMINS: 'admin-chats/admins',
   }
 };

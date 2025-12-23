@@ -5,6 +5,7 @@ import { Routes } from '@angular/router';
 import { Client } from './pages/signup/client/client';
 import { BookingChatsComponent } from '../chat/chat.component';
 import { ClientPaymentHistoryComponent } from '../payments/pages/client-payment-history/client-payment-history.component';
+import { AdminChatsComponent } from '../admin-chat/admin-chat.component';
 
 export const CLIENTS_ROUTES: Routes = [
   {
@@ -13,6 +14,7 @@ export const CLIENTS_ROUTES: Routes = [
   },
   { path: 'profil', component: ProfileComponent },
   { path: 'chats', component: BookingChatsComponent },
+  { path: 'admin-chats', component: AdminChatsComponent },
   {
     path: 'bookings',
     children: [

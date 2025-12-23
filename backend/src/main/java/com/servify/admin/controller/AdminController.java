@@ -6,6 +6,7 @@ import com.servify.admin.dto.AdminDashboardStats;
 import com.servify.admin.dto.ProviderApplicationResponse;
 import com.servify.admin.dto.UpdateProviderStatusRequest;
 import com.servify.admin.service.AdminService;
+import com.servify.client.dto.ClientResponse;
 import com.servify.provider.model.ProviderStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -81,6 +82,19 @@ public class AdminController {
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     public ResponseEntity<Void> deleteProvider(@PathVariable("providerId") Long providerId) {
         adminService.deleteProvider(providerId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/clients")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
+    public ResponseEntity<List<ClientResponse>> findAllClients() {
+        return ResponseEntity.ok(adminService.findAllClients());
+    }
+
+    @DeleteMapping("/clients/{clientId}")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
+    public ResponseEntity<Void> deleteClient(@PathVariable("clientId") Long clientId) {
+        adminService.deleteClient(clientId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -5,6 +5,7 @@ import { AdminRequest, AdminResponse } from '../models/admin.model';
 import { AdminDashboardStats } from '../models/admin-dashboard-stats.model';
 import { ProviderApplication, ProviderStatus } from '../models/provider-application.model';
 import { ProviderRevenueSummary } from '../models/provider-revenue-summary.model';
+import { ClientResponse } from '../models/client.model';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -48,5 +49,13 @@ export class AdminService {
 
   deleteProvider(providerId: number) {
     return this.http.delete<void>(API_ENDPOINTS.ADMIN.PROVIDERS, providerId);
+  }
+
+  getClients() {
+    return this.http.getAll<ClientResponse>(API_ENDPOINTS.ADMIN.CLIENTS);
+  }
+
+  deleteClient(clientId: number) {
+    return this.http.delete<void>(API_ENDPOINTS.ADMIN.CLIENTS, clientId);
   }
 }

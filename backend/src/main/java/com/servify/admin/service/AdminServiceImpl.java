@@ -7,6 +7,8 @@ import com.servify.admin.dto.ProviderApplicationResponse;
 import com.servify.admin.mapper.AdminMapper;
 import com.servify.admin.model.AdminEntity;
 import com.servify.admin.repository.AdminRepository;
+import com.servify.client.dto.ClientResponse;
+import com.servify.client.mapper.ClientMapper;
 import com.servify.client.repository.ClientRepository;
 import com.servify.provider.model.ProviderEntity;
 import com.servify.provider.model.ProviderStatus;
@@ -39,6 +41,7 @@ public class AdminServiceImpl implements AdminService {
     private final ClientRepository clientRepository;
     private final UserRepository userRepository;
     private final AdminMapper adminMapper;
+    private final ClientMapper clientMapper;
     private final SearchOptionsService searchOptionsService;
     private final ServiceCategoryRepository  serviceCategoryRepository;
 
@@ -146,6 +149,22 @@ public class AdminServiceImpl implements AdminService {
             .orElseThrow(() -> new ResourceNotFoundException("Provider not found: " + providerId));
 
         providerRepository.delete(provider);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ClientResponse> findAllClients() {
+        return clientRepository.findAll().stream()
+            .map(clientMapper::toResponse)
+            .toList();
+    }
+
+    @Override
+    public void deleteClient(Long clientId) {
+        if (!clientRepository.existsById(clientId)) {
+            throw new ResourceNotFoundException("Client not found: " + clientId);
+        }
+        clientRepository.deleteById(clientId);
     }
 
     private void ensureEmailIsAvailable(String email) {

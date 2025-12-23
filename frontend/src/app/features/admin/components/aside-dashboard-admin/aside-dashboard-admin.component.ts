@@ -14,11 +14,11 @@ export class AsideDashboardAdmin {
     private readonly router = inject(Router);
 
 
-  @Input() activeSection: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' | 'admins' = 'dashboard';
+  @Input() activeSection: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' | 'admins' | 'chats' = 'dashboard';
   @Input() isSuperAdmin = false;
-  @Output() sectionChange = new EventEmitter<'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' | 'admins'>();
+  @Output() sectionChange = new EventEmitter<'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' | 'admins' | 'chats'>();
 
-  navigate(section: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' | 'admins') {
+  navigate(section: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' | 'admins' | 'chats') {
     if (section !== this.activeSection) {
       this.sectionChange.emit(section);
     }

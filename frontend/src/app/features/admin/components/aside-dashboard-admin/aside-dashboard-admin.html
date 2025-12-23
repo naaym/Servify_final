@@ -43,6 +43,13 @@
     >
       <span class="w-2 h-2 rounded-full bg-blue-400"></span> Clients
     </button>
+    <a
+      routerLink="/admins/chats"
+      routerLinkActive="bg-purple-600/20 border-purple-700/40"
+      class="flex w-full items-center gap-3 px-4 py-3 rounded-xl border border-gray-800 transition"
+    >
+      <span class="w-2 h-2 rounded-full bg-indigo-400"></span> Chats admin
+    </a>
     <button
       class="flex w-full items-center gap-3 px-4 py-3 rounded-xl border transition"
       [class.bg-purple-600/20]="activeSection === 'bookings'"

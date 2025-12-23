@@ -1,0 +1,110 @@
+<div class="min-h-screen bg-[#F5F5F5] p-6">
+  <div class="mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
+    <aside class="bg-white rounded-3xl shadow-sm border border-gray-100 p-4 flex flex-col h-[80vh]">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold">Chats admin</h2>
+      </div>
+      <div class="mt-4">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="applyFilter()"
+          placeholder="Rechercher un contact"
+          class="w-full rounded-2xl border border-gray-200 px-4 py-2 text-sm focus:outline-none"
+        />
+      </div>
+
+      <div class="mt-4 flex-1 overflow-y-auto space-y-3">
+        @if (loading) {
+          <p class="text-sm text-gray-400">Chargement...</p>
+        }
+        @if (errorMessage) {
+          <p class="text-sm text-red-500">{{ errorMessage }}</p>
+        }
+        @if (!loading && !errorMessage && filteredConversations.length === 0) {
+          <p class="text-sm text-gray-400">Aucune conversation active.</p>
+        }
+        @for (conversation of filteredConversations; track conversation.threadId) {
+          <button
+            type="button"
+            class="w-full flex items-center gap-3 p-3 rounded-2xl text-left hover:bg-gray-50"
+            [ngClass]="selectedConversation?.threadId === conversation.threadId ? 'bg-gray-100' : ''"
+            (click)="selectConversation(conversation)"
+          >
+            <img
+              [src]="conversation.participantImageUrl || 'https://placehold.co/48x48?text=User'"
+              alt="Participant avatar"
+              class="w-12 h-12 rounded-full object-cover"
+            />
+            <div class="flex-1">
+              <p class="font-semibold text-sm">{{ conversation.participantName }}</p>
+              <p class="text-xs text-gray-500 truncate">
+                {{ conversation.lastMessage || 'Démarrez la conversation' }}
+              </p>
+            </div>
+          </button>
+        }
+      </div>
+
+      @if (!isAdmin) {
+        <div class="mt-4 border-t border-gray-100 pt-4">
+          <p class="text-xs uppercase tracking-wide text-gray-400 mb-2">
+            Admins disponibles
+          </p>
+          @if (loadingAdmins) {
+            <p class="text-sm text-gray-400">Chargement des admins...</p>
+          }
+          @if (adminError) {
+            <p class="text-sm text-red-500">{{ adminError }}</p>
+          }
+          <div class="space-y-2 max-h-40 overflow-y-auto">
+            @for (admin of availableAdmins; track admin.adminId) {
+              <button
+                type="button"
+                class="w-full flex items-center justify-between gap-2 rounded-xl border border-gray-200 px-3 py-2 text-left text-sm hover:bg-gray-50"
+                (click)="startConversation(admin)"
+              >
+                <span class="font-semibold">{{ admin.name }}</span>
+                <span class="text-xs text-gray-400">{{ admin.email }}</span>
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </aside>
+
+    <section class="bg-white rounded-3xl shadow-sm border border-gray-100 p-4 h-[80vh] flex flex-col">
+      @if (!selectedConversation) {
+        <div class="flex-1 flex items-center justify-center text-gray-400 text-center px-6">
+          @if (isAdmin) {
+            <p>Sélectionnez une conversation pour commencer.</p>
+          } @else if (isSuperAdmin) {
+            <p>Choisissez un admin pour démarrer une conversation.</p>
+          } @else {
+            <p>Choisissez un admin pour discuter avec l'équipe.</p>
+          }
+        </div>
+      } @else {
+        <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+          <div class="flex items-center gap-3">
+            <img
+              [src]="selectedConversation.participantImageUrl || 'https://placehold.co/40x40?text=User'"
+              alt="Participant avatar"
+              class="w-10 h-10 rounded-full object-cover"
+            />
+            <div>
+              <p class="font-semibold">{{ selectedConversation.participantName }}</p>
+              <p class="text-xs text-gray-400">
+                {{ selectedConversation.participantRole }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-1 mt-4">
+          <app-admin-chat-thread [threadId]="selectedConversation.threadId"></app-admin-chat-thread>
+        </div>
+      }
+    </section>
+  </div>
+</div>

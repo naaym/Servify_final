@@ -8,6 +8,7 @@ import { AdminDashboardStats } from '../../models/admin-dashboard-stats.model';
 import { TokenService } from '../../../../core/services/token.service';
 import { AdminRequest, AdminResponse } from '../../models/admin.model';
 import { ProviderRevenueSummary } from '../../models/provider-revenue-summary.model';
+import { ClientResponse } from '../../models/client.model';
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -28,13 +29,16 @@ export class DashboardAdmin implements OnInit {
   loadingStats = false;
   loadingAdmins = false;
   loadingRevenue = false;
+  loadingClients = false;
   error?: string;
   revenueError?: string;
   adminError?: string;
+  clientError?: string;
   selectedProvider?: ProviderApplication;
-  activeSection: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' | 'admins' = 'dashboard';
+  activeSection: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' | 'admins' | 'chats' = 'dashboard';
   isSuperAdmin = false;
   admins: AdminResponse[] = [];
+  clients: ClientResponse[] = [];
   adminForm: AdminRequest = { name: '', email: '', phone: '', governorate: '', password: '' };
   editingAdminId?: number;
   showAdminModal = false;
@@ -57,6 +61,9 @@ export class DashboardAdmin implements OnInit {
     }
     if (this.activeSection === 'admins' && this.isSuperAdmin) {
       this.loadAdmins();
+    }
+    if (this.activeSection === 'clients') {
+      this.loadClients();
     }
   }
 
@@ -101,10 +108,11 @@ export class DashboardAdmin implements OnInit {
     return this.providerRevenueSummary.find((summary) => summary.providerId === providerId);
   }
 
-  switchSection(section: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' | 'admins') {
+  switchSection(section: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' | 'admins' | 'chats') {
     this.activeSection = section;
     this.error = undefined;
     this.adminError = undefined;
+    this.clientError = undefined;
     this.showAdminModal = false;
 
     if (section === 'providers') {
@@ -112,6 +120,9 @@ export class DashboardAdmin implements OnInit {
     }
     if (section === 'admins' && this.isSuperAdmin) {
       this.loadAdmins();
+    }
+    if (section === 'clients') {
+      this.loadClients();
     }
   }
 
@@ -250,6 +261,34 @@ export class DashboardAdmin implements OnInit {
       error: (err) => {
         this.adminError = err.message ?? 'Suppression impossible';
         this.loadingAdmins = false;
+      },
+    });
+  }
+
+  loadClients() {
+    this.loadingClients = true;
+    this.adminService.getClients().subscribe({
+      next: (clients) => {
+        this.clients = clients;
+        this.loadingClients = false;
+      },
+      error: (err) => {
+        this.clientError = err.message ?? 'Impossible de charger les clients';
+        this.loadingClients = false;
+      },
+    });
+  }
+
+  deleteClient(clientId: number) {
+    this.loadingClients = true;
+    this.adminService.deleteClient(clientId).subscribe({
+      next: () => {
+        this.loadClients();
+        this.loadDashboardStats();
+      },
+      error: (err) => {
+        this.clientError = err.message ?? 'Suppression impossible';
+        this.loadingClients = false;
       },
     });
   }

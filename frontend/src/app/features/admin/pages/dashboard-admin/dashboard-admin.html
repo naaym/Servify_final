@@ -19,6 +19,9 @@
             @else if (activeSection === 'admins') {
               <h1 class="text-3xl font-bold">Gestion des administrateurs</h1>
             }
+            @else if (activeSection === 'clients') {
+              <h1 class="text-3xl font-bold">Clients</h1>
+            }
             <p class="text-gray-200">
               @switch (activeSection) {
                 @case ('dashboard') {
@@ -29,6 +32,9 @@
                 }
                 @case ('admins') {
                   <span>Création, mise à jour et suppression des comptes administrateurs.</span>
+                }
+                @case ('clients') {
+                  <span>Suivi et suppression des comptes clients.</span>
                 }
                 @default {
                   <span>Sélectionnez une section pour consulter les détails.</span>
@@ -316,6 +322,73 @@
             </tbody>
           </table>
         }
+      </div>
+    }
+
+    @if (activeSection === 'clients') {
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-gradient-to-br from-purple-700/20 via-purple-900/30 to-purple-700/10 rounded-2xl p-5 border border-purple-700/40 shadow-lg">
+          <p class="text-xs text-gray-400">Clients</p>
+          <div class="text-3xl font-bold mt-2">{{ dashboardStats?.clients ?? 0 }}</div>
+          <p class="text-xs text-gray-500 mt-1">Suppression disponible pour admin et super admin.</p>
+        </div>
+      </div>
+
+      <div class="bg-[#12121A] p-6 rounded-2xl shadow space-y-4 border border-gray-800 mt-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <div>
+            <h2 class="text-lg font-semibold">Liste des clients</h2>
+            <p class="text-gray-400 text-sm">Visualisez et supprimez les comptes clients.</p>
+          </div>
+        </div>
+
+        @if (clientError) {
+          <div class="bg-red-900/30 text-red-200 px-4 py-3 rounded-lg border border-red-800">{{ clientError }}</div>
+        }
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-800 text-sm">
+            <thead>
+              <tr class="text-left text-gray-400">
+                <th class="py-3">Nom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Gouvernorat</th>
+                <th>Création</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-800">
+              @if (loadingClients) {
+                <tr><td colspan="6" class="py-4 text-center text-gray-400">Chargement...</td></tr>
+              }
+              @else if (!clients.length) {
+                <tr><td colspan="6" class="py-4 text-center text-gray-400">Aucun client pour le moment.</td></tr>
+              }
+              @else {
+                @for (client of clients; track client.id) {
+                  <tr class="hover:bg-[#1D1D26]">
+                    <td class="py-3">
+                      <div class="font-semibold">{{ client.name }}</div>
+                    </td>
+                    <td>{{ client.email }}</td>
+                    <td>{{ client.phone }}</td>
+                    <td>{{ client.governorate }}</td>
+                    <td>{{ client.createdAt | date:'shortDate' }}</td>
+                    <td class="text-right">
+                      <button
+                        class="px-3 py-2 rounded-lg border border-red-600 text-red-300 hover:bg-red-600/20"
+                        (click)="deleteClient(client.id)"
+                      >
+                        Supprimer
+                      </button>
+                    </td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     }
   </div>
