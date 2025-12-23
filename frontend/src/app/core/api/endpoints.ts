@@ -50,6 +50,7 @@ export const API_ENDPOINTS = {
     STATS:'admins/stats',
     PROVIDER_REQUESTS:'admins/providers',
     PROVIDER_STATUS:(id:number)=>`admins/providers/${id}/status`,
-    PROVIDERS:'admins/providers'
+    PROVIDERS:'admins/providers',
+    CLIENTS:'admins/clients'
   }
 };
