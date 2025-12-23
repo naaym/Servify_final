@@ -1,6 +1,7 @@
 package com.servify.payment.repository;
 
 import com.servify.payment.model.PaymentTransaction;
+import com.servify.payment.model.PaymentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,4 +11,5 @@ public interface PaymentTransactionRepository extends JpaRepository<PaymentTrans
     Optional<PaymentTransaction> findFirstByOrderIdOrderByCreatedAtDesc(Long orderId);
     Optional<PaymentTransaction> findByPaymentIntentId(String paymentIntentId);
     List<PaymentTransaction> findByOrderIdInOrderByCreatedAtDesc(List<Long> orderIds);
+    boolean existsByOrderIdAndStatus(Long orderId, PaymentStatus status);
 }

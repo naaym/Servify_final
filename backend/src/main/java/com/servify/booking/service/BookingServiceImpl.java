@@ -13,6 +13,8 @@ import com.servify.client.model.ClientEntity;
 import com.servify.client.repository.ClientRepository;
 import com.servify.provider.model.ProviderEntity;
 import com.servify.provider.repository.ProviderRepository;
+import com.servify.payment.model.PaymentStatus;
+import com.servify.payment.repository.PaymentTransactionRepository;
 import com.servify.review.dto.ReviewRequest;
 import com.servify.review.dto.ReviewResponse;
 import com.servify.review.dto.ReviewSummary;
@@ -46,6 +48,7 @@ public class BookingServiceImpl implements BookingService {
     private final ProviderRepository providerRepository;
     private final ClientRepository clientRepository;
     private final ReviewRepository reviewRepository;
+    private final PaymentTransactionRepository paymentTransactionRepository;
 
     @Override
     public BookingResponse createBooking(Long providerId, String date, String time, String description, List<MultipartFile> attachments) {
@@ -130,6 +133,9 @@ public class BookingServiceImpl implements BookingService {
     public BookingDetailsResponse cancelBooking(Long bookingId) {
         BookingEntity booking = findOwnedBooking(bookingId);
 
+        if (paymentTransactionRepository.existsByOrderIdAndStatus(bookingId, PaymentStatus.SUCCEEDED)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Booking cannot be cancelled after payment");
+        }
         if (booking.getStatus() == BookingStatus.DONE || booking.getStatus() == BookingStatus.CANCELLED) {
             return mapToBookingDetails(booking);
         }

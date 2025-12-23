@@ -1,6 +1,7 @@
 package com.servify.payment.service;
 
 import com.servify.booking.model.BookingEntity;
+import com.servify.booking.model.BookingStatus;
 import com.servify.booking.repository.BookingRepository;
 import com.servify.payment.config.StripeProperties;
 import com.servify.provider.model.ProviderEntity;
@@ -20,6 +21,9 @@ public class PaymentOrderService {
     public BigDecimal resolveAmount(Long orderId) {
         BookingEntity booking = bookingRepository.findById(orderId)
             .orElseThrow(() -> new ResourceNotFoundException("Booking not found for orderId " + orderId));
+        if (booking.getStatus() != BookingStatus.ACCEPTED) {
+            throw new IllegalArgumentException("Booking must be accepted before payment.");
+        }
         ProviderEntity provider = booking.getProvider();
         if (provider != null && provider.getBasePrice() != null) {
             return BigDecimal.valueOf(provider.getBasePrice());

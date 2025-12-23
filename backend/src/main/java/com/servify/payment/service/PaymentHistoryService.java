@@ -5,12 +5,16 @@ import com.servify.booking.repository.BookingRepository;
 import com.servify.client.model.ClientEntity;
 import com.servify.client.repository.ClientRepository;
 import com.servify.payment.dto.PaymentHistoryItemResponse;
+import com.servify.payment.model.PaymentStatus;
 import com.servify.payment.model.PaymentTransaction;
 import com.servify.payment.repository.PaymentTransactionRepository;
 import com.servify.provider.model.ProviderEntity;
 import com.servify.provider.repository.ProviderRepository;
 import com.servify.shared.exception.ResourceNotFoundException;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentHistoryService {
 
     private final PaymentTransactionRepository transactionRepository;
@@ -53,7 +58,9 @@ public class PaymentHistoryService {
         Map<Long, BookingEntity> bookingMap = bookings.stream()
             .collect(Collectors.toMap(BookingEntity::getBookingId, Function.identity()));
 
-        return transactionRepository.findByOrderIdInOrderByCreatedAtDesc(bookingIds).stream()
+        List<PaymentTransaction> transactions = transactionRepository.findByOrderIdInOrderByCreatedAtDesc(bookingIds);
+        refreshPendingStatuses(transactions);
+        return transactions.stream()
             .map(transaction -> toResponse(transaction, bookingMap.get(transaction.getOrderId())))
             .toList();
     }
@@ -81,5 +88,36 @@ public class PaymentHistoryService {
 
     private String getCurrentUserEmail() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    private void refreshPendingStatuses(List<PaymentTransaction> transactions) {
+        for (PaymentTransaction transaction : transactions) {
+            if (transaction.getStatus() != PaymentStatus.PENDING) {
+                continue;
+            }
+            try {
+                PaymentIntent intent = PaymentIntent.retrieve(transaction.getPaymentIntentId());
+                PaymentStatus resolvedStatus = mapStripeStatus(intent.getStatus());
+                if (resolvedStatus != transaction.getStatus()) {
+                    transaction.setStatus(resolvedStatus);
+                    transactionRepository.save(transaction);
+                }
+            } catch (StripeException exception) {
+                log.warn("Unable to refresh payment status for intent {}", transaction.getPaymentIntentId(), exception);
+            }
+        }
+    }
+
+    private PaymentStatus mapStripeStatus(String stripeStatus) {
+        return switch (stripeStatus) {
+            case "succeeded" -> PaymentStatus.SUCCEEDED;
+            case "canceled" -> PaymentStatus.FAILED;
+            case "requires_payment_method",
+                "requires_confirmation",
+                "requires_action",
+                "processing",
+                "requires_capture" -> PaymentStatus.PENDING;
+            default -> PaymentStatus.PENDING;
+        };
     }
 }

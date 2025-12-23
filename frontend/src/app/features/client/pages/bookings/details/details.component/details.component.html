@@ -240,7 +240,16 @@
         </button>
       }
 
-      @if(bookingDetails?.status!=='DONE' && bookingDetails?.status!=='CANCELLED'){
+      @if(bookingDetails?.status === 'ACCEPTED' && !isPaid){
+        <button
+          (click)="payBooking()"
+          class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 shadow transition"
+        >
+          Payer
+        </button>
+      }
+
+      @if(bookingDetails?.status!=='DONE' && bookingDetails?.status!=='CANCELLED' && !isPaid){
         <button
           (click)="updateStatus('CANCELLED')"
           class="bg-red-500 text-white px-6 py-3 rounded-xl hover:bg-red-600 shadow transition"

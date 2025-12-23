@@ -61,7 +61,7 @@ export class NewBookingComponent {
     this.bookingService.createBooking(dto).subscribe({
       next:(res)=>{
       console.log("booking created",res)
-      this.router.navigate(['/checkout'], { queryParams: { bookingId: res.bookingId } })
+      this.router.navigate(['/clients/dashboard'])
     },
 
     })

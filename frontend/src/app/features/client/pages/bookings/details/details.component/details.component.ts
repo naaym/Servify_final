@@ -2,11 +2,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClientBookingService } from '../../clientbooking.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClientBookingDetails } from '../../clientbookingdetail.model';
 import { Status } from '../../../../../booking/models/status.model';
 import { ReviewRequest } from '../../review-request.model';
 import { BookingUpdatePayload } from '../../booking-update.model';
+import { PaymentHistoryItem, PaymentService } from '../../../../payments/services/payment.service';
 
 @Component({
   selector: 'app-details.component',
@@ -17,8 +18,11 @@ import { BookingUpdatePayload } from '../../booking-update.model';
 export class DetailsComponent implements OnInit {
   private readonly clientbookingservice=inject(ClientBookingService);
   private readonly route=inject(ActivatedRoute)
+  private readonly router = inject(Router);
+  private readonly paymentService = inject(PaymentService);
   bookingDetails:ClientBookingDetails|null=null;
   errorMessage:string="";
+  isPaid = false;
   reviewError = '';
   reviewSuccess = '';
   isSubmittingReview = false;
@@ -49,10 +53,21 @@ export class DetailsComponent implements OnInit {
       if (this.editMode && res.status !== 'PENDING') {
         this.editMode = false;
       }
+      this.loadPaymentStatus(res.bookingId);
     },
       error:err=>this.errorMessage=err.message})
 
     }
+  loadPaymentStatus(bookingId: number) {
+    this.paymentService.getClientHistory().subscribe({
+      next: (payments: PaymentHistoryItem[]) => {
+        this.isPaid = payments.some(
+          (payment) => payment.bookingId === bookingId && payment.status === 'SUCCEEDED'
+        );
+      },
+      error: (err) => console.log(err.message),
+    });
+  }
 
     updateStatus(status:Status){
       if(status !== 'CANCELLED' || !this.bookingDetails) return;
@@ -124,6 +139,13 @@ export class DetailsComponent implements OnInit {
         time: dateValue.toISOString().slice(11, 16),
         description: details.description ?? '',
       };
+    }
+
+    payBooking() {
+      if (!this.bookingDetails || this.bookingDetails.status !== 'ACCEPTED' || this.isPaid) {
+        return;
+      }
+      this.router.navigate(['/checkout'], { queryParams: { bookingId: this.bookingDetails.bookingId } });
     }
 
 
