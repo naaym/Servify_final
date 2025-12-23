@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClientBookingService } from '../../clientbooking.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClientBookingDetails } from '../../clientbookingdetail.model';
 import { Status } from '../../../../../booking/models/status.model';
 import { ReviewRequest } from '../../review-request.model';
@@ -17,6 +17,7 @@ import { BookingUpdatePayload } from '../../booking-update.model';
 export class DetailsComponent implements OnInit {
   private readonly clientbookingservice=inject(ClientBookingService);
   private readonly route=inject(ActivatedRoute)
+  private readonly router = inject(Router);
   bookingDetails:ClientBookingDetails|null=null;
   errorMessage:string="";
   reviewError = '';
@@ -124,6 +125,13 @@ export class DetailsComponent implements OnInit {
         time: dateValue.toISOString().slice(11, 16),
         description: details.description ?? '',
       };
+    }
+
+    payBooking() {
+      if (!this.bookingDetails || this.bookingDetails.status !== 'ACCEPTED') {
+        return;
+      }
+      this.router.navigate(['/checkout'], { queryParams: { bookingId: this.bookingDetails.bookingId } });
     }
 
 
