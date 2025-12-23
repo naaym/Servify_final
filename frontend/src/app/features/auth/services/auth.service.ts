@@ -22,6 +22,7 @@ export class AuthService {
   }
   logout(){
     this.tokenservice.clearTokens();
+
   }
 
   getIdFromLocalStorage() {

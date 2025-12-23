@@ -11,5 +11,6 @@ public interface PaymentTransactionRepository extends JpaRepository<PaymentTrans
     Optional<PaymentTransaction> findFirstByOrderIdOrderByCreatedAtDesc(Long orderId);
     Optional<PaymentTransaction> findByPaymentIntentId(String paymentIntentId);
     List<PaymentTransaction> findByOrderIdInOrderByCreatedAtDesc(List<Long> orderIds);
+    List<PaymentTransaction> findByStatus(PaymentStatus status);
     boolean existsByOrderIdAndStatus(Long orderId, PaymentStatus status);
 }

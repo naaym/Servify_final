@@ -42,7 +42,8 @@ export const API_ENDPOINTS = {
     CONFIG: 'payments/config',
     INTENTS: 'payments/intents',
     HISTORY: 'payments/history',
-    PROVIDER_HISTORY: 'payments/provider/history'
+    PROVIDER_HISTORY: 'payments/provider/history',
+    SUPER_ADMIN_SUMMARY: 'payments/superadmin/summary'
   },
   ADMIN: {
     BASE:'admins',

@@ -33,9 +33,9 @@
         </div>
 
         <div class="flex min-w-[180px] flex-col items-center gap-3 text-center lg:items-end lg:text-right">
-          <div class="text-sm text-slate-500">
+          <div class="text-sm text-slate-500" *ngIf="provider.basePrice !== null && provider.basePrice !== undefined">
             <span class="block">À partir de</span>
-            <strong class="text-xl text-slate-900">{{ provider.basePrice || 0 }} DT</strong>
+            <strong class="text-xl text-slate-900">{{ provider.basePrice }} DT</strong>
           </div>
           <div class="text-sm text-slate-500">
           </div>

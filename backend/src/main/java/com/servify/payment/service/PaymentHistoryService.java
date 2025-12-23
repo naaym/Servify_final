@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PaymentHistoryService {
 
+    private static final BigDecimal PLATFORM_FEE_RATE = new BigDecimal("0.10");
+
     private final PaymentTransactionRepository transactionRepository;
     private final BookingRepository bookingRepository;
     private final ClientRepository clientRepository;
@@ -38,17 +42,17 @@ public class PaymentHistoryService {
         ClientEntity client = clientRepository.findByEmail(getCurrentUserEmail())
             .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
         List<BookingEntity> bookings = bookingRepository.findByClientUserIdOrderByCreatedAtDesc(client.getUserId());
-        return mapHistoryForBookings(bookings);
+        return mapHistoryForBookings(bookings, false);
     }
 
     public List<PaymentHistoryItemResponse> getProviderHistory() {
         ProviderEntity provider = providerRepository.findByEmail(getCurrentUserEmail())
             .orElseThrow(() -> new ResourceNotFoundException("Provider not found"));
         List<BookingEntity> bookings = bookingRepository.findByProviderUserIdOrderByCreatedAtDesc(provider.getUserId());
-        return mapHistoryForBookings(bookings);
+        return mapHistoryForBookings(bookings, true);
     }
 
-    private List<PaymentHistoryItemResponse> mapHistoryForBookings(List<BookingEntity> bookings) {
+    private List<PaymentHistoryItemResponse> mapHistoryForBookings(List<BookingEntity> bookings, boolean applyProviderShare) {
         if (bookings == null || bookings.isEmpty()) {
             return Collections.emptyList();
         }
@@ -61,22 +65,26 @@ public class PaymentHistoryService {
         List<PaymentTransaction> transactions = transactionRepository.findByOrderIdInOrderByCreatedAtDesc(bookingIds);
         refreshPendingStatuses(transactions);
         return transactions.stream()
-            .map(transaction -> toResponse(transaction, bookingMap.get(transaction.getOrderId())))
+            .map(transaction -> toResponse(transaction, bookingMap.get(transaction.getOrderId()), applyProviderShare))
             .toList();
     }
 
-    private PaymentHistoryItemResponse toResponse(PaymentTransaction transaction, BookingEntity booking) {
+    private PaymentHistoryItemResponse toResponse(PaymentTransaction transaction, BookingEntity booking, boolean applyProviderShare) {
         String providerName = booking != null && booking.getProvider() != null
             ? booking.getProvider().getName()
             : null;
         String clientName = booking != null && booking.getClient() != null
             ? booking.getClient().getName()
             : null;
+        Long amount = transaction.getAmount();
+        if (applyProviderShare) {
+            amount = applyProviderShare(amount);
+        }
 
         return PaymentHistoryItemResponse.builder()
             .bookingId(transaction.getOrderId())
             .paymentIntentId(transaction.getPaymentIntentId())
-            .amount(transaction.getAmount())
+            .amount(amount)
             .currency(transaction.getCurrency())
             .status(transaction.getStatus())
             .createdAt(transaction.getCreatedAt())
@@ -84,6 +92,14 @@ public class PaymentHistoryService {
             .clientName(clientName)
             .bookingDate(booking != null ? booking.getCreatedAt() : null)
             .build();
+    }
+
+    private long applyProviderShare(long amount) {
+        long fee = BigDecimal.valueOf(amount)
+            .multiply(PLATFORM_FEE_RATE)
+            .setScale(0, RoundingMode.HALF_UP)
+            .longValue();
+        return amount - fee;
     }
 
     private String getCurrentUserEmail() {

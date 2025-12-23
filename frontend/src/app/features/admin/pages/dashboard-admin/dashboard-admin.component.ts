@@ -7,7 +7,7 @@ import { ProviderApplication, ProviderStatus } from '../../models/provider-appli
 import { AdminDashboardStats } from '../../models/admin-dashboard-stats.model';
 import { TokenService } from '../../../../core/services/token.service';
 import { AdminRequest, AdminResponse } from '../../models/admin.model';
-import { AuthService } from '../../../auth/services/auth.service';
+import { ProviderRevenueSummary } from '../../models/provider-revenue-summary.model';
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -21,12 +21,15 @@ export class DashboardAdmin implements OnInit {
   private readonly tokenService = inject(TokenService);
 
   dashboardStats?: AdminDashboardStats;
+  providerRevenueSummary: ProviderRevenueSummary[] = [];
   providerRequests: ProviderApplication[] = [];
   selectedStatus: ProviderStatus | undefined = undefined;
   loadingRequests = false;
   loadingStats = false;
   loadingAdmins = false;
+  loadingRevenue = false;
   error?: string;
+  revenueError?: string;
   adminError?: string;
   selectedProvider?: ProviderApplication;
   activeSection: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' | 'admins' = 'dashboard';
@@ -39,10 +42,16 @@ export class DashboardAdmin implements OnInit {
   ngOnInit() {
     this.isSuperAdmin = this.tokenService.hasRole('SUPER_ADMIN');
     this.loadDashboardStats();
+    if (this.isSuperAdmin) {
+      this.loadProviderRevenueSummary();
+    }
   }
 
   refreshData() {
     this.loadDashboardStats();
+    if (this.isSuperAdmin) {
+      this.loadProviderRevenueSummary();
+    }
     if (this.activeSection === 'providers') {
       this.loadProviderRequests(this.selectedStatus);
     }
@@ -63,6 +72,33 @@ export class DashboardAdmin implements OnInit {
         this.loadingStats = false;
       },
     });
+  }
+
+  loadProviderRevenueSummary() {
+    this.loadingRevenue = true;
+    this.adminService.getProviderRevenueSummary().subscribe({
+      next: (summary) => {
+        this.providerRevenueSummary = summary;
+        this.revenueError = undefined;
+        this.loadingRevenue = false;
+      },
+      error: (err) => {
+        this.revenueError = err.message ?? 'Impossible de charger les revenus des prestataires';
+        this.loadingRevenue = false;
+      },
+    });
+  }
+
+  get platformProfitTotal() {
+    return this.providerRevenueSummary.reduce((total, summary) => total + summary.platformFeeAmount, 0);
+  }
+
+  get platformProfitCurrency() {
+    return (this.providerRevenueSummary[0]?.currency || 'EUR').toUpperCase();
+  }
+
+  getRevenueForProvider(providerId: number) {
+    return this.providerRevenueSummary.find((summary) => summary.providerId === providerId);
   }
 
   switchSection(section: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' | 'admins') {

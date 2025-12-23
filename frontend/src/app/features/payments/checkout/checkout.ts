@@ -5,6 +5,7 @@ import { loadStripe, Stripe, StripeElements, StripeCardElement } from '@stripe/s
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentService } from '../services/payment.service';
 import { ShowMessageService } from '../../../shared/services/showmessage.service';
+import { ClientBookingService } from '../../client/pages/bookings/clientbooking.service';
 
 @Component({
   selector: 'app-checkout',
@@ -18,6 +19,7 @@ export class CheckoutComponent implements AfterViewInit {
 
   private paymentService = inject(PaymentService);
   private messageService = inject(ShowMessageService);
+  private bookingService = inject(ClientBookingService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -27,6 +29,7 @@ export class CheckoutComponent implements AfterViewInit {
   processing = false;
   statusMessage = '';
   defaultAmount = '30.00';
+  resolvedAmount = '30.00';
   currency = 'eur';
   orderId?: number;
 
@@ -39,6 +42,7 @@ export class CheckoutComponent implements AfterViewInit {
     this.paymentService.getConfig().subscribe({
       next: async (config) => {
         this.defaultAmount = config.defaultAmount;
+        this.resolvedAmount = config.defaultAmount;
         this.currency = config.currency;
         if (!config.publishableKey) {
           this.messageService.show('error', 'Clé Stripe publishable manquante.');
@@ -55,6 +59,35 @@ export class CheckoutComponent implements AfterViewInit {
       },
       error: () => {
         this.messageService.show('error', 'Impossible de charger la configuration Stripe.');
+      },
+    });
+
+    if (this.orderId) {
+      this.loadBookingAmount(this.orderId);
+    }
+  }
+
+  onOrderIdChange(value: number | null) {
+    this.orderId = value ?? undefined;
+    if (this.orderId) {
+      this.loadBookingAmount(this.orderId);
+    } else {
+      this.resolvedAmount = this.defaultAmount;
+    }
+  }
+
+  private loadBookingAmount(orderId: number) {
+    this.bookingService.getBookingsById(orderId).subscribe({
+      next: (booking) => {
+        const basePrice = booking.providerInfo?.basePrice;
+        if (basePrice !== null && basePrice !== undefined) {
+          this.resolvedAmount = basePrice.toFixed(2);
+        } else {
+          this.resolvedAmount = this.defaultAmount;
+        }
+      },
+      error: () => {
+        this.resolvedAmount = this.defaultAmount;
       },
     });
   }

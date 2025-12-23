@@ -80,6 +80,18 @@
         <div class="text-3xl font-bold mt-2">{{ dashboardStats?.services ?? 0 }}</div>
       </div>
     </div>
+
+    @if (isSuperAdmin) {
+      <div class="bg-[#12121A] p-6 rounded-2xl shadow border border-gray-800 mt-6">
+        <p class="text-xs text-gray-400">Profit plateforme</p>
+        <div class="mt-2 text-3xl font-bold text-emerald-300">
+          {{ (platformProfitTotal / 100) | number: '1.2-2' }} {{ platformProfitCurrency }}
+        </div>
+        <p class="mt-2 text-sm text-gray-400">Somme de 10% sur chaque paiement réussi.</p>
+      </div>
+
+      
+    }
   }
 
   @if (activeSection === 'admins' && isSuperAdmin) {
@@ -379,7 +391,7 @@
           </div>
           <div class="space-y-3">
             <div class="text-gray-400 text-xs uppercase tracking-widest">Documents</div>
-            
+
               <div class="bg-[#1A1A24] p-4 rounded-xl border border-gray-800">
               <ul class="space-y-4 text-sm">
   <li class="flex items-start gap-3">
@@ -427,6 +439,46 @@
             </div>
           </div>
         </div>
+
+        @if (isSuperAdmin) {
+          @if (loadingRevenue) {
+            <div class="mt-6 rounded-xl border border-gray-800 bg-[#1A1A24] p-4 text-sm text-gray-400">
+              Chargement du flux monnaie...
+            </div>
+          } @else if (revenueError) {
+            <div class="mt-6 rounded-xl border border-red-700/40 bg-red-900/20 p-4 text-sm text-red-300">
+              {{ revenueError }}
+            </div>
+          } @else if (getRevenueForProvider(provider.id); as revenue) {
+            <div class="mt-6 rounded-xl border border-emerald-700/40 bg-emerald-900/10 p-4 text-sm">
+              <p class="text-xs uppercase tracking-widest text-emerald-200">Flux monnaie</p>
+              <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <p class="text-gray-400 text-xs">Total brut</p>
+                  <p class="text-lg font-semibold text-white">
+                    {{ (revenue.grossAmount / 100) | number: '1.2-2' }} {{ revenue.currency | uppercase }}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-gray-400 text-xs">Commission (10%)</p>
+                  <p class="text-lg font-semibold text-emerald-200">
+                    {{ (revenue.platformFeeAmount / 100) | number: '1.2-2' }} {{ revenue.currency | uppercase }}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-gray-400 text-xs">Net prestataire</p>
+                  <p class="text-lg font-semibold text-white">
+                    {{ (revenue.providerNetAmount / 100) | number: '1.2-2' }} {{ revenue.currency | uppercase }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          } @else {
+            <div class="mt-6 rounded-xl border border-gray-800 bg-[#1A1A24] p-4 text-sm text-gray-400">
+              Aucun paiement enregistré pour ce prestataire.
+            </div>
+          }
+        }
 
         <div class="flex justify-end gap-3 mt-6">
           <button class="px-4 py-2 rounded-lg border border-gray-700 hover:border-purple-400" (click)="closeApplication()">Fermer</button>

@@ -4,6 +4,7 @@ import { API_ENDPOINTS } from '../../../core/api/endpoints';
 import { AdminRequest, AdminResponse } from '../models/admin.model';
 import { AdminDashboardStats } from '../models/admin-dashboard-stats.model';
 import { ProviderApplication, ProviderStatus } from '../models/provider-application.model';
+import { ProviderRevenueSummary } from '../models/provider-revenue-summary.model';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -32,6 +33,10 @@ export class AdminService {
   getProviderRequests(status?: ProviderStatus) {
     const params = status ? { status } : undefined;
     return this.http.get<ProviderApplication[]>(API_ENDPOINTS.ADMIN.PROVIDER_REQUESTS, params);
+  }
+
+  getProviderRevenueSummary() {
+    return this.http.get<ProviderRevenueSummary[]>(API_ENDPOINTS.PAYMENTS.SUPER_ADMIN_SUMMARY);
   }
 
   decideProvider(providerId: number, status: ProviderStatus) {

@@ -7,7 +7,7 @@ import { ClientBookingDetails } from '../../clientbookingdetail.model';
 import { Status } from '../../../../../booking/models/status.model';
 import { ReviewRequest } from '../../review-request.model';
 import { BookingUpdatePayload } from '../../booking-update.model';
-import { PaymentHistoryItem, PaymentService } from '../../../../payments/services/payment.service';
+import { PaymentHistoryItem, PaymentService } from '../../../../../payments/services/payment.service';
 
 @Component({
   selector: 'app-details.component',

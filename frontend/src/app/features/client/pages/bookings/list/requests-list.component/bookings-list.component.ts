@@ -4,7 +4,7 @@ import { ClientBookingService } from '../../clientbooking.service';
 import { BookingResponse } from '../../../../../booking/models/booking-response.model';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Status } from '../../../../../booking/models/status.model';
-import { PaymentHistoryItem, PaymentService } from '../../../../payments/services/payment.service';
+import { PaymentHistoryItem, PaymentService } from '../../../../../payments/services/payment.service';
 
 @Component({
   selector: 'bookings-list',

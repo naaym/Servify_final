@@ -20,6 +20,7 @@ export class TokenService {
   clearTokens() {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userIdKey);
+    localStorage.removeItem('chat_last_seen');
   }
 
 

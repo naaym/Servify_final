@@ -198,7 +198,7 @@ serviceName:"Plombier-fuite cerveau lkjls",
 serviceGategory:"Plomberie",
 attachments:[{url:"upload//drawinmawjouda/local/image",name:"image.png"}],
 providerInfo:{providerId:4562,providerLocalisation:"jandouuba",providerName:"EL 3issewi",providerPhone:"5465000465"
-  ,providerImage:{url:"upload//sldifujsf",name:"test.png"},providerRate:4.9
+  ,providerImage:{url:"upload//sldifujsf",name:"test.png"},providerRate:4.9,basePrice:42.5
 }
     }
   })))

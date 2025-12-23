@@ -5,6 +5,7 @@ export interface providerBookingDetails{
   providerName:string;
   providerPhone:string;
   providerRate:number;
+  basePrice?: number;
   profileImageUrl?:string;
 
 }
