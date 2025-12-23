@@ -9,6 +9,7 @@
         type="number"
         class="mt-2 w-full rounded-lg border border-slate-200 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
         [(ngModel)]="orderId"
+        (ngModelChange)="onOrderIdChange($event)"
       />
     </label>
 
@@ -22,7 +23,7 @@
       (click)="pay()"
       [disabled]="processing || !orderId"
     >
-      {{ processing ? 'Traitement...' : ('Payer ' + defaultAmount + ' ' + (currency | uppercase)) }}
+      {{ processing ? 'Traitement...' : ('Payer ' + resolvedAmount + ' ' + (currency | uppercase)) }}
     </button>
 
     <p class="mt-4 text-sm text-slate-600" *ngIf="statusMessage">{{ statusMessage }}</p>
