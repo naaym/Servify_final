@@ -89,6 +89,14 @@ export class DashboardAdmin implements OnInit {
     });
   }
 
+  get platformProfitTotal() {
+    return this.providerRevenueSummary.reduce((total, summary) => total + summary.platformFeeAmount, 0);
+  }
+
+  get platformProfitCurrency() {
+    return (this.providerRevenueSummary[0]?.currency || 'EUR').toUpperCase();
+  }
+
   switchSection(section: 'dashboard' | 'providers' | 'clients' | 'bookings' | 'services' | 'admins') {
     this.activeSection = section;
     this.error = undefined;

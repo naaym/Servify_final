@@ -68,7 +68,7 @@
       </div>
 
     <!-- CARDS -->
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
         <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4 border border-white/5">
           <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 flex justify-center items-center text-xl font-bold">📨</div>
           <div>
@@ -90,6 +90,14 @@
           <div>
             <p class="text-gray-400 text-sm">Done</p>
             <h2 class="text-2xl font-bold">{{ completedCount }}</h2>
+          </div>
+        </div>
+
+        <div class="bg-[#16161C] p-6 rounded-2xl shadow flex items-center gap-4 border border-white/5">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 flex justify-center items-center text-xl font-bold">€</div>
+          <div>
+            <p class="text-gray-400 text-sm">Gains nets</p>
+            <h2 class="text-2xl font-bold">{{ (netEarningsTotal / 100) | number: '1.2-2' }} {{ netEarningsCurrency }}</h2>
           </div>
         </div>
       </div>
@@ -163,6 +171,62 @@
             }
           </tbody>
         </table>
+      </div>
+
+      <div class="bg-[#16161C] p-6 rounded-3xl shadow-xl border border-white/5">
+        <div class="flex flex-col gap-2 mb-6 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-purple-200">Paiements</p>
+            <h2 class="text-lg font-semibold">Derniers paiements (net)</h2>
+            <p class="text-sm text-gray-400">Le net correspond à 90% du montant payé.</p>
+          </div>
+        </div>
+
+        @if (paymentsLoading) {
+          <div class="text-gray-300">Chargement des paiements...</div>
+        } @else if (paymentsError) {
+          <div class="text-red-400">{{ paymentsError }}</div>
+        } @else if (payments.length === 0) {
+          <div class="text-gray-400">Aucun paiement enregistré.</div>
+        } @else {
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="text-gray-400 border-b border-gray-800">
+                <tr>
+                  <th class="text-left py-3 font-semibold text-gray-300">Booking</th>
+                  <th class="text-left py-3 font-semibold text-gray-300">Client</th>
+                  <th class="text-left py-3 font-semibold text-gray-300">Net</th>
+                  <th class="text-left py-3 font-semibold text-gray-300">Statut</th>
+                  <th class="text-left py-3 font-semibold text-gray-300">Date</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-800">
+                @for (payment of payments; track payment.paymentIntentId) {
+                  <tr class="hover:bg-[#1D1D26] transition">
+                    <td class="py-4 font-semibold">#{{ payment.bookingId }}</td>
+                    <td class="text-gray-200">{{ payment.clientName || 'Client' }}</td>
+                    <td class="text-gray-200">
+                      {{ (payment.amount / 100) | number: '1.2-2' }} {{ payment.currency | uppercase }}
+                    </td>
+                    <td>
+                      <span
+                        class="px-3 py-1 rounded-lg text-xs font-semibold"
+                        [ngClass]="{
+                          'bg-yellow-600/30 text-yellow-300': payment.status === 'PENDING',
+                          'bg-green-600/30 text-green-300': payment.status === 'SUCCEEDED',
+                          'bg-red-600/30 text-red-300': payment.status === 'FAILED'
+                        }"
+                      >
+                        {{ payment.status }}
+                      </span>
+                    </td>
+                    <td class="text-gray-300">{{ payment.createdAt | date: 'dd MMM yyyy HH:mm' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
       </div>
 
       <ng-template #emptyState>

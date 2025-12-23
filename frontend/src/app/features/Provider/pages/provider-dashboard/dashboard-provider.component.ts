@@ -6,6 +6,7 @@ import { ProviderBookingResponse } from '../../models/provider-booking.model';
 import { Status } from '../../../booking/models/status.model';
 import { AuthService } from '../../../auth/services/auth.service';
 import { ChatNotificationService } from '../../../chat/services/chat-notification.service';
+import { PaymentHistoryItem, PaymentService } from '../../../payments/services/payment.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,19 +15,24 @@ import { ChatNotificationService } from '../../../chat/services/chat-notificatio
   styleUrl: './dashboard.scss',
 })
 export class ProviderDashboard implements OnInit {
-     private readonly authService = inject(AuthService);
+    private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
     private readonly chatNotificationService = inject(ChatNotificationService);
+    private readonly paymentService = inject(PaymentService);
     readonly unreadCount$ = this.chatNotificationService.unreadCount$;
   bookings: ProviderBookingResponse[] = [];
+  payments: PaymentHistoryItem[] = [];
   errorMessage = '';
   loading = false;
+  paymentsLoading = false;
+  paymentsError = '';
 
   constructor(private readonly bookingService: ProviderBookingService) {}
 
   ngOnInit(): void {
     this.chatNotificationService.startPolling();
     this.loadBookings();
+    this.loadPayments();
   }
 
   loadBookings() {
@@ -39,6 +45,21 @@ export class ProviderDashboard implements OnInit {
       error: (err) => {
         this.errorMessage = err.message;
         this.loading = false;
+      },
+    });
+  }
+
+  loadPayments() {
+    this.paymentsLoading = true;
+    this.paymentService.getProviderHistory().subscribe({
+      next: (payments) => {
+        this.payments = payments;
+        this.paymentsError = '';
+        this.paymentsLoading = false;
+      },
+      error: (err) => {
+        this.paymentsError = err.message ?? 'Impossible de charger les paiements';
+        this.paymentsLoading = false;
       },
     });
   }
@@ -67,6 +88,14 @@ export class ProviderDashboard implements OnInit {
 
   get completedCount() {
     return this.bookings.filter((b) => b.status === 'DONE').length;
+  }
+
+  get netEarningsTotal() {
+    return this.payments.reduce((total, payment) => total + payment.amount, 0);
+  }
+
+  get netEarningsCurrency() {
+    return (this.payments[0]?.currency || 'EUR').toUpperCase();
   }
 
     logout(){

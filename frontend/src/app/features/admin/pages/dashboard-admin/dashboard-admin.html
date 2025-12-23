@@ -82,6 +82,14 @@
     </div>
 
     @if (isSuperAdmin) {
+      <div class="bg-[#12121A] p-6 rounded-2xl shadow border border-gray-800 mt-6">
+        <p class="text-xs text-gray-400">Profit plateforme</p>
+        <div class="mt-2 text-3xl font-bold text-emerald-300">
+          {{ (platformProfitTotal / 100) | number: '1.2-2' }} {{ platformProfitCurrency }}
+        </div>
+        <p class="mt-2 text-sm text-gray-400">Somme de 10% sur chaque paiement réussi.</p>
+      </div>
+
       <div class="bg-[#12121A] p-6 rounded-2xl shadow space-y-4 border border-gray-800 mt-6">
         <div>
           <h2 class="text-lg font-semibold">Revenus par prestataire</h2>
