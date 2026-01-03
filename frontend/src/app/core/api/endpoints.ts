@@ -1,6 +1,6 @@
 export const API_ENDPOINTS = {
-  BASE: 'http://localhost:8084/api',
-  WS_BASE: 'http://localhost:8084/ws',
+  BASE: 'http://localhost:8080/api',
+  WS_BASE: 'http://localhost:8080/ws',
   MESSAGES: {
     CONVERSATIONS: 'messages/conversations',
   },
