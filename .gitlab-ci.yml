@@ -21,7 +21,7 @@ default:
 
 frontend_build:
   stage: build
-  image: node:18
+  image: node:20
   before_script:
     - cd frontend
   script:
