@@ -1,17 +1,59 @@
 stages:
-  - build
+  - compile
+  - test
+  - package
   - docker
 
 variables:
-  FRONTEND_IMAGE: "hkiriiheb/servify-frontend"
   BACKEND_IMAGE: "hkiriiheb/servify-backend"
+  FRONTEND_IMAGE: "hkiriiheb/servify-frontend"
   DOCKER_TLS_CERTDIR: ""
 
 # ======================
-# FRONTEND BUILD
+# BACKEND - COMPILE
 # ======================
-frontend_build:
-  stage: build
+backend_compile:
+  stage: compile
+  image: maven:3.9.6-eclipse-temurin-17
+  script:
+    - mvn -f backend/pom.xml -q -B clean compile
+
+# ======================
+# BACKEND - TEST
+# ======================
+backend_test:
+  stage: test
+  image: maven:3.9.6-eclipse-temurin-17
+  services:
+    - name: mysql:8.0
+      alias: mysql
+  variables:
+    MYSQL_DATABASE: servify_db
+    MYSQL_ROOT_PASSWORD: Mysql123@@
+    SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/servify_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    SPRING_DATASOURCE_USERNAME: root
+    SPRING_DATASOURCE_PASSWORD: Mysql123@@
+    SPRING_JPA_HIBERNATE_DDL_AUTO: update
+  script:
+    - mvn -f backend/pom.xml -q -B test
+
+# ======================
+# BACKEND - PACKAGE
+# ======================
+backend_package:
+  stage: package
+  image: maven:3.9.6-eclipse-temurin-17
+  script:
+    - mvn -f backend/pom.xml -q -B package -DskipTests
+  artifacts:
+    paths:
+      - backend/target/*.jar
+
+# ======================
+# FRONTEND - PACKAGE
+# ======================
+frontend_package:
+  stage: package
   image: node:20
   script:
     - cd frontend
@@ -22,47 +64,32 @@ frontend_build:
       - frontend/dist/
 
 # ======================
-# BACKEND BUILD
-# ======================
-backend_build:
-  stage: build
-  image: maven:3.9.6-eclipse-temurin-17
-  script:
-    - mvn -f backend/pom.xml clean package -DskipTests
-  artifacts:
-    paths:
-      - backend/target/*.jar
-
-# ======================
-# FRONTEND DOCKER
-# ======================
-frontend_docker:
-  stage: docker
-  image: docker:24
-  services:
-    - docker:24-dind
-  before_script:
-    - docker login -u "hkiriiheb" -p "dockerhub123@@"
-  script:
-    - docker build -t hkiriiheb/servify-frontend:latest frontend
-    - docker push hkiriiheb/servify-frontend:latest
-  needs:
-    - frontend_build
-
-# ======================
-# BACKEND DOCKER
+# BACKEND - DOCKER
 # ======================
 backend_docker:
   stage: docker
   image: docker:24
   services:
     - docker:24-dind
-  before_script:
-    - docker login -u "hkiriiheb" -p "dockerhub123@@"
   script:
-    - docker build -t hkiriiheb/servify-backend:latest backend
-    - docker push hkiriiheb/servify-backend:latest
-  needs:
-    - backend_build
-    
-    
+    - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+    - cp backend/target/*.jar backend/app.jar
+    - docker build -t $BACKEND_IMAGE:latest backend
+    - docker push $BACKEND_IMAGE:latest
+  dependencies:
+    - backend_package
+
+# ======================
+# FRONTEND - DOCKER
+# ======================
+frontend_docker:
+  stage: docker
+  image: docker:24
+  services:
+    - docker:24-dind
+  script:
+    - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+    - docker build -t $FRONTEND_IMAGE:latest frontend
+    - docker push $FRONTEND_IMAGE:latest
+  dependencies:
+    - frontend_package
