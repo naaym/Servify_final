@@ -64,3 +64,4 @@ backend_docker:
     - docker push hkiriiheb/servify-backend:latest
   needs:
     - backend_build
+    
