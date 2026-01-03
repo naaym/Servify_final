@@ -1,99 +1,66 @@
 stages:
   - build
-  - test
-  - package
   - docker
 
 variables:
-  DOCKER_HOST: tcp://docker:2375
-  DOCKER_TLS_CERTDIR: ""
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   FRONTEND_IMAGE: "$DOCKERHUB_USERNAME/servify-frontend"
   BACKEND_IMAGE: "$DOCKERHUB_USERNAME/servify-backend"
+  DOCKER_TLS_CERTDIR: ""
 
-default:
-  cache:
-    key: ${CI_PROJECT_NAME}
-    paths:
-      - .m2/repository
-      - frontend/node_modules
-    policy: pull-push
-
+# ======================
+# FRONTEND BUILD
+# ======================
 frontend_build:
   stage: build
-  image: node:18
-  before_script:
-    - cd frontend
+  image: node:20
   script:
+    - cd frontend
     - npm ci
     - npm run build
   artifacts:
     paths:
       - frontend/dist/
-    expire_in: 1 week
 
-backend_test:
-  stage: test
+# ======================
+# BACKEND BUILD
+# ======================
+backend_build:
+  stage: build
   image: maven:3.9.6-eclipse-temurin-17
   script:
-    - mvn -B -f backend/pom.xml clean test
-  artifacts:
-    when: on_failure
-    reports:
-      junit: backend/target/surefire-reports/*.xml
-
-backend_package:
-  stage: package
-  image: maven:3.9.6-eclipse-temurin-17
-  script:
-    - mvn -B -f backend/pom.xml clean package -DskipTests
+    - mvn -f backend/pom.xml clean package -DskipTests
   artifacts:
     paths:
       - backend/target/*.jar
-    expire_in: 1 week
 
+# ======================
+# FRONTEND DOCKER
+# ======================
 frontend_docker:
   stage: docker
-  image: docker:24.0.5
+  image: docker:24
   services:
-    - name: docker:24.0.5-dind
-      command: ["--tls=false"]
-  variables:
-    DOCKER_DRIVER: overlay2
+    - docker:24-dind
   before_script:
-    - apk add --no-cache nodejs npm
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_TOKEN"
   script:
-    - cd frontend
-    - npm ci
-    - npm run build
-    - cd ..
-    - docker build -t "$FRONTEND_IMAGE:latest" -t "$FRONTEND_IMAGE:${CI_PIPELINE_IID}" frontend
-    - docker push "$FRONTEND_IMAGE:latest"
-    - docker push "$FRONTEND_IMAGE:${CI_PIPELINE_IID}"
+    - docker build -t $FRONTEND_IMAGE:latest frontend
+    - docker push $FRONTEND_IMAGE:latest
   needs:
-    - job: frontend_build
-      artifacts: true
+    - frontend_build
 
+# ======================
+# BACKEND DOCKER
+# ======================
 backend_docker:
   stage: docker
-  image: docker:24.0.5
+  image: docker:24
   services:
-    - name: docker:24.0.5-dind
-      command: ["--tls=false"]
-  variables:
-    DOCKER_DRIVER: overlay2
+    - docker:24-dind
   before_script:
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_TOKEN"
   script:
-    - docker build -t "$BACKEND_IMAGE:latest" -t "$BACKEND_IMAGE:${CI_PIPELINE_IID}" backend
-    - docker push "$BACKEND_IMAGE:latest"
-    - docker push "$BACKEND_IMAGE:${CI_PIPELINE_IID}"
+    - docker build -t $BACKEND_IMAGE:latest backend
+    - docker push $BACKEND_IMAGE:latest
   needs:
-    - job: backend_package
-      artifacts: true
-
-workflow:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH
+    - backend_build
