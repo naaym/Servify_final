@@ -28,9 +28,9 @@ backend_test:
     - name: mysql:8.0
       alias: mysql
   variables:
-    MYSQL_DATABASE: servify_db
+    MYSQL_DATABASE: servify
     MYSQL_ROOT_PASSWORD: Mysql123@@
-    SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/servify_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/servify?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     SPRING_DATASOURCE_USERNAME: root
     SPRING_DATASOURCE_PASSWORD: Mysql123@@
     SPRING_JPA_HIBERNATE_DDL_AUTO: update
