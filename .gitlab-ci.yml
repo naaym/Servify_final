@@ -35,6 +35,8 @@ backend_test:
     SPRING_DATASOURCE_PASSWORD: Mysql123@@
     SPRING_JPA_HIBERNATE_DDL_AUTO: update
   script:
+    -echo " Waiting for MySQL..."
+    -until mysqladmin ping -h mysql -u root -p Mysql123@@ --silent; do sleep 2; done
     - mvn -f backend/pom.xml -q -B test
 
 # ======================
