@@ -49,8 +49,8 @@ docker-job:
     DOCKER_TLS_CERTDIR: ""
   script:
     - cp backend/target/*.jar backend/app.jar
-    - docker build -t $DOCKERHUB_USERNAME/servify-backend:latest backend
+    - docker build -t "$DOCKERHUB_USERNAME/servify-backend:latest" backend
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-    - docker push $DOCKERHUB_USERNAME/servify-backend:latest
+    - docker push "$DOCKERHUB_USERNAME/servify-backend:latest"
   dependencies:
     - package-job
