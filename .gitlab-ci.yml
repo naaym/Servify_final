@@ -47,7 +47,7 @@ docker-job:
   services:
     - docker:24-dind
   script:
-    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+    - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
     - cp backend/target/*.jar backend/app.jar
     - docker build -t $IMAGE_NAME:latest backend
     - docker push $IMAGE_NAME:latest
