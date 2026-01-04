@@ -36,6 +36,34 @@ package-job:
   artifacts:
     paths:
       - backend/target/*.jar
+  
+# FRONTEND BUILD
+# ======================
+frontend_build:
+  stage: build
+  image: node:20
+  script:
+    - cd frontend
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - frontend/dist/
+# ======================
+# FRONTEND DOCKER
+# ======================
+frontend_docker:
+  stage: docker
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "hkiriiheb" -p "dockerhub123@@"
+  script:
+    - docker build -t hkiriiheb/servify-frontend:latest frontend
+    - docker push hkiriiheb/servify-frontend:latest
+  needs:
+    - frontend_build
 
 # ======================
 # DOCKER
