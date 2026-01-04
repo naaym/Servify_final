@@ -42,16 +42,15 @@ package-job:
 # ======================
 docker-job:
   stage: docker
-  image: docker:24
+  image: docker:latest
   services:
-    - docker:24-dind
+    - docker:dind
   variables:
     DOCKER_TLS_CERTDIR: ""
-    IMAGE_NAME: hkiriiheb/servify-backend
   script:
     - cp backend/target/*.jar backend/app.jar
-    - docker build -t $IMAGE_NAME:latest backend
+    - docker build -t $DOCKERHUB_USERNAME/servify-backend:latest backend
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-    - docker push $IMAGE_NAME:latest
+    - docker push $DOCKERHUB_USERNAME/servify-backend:latest
   dependencies:
     - package-job
