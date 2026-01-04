@@ -2,7 +2,9 @@ stages:
   - compile
   - test
   - package
+  - build
   - docker
+
 
 
   
