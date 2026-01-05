@@ -51,7 +51,7 @@ frontend_docker:
   needs:
     - frontend_build
 
-docker-job:
+backend_docker:
   stage: docker
   image: docker:latest
   services:
