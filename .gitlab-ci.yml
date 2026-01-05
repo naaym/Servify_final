@@ -5,31 +5,19 @@ stages:
   - build
   - docker
 
-
-
-  
-
-# ======================
-# COMPILE
-# ======================
 compile-job:
   stage: compile
   image: maven:3.9.6-eclipse-temurin-17
   script:
     - mvn -f backend/pom.xml -q -B clean compile
 
-# ======================
-# TEST
-# ======================
+
 test-job:
   stage: test
   image: maven:3.9.6-eclipse-temurin-17
   script:
     - mvn -f backend/pom.xml -q -B test
 
-# ======================
-# PACKAGE
-# ======================
 package-job:
   stage: package
   image: maven:3.9.6-eclipse-temurin-17
@@ -39,8 +27,6 @@ package-job:
     paths:
       - backend/target/*.jar
   
-# FRONTEND BUILD
-# ======================
 frontend_build:
   stage: build
   image: node:20
@@ -51,9 +37,7 @@ frontend_build:
   artifacts:
     paths:
       - frontend/dist/
-# ======================
-# FRONTEND DOCKER
-# ======================
+
 frontend_docker:
   stage: docker
   image: docker:latest
@@ -67,9 +51,6 @@ frontend_docker:
   needs:
     - frontend_build
 
-# ======================
-# DOCKER
-# ======================
 docker-job:
   stage: docker
   image: docker:latest
@@ -82,5 +63,6 @@ docker-job:
     - cp backend/target/*.jar backend/app.jar
     - docker build -t hkiriiheb/servify-backend:latest  backend
     - docker push hkiriiheb/servify-backend:latest
-  dependencies:
-    - package-job
+  needs:
+    - job: package-job
+      artifacts: true
