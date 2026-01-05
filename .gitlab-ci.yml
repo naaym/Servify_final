@@ -16,7 +16,7 @@ test-job:
   stage: test
   image: maven:3.9.6-eclipse-temurin-17
   script:
-    - mvn -f backend/pom.xml -q -B test
+    - mvn -f backend/pom.xml  -B test
 
 package-job:
   stage: package
