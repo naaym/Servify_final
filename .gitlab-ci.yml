@@ -1,0 +1,68 @@
+stages:
+  - compile
+  - test
+  - package
+  - build
+  - docker
+
+compile-job:
+  stage: compile
+  image: maven:3.9.6-eclipse-temurin-17
+  script:
+    - mvn -f backend/pom.xml -q -B clean compile
+
+
+test-job:
+  stage: test
+  image: maven:3.9.6-eclipse-temurin-17
+  script:
+    - mvn -f backend/pom.xml  -B test
+
+package-job:
+  stage: package
+  image: maven:3.9.6-eclipse-temurin-17
+  script:
+    - mvn -f backend/pom.xml -q -B package -DskipTests
+  artifacts:
+    paths:
+      - backend/target/*.jar
+  
+frontend_build:
+  stage: build
+  image: node:20
+  script:
+    - cd frontend
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - frontend/dist/
+
+frontend_docker:
+  stage: docker
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "hkiriiheb" -p "dockerhub123@@"
+  script:
+    - docker build -t hkiriiheb/servify-frontend:latest frontend
+    - docker push hkiriiheb/servify-frontend:latest
+  needs:
+    - frontend_build
+
+backend_docker:
+  stage: docker
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - docker login -u hkiriiheb -p dockerhub123@@
+    - cp backend/target/*.jar backend/app.jar
+    - docker build -t hkiriiheb/servify-backend:latest  backend
+    - docker push hkiriiheb/servify-backend:latest
+  needs:
+    - job: package-job
+      artifacts: true
